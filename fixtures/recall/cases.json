@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "cases": [
+    {
+      "id": "paraphrase",
+      "query": "How do I prevent repeated callbacks during a staging stress run?"
+    },
+    {
+      "id": "stale-note",
+      "query": "What is the reconciliation worker limit now?"
+    },
+    {
+      "id": "ambiguous-workspace",
+      "query": "What should I remember before the next run?"
+    },
+    {
+      "id": "archived-workspace",
+      "query": "Which deployment tunnel did the archived project use?"
+    },
+    {
+      "id": "no-result",
+      "query": "What is the office holiday catering policy?"
+    }
+  ]
+}

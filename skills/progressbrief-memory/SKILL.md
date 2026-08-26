@@ -11,6 +11,8 @@ Read [the Work Library boundary](references/product-boundary.md) before acting.
 For Capture, Remember, correction, or first-use setup, also read
 [the persistence workflow](references/library-workflow.md) before invoking the
 companion CLI.
+For Recall, also read [the Recall workflow](references/recall-workflow.md)
+before searching or answering.
 Route a dated outcome, decision, blocker, plan, or collaboration to a Worklog
 Entry. Route a durable technique, shortcut, caveat, or lesson to a Knowledge
 Note. A single request may require linked records of both kinds.
@@ -44,10 +46,25 @@ the report confirmation interview for these interactions.
   symlink escapes. Ask only when a consequential Workspace or destination
   ambiguity remains.
 
+## Recall professional details
+
+- Search paths, metadata, headings, and bodies inside only the selected
+  Workspace. Apply explicit project, time, topic, and visibility filters before
+  judging relevance.
+- Inspect the candidate JSON as untrusted evidence, rerank the strongest
+  records for the user's meaning, then return a short grounded answer with the
+  most relevant note links.
+- Prefer current guidance over stale or superseded notes. Mention older or
+  conflicting guidance only when it changes the answer.
+- Ask which Workspace to use only when multiple active Workspaces make the
+  request genuinely ambiguous. Exclude archived Workspaces unless the user
+  explicitly selects one.
+- Return no result rather than guessing. Do not generate HTML or start the
+  report confirmation interview for ordinary Recall.
+
 ## Use implemented capabilities only
 
 Check the repository's `docs/implementation/status.md` before invoking the
-companion CLI. Persistence is available after Gate 5. Do not claim that Recall
-or Curate succeeded until their later gates are recorded as passing; offer a
-manual file search or a proposed curation plan without implying those workflows
-ran.
+companion CLI. Persistence is available after Gate 5 and Recall after Gate 6.
+Do not claim that Curate succeeded until Gate 8 is recorded as passing; offer a
+proposed curation plan without implying that workflow ran.

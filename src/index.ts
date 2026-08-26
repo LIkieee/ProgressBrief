@@ -99,12 +99,26 @@ export {
   setWorkspaceArchived,
   undoLastMutation,
 } from "./library/workspace.js";
+export {
+  recallFromLibrary,
+  searchRecallCandidates,
+} from "./library/recall.js";
+export type {
+  RecallCandidate,
+  RecallMatchedField,
+  RecallOptions,
+  RecallResult,
+  RecallSearchOptions,
+  RecallSearchResult,
+  RecallWorkspaceChoice,
+} from "./library/recall.js";
 export type {
   CaptureClassification,
   CaptureMemoryOptions,
   CaptureMemoryResult,
   KnowledgeNote,
   KnowledgeResolution,
+  Visibility,
   WorklogEntry,
   WorkspaceDocument,
 } from "./library/types.js";

@@ -17,7 +17,7 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently implements Gates 0–5: the foundation, semantic
+The repository currently implements Gates 0–6: the foundation, semantic
 contracts, Snapshot report path, deterministic clean HTML renderer, and the
 creator review loop, plus Work Library persistence. The review wrapper supports
 stable component and text
@@ -25,8 +25,11 @@ annotations, inline corrections as feedback operations, a durable queue,
 explicit Codex and Claude Code handoffs, conflict detection, and live reload.
 The memory path supports first-use setup, Workspace-scoped Capture and Remember,
 search-before-write outcomes, linked Markdown records, atomic locked writes,
-and per-Workspace undo. Recall, Deep Dive, Curate, clean-host installation, and
-release proof remain later gates and are not claimed as implemented yet.
+and per-Workspace undo. Recall adds portable lexical retrieval over paths,
+metadata, headings, and bodies; Workspace/project/time/topic/visibility
+filters; query expansion; agent reranking; grounded note links; and current-over-
+superseded handling. Deep Dive, Curate, clean-host installation, and release
+proof remain later gates and are not claimed as implemented yet.
 
 ## Requirements
 
@@ -42,7 +45,7 @@ Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 5
+npm run verify:gate -- 6
 ```
 
 Individual foundation checks are also stable:
@@ -59,6 +62,7 @@ npm run test:report
 npm run test:browser
 npm run test:review
 npm run test:library
+npm run test:recall
 ```
 
 Start creator review for an existing source model and clean HTML artifact:
@@ -88,6 +92,20 @@ progressbrief memory capture \
 
 Use `progressbrief memory undo --library <directory> --workspace <id-or-slug>`
 to reverse only the last ProgressBrief mutation in that Workspace.
+
+Recall a professional detail without generating a report:
+
+```sh
+progressbrief memory recall \
+  --library "$PWD/ProgressBrief Library" \
+  --workspace example-company \
+  --query "What does staging require before migration?"
+```
+
+The memory skill first requests `--format candidates`, reranks only the returned
+record IDs, and repeats the query with `--rerank <id,id>`. If Workspace scope is
+ambiguous or there is no grounded result, Recall asks once or returns no result
+instead of guessing.
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when
 its required suite is absent; future suites are never represented by passing
