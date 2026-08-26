@@ -61,3 +61,23 @@ JSON Schema and cross-reference semantics. Keep creator-only source locators,
 raw excerpts, and omission reasons outside the export projection. Do not claim
 that a report has been rendered or browser-verified until those capabilities
 are recorded as implemented.
+
+## Apply a feedback queue
+
+When a host invocation names a feedback queue, source model, and clean HTML
+artifact:
+
+1. Validate the queue and report model and confirm their report IDs match.
+2. Reconcile every pending target by stable component ID, content hash, and
+   selected-text context. Mark stale targets as `conflict` and request creator
+   resolution instead of applying them.
+3. Treat an inline correction as a feedback operation, not an untracked DOM
+   edit. Apply accepted annotations and edits to the source model while
+   preserving stable IDs and advancing its revision history.
+4. Mark only successfully handled items as `applied`, then persist the queue
+   atomically with an incremented queue version.
+5. Validate and render the revised source model to the named clean HTML path.
+   The local wrapper observes that file and reloads the creator view.
+
+Never copy review scripts, controls, tokens, queue contents, or creator-only
+paths into the report model's export projection or finalized HTML.

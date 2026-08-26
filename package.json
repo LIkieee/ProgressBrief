@@ -28,6 +28,7 @@
     "test:browser": "npm run build --silent && node --test --test-concurrency=1 tests/browser/*.test.mjs",
     "test:foundation": "npm run build --silent && node --test tests/foundation/*.test.mjs",
     "test:report": "npm run build --silent && node --test tests/report/*.test.mjs",
+    "test:review": "npm run build --silent && node --test --test-concurrency=1 tests/review/*.test.mjs",
     "validate:ci": "node scripts/validate-ci.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "verify:gate": "node scripts/verify-gate.mjs",

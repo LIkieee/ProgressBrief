@@ -55,6 +55,31 @@ export {
   DEFAULT_SNAPSHOT_STRUCTURE,
   resolveStructure,
 } from "./report/structure.js";
+export {
+  FeedbackQueueStore,
+  applyInlineEditFeedback,
+  componentContentHash,
+  componentTargetHashes,
+  createFeedbackTarget,
+  reconcileFeedbackQueue,
+} from "./review/feedback.js";
+export type {
+  FeedbackItem,
+  FeedbackOperationInput,
+  FeedbackQueue,
+  FeedbackQueueStoreOptions,
+  FeedbackTarget,
+} from "./review/feedback.js";
+export { createFeedbackInvocations } from "./review/invocations.js";
+export type {
+  FeedbackInvocationPaths,
+  FeedbackInvocations,
+} from "./review/invocations.js";
+export { startReviewServer } from "./review/server.js";
+export type {
+  ReviewServer,
+  StartReviewServerOptions,
+} from "./review/server.js";
 export type {
   AgentReportProposal,
   ConfirmationPlan,

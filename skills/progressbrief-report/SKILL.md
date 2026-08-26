@@ -44,11 +44,26 @@ fixture, not as a wording template for new reports.
   paths in finalized HTML.
 - Do not add review controls or a remote runtime to the clean artifact.
 
+## Apply creator feedback
+
+When the invocation names a feedback queue, report model, and clean HTML path,
+read the queue and validate it before editing. For every pending item, locate
+the stable component ID and verify both its content hash and selected-text
+context with the packaged review helpers. If the target changed, mark the item
+as a conflict and ask the creator to resolve it; never overwrite changed text.
+
+Apply annotations and inline corrections to the source model as agent
+revisions, preserve stable IDs, advance revision history, and mark successfully
+handled queue items as applied. Write the versioned queue atomically, validate
+the revised model, and refresh the named clean HTML artifact so the review
+wrapper can live-reload it. Keep the queue, paths, server token, review script,
+and controls out of the clean artifact.
+
 ## Use implemented capabilities only
 
 Check the repository's `docs/implementation/status.md` before invoking the
 companion CLI. Do not claim that a later-gate workflow is available when its
-gate is not recorded as passing. Gate 2 supports request resolution, concise
-confirmation, proposal validation, and a schema-valid report source model. Do
-not present HTML rendering, browser inspection, or clean export as verified
-until the renderer gate is recorded as passing.
+gate is not recorded as passing. Gate 4 supports the Snapshot source model,
+deterministic clean HTML, browser inspection, creator feedback queues, explicit
+Codex and Claude Code handoffs, conflict detection, and live reload. Do not
+claim Work Library persistence or later-gate workflows are implemented.

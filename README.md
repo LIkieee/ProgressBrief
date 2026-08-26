@@ -17,14 +17,13 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently contains the Gate 0 foundation, Gate 1 semantic
-contracts, and the Gate 2 Snapshot report path. The report skill can resolve
-mode, audience, purpose, reporting period, and structure; run a bounded
-confirmation plan including `generate now`; evaluate agent-authored claims by
-content invariants; and produce a schema-valid report source model. The
-synthetic fixture includes the complete golden Snapshot used by later renderer
-tests. HTML rendering, persistence, and creator review arrive in later gates
-and are not claimed as implemented yet.
+The repository currently implements Gates 0–4: the foundation, semantic
+contracts, Snapshot report path, deterministic clean HTML renderer, and the
+creator review loop. The review wrapper supports stable component and text
+annotations, inline corrections as feedback operations, a durable queue,
+explicit Codex and Claude Code handoffs, conflict detection, and live reload.
+Work Library persistence, Recall, Deep Dive, Curate, clean-host installation,
+and release proof remain later gates and are not claimed as implemented yet.
 
 ## Requirements
 
@@ -40,7 +39,7 @@ Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 2
+npm run verify:gate -- 4
 ```
 
 Individual foundation checks are also stable:
@@ -54,6 +53,18 @@ npm run validate:skills
 npm run validate:ci
 npm run test:contracts
 npm run test:report
+npm run test:browser
+npm run test:review
+```
+
+Start creator review for an existing source model and clean HTML artifact:
+
+```sh
+progressbrief review \
+  --root ./report-output \
+  --report-model ./report-output/source-model.json \
+  --report-html ./report-output/clean-report.html \
+  --queue ./report-output/feedback-queue.json
 ```
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when

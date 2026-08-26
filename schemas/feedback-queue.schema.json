@@ -90,7 +90,16 @@
             },
             "then": {
               "required": ["replacementText"],
-              "properties": { "replacementText": true }
+              "properties": {
+                "replacementText": true,
+                "target": {
+                  "type": "object",
+                  "required": ["selectedText"],
+                  "properties": {
+                    "selectedText": true
+                  }
+                }
+              }
             }
           }
         ]
