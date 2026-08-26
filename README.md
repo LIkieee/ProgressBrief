@@ -17,13 +17,16 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently implements Gates 0–4: the foundation, semantic
+The repository currently implements Gates 0–5: the foundation, semantic
 contracts, Snapshot report path, deterministic clean HTML renderer, and the
-creator review loop. The review wrapper supports stable component and text
+creator review loop, plus Work Library persistence. The review wrapper supports
+stable component and text
 annotations, inline corrections as feedback operations, a durable queue,
 explicit Codex and Claude Code handoffs, conflict detection, and live reload.
-Work Library persistence, Recall, Deep Dive, Curate, clean-host installation,
-and release proof remain later gates and are not claimed as implemented yet.
+The memory path supports first-use setup, Workspace-scoped Capture and Remember,
+search-before-write outcomes, linked Markdown records, atomic locked writes,
+and per-Workspace undo. Recall, Deep Dive, Curate, clean-host installation, and
+release proof remain later gates and are not claimed as implemented yet.
 
 ## Requirements
 
@@ -39,7 +42,7 @@ Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 4
+npm run verify:gate -- 5
 ```
 
 Individual foundation checks are also stable:
@@ -55,6 +58,7 @@ npm run test:contracts
 npm run test:report
 npm run test:browser
 npm run test:review
+npm run test:library
 ```
 
 Start creator review for an existing source model and clean HTML artifact:
@@ -66,6 +70,24 @@ progressbrief review \
   --report-html ./report-output/clean-report.html \
   --queue ./report-output/feedback-queue.json
 ```
+
+Initialize a visible Work Library, then Capture or Remember a fragment:
+
+```sh
+progressbrief library init \
+  --directory "$PWD/ProgressBrief Library" \
+  --workspace "Example Company" \
+  --kind employer \
+  --project "Migration"
+
+progressbrief memory capture \
+  --library "$PWD/ProgressBrief Library" \
+  --workspace example-company \
+  --text "Capture: we finished the migration, and staging migrations require VPN access."
+```
+
+Use `progressbrief memory undo --library <directory> --workspace <id-or-slug>`
+to reverse only the last ProgressBrief mutation in that Workspace.
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when
 its required suite is absent; future suites are never represented by passing

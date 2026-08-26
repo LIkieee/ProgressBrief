@@ -27,6 +27,7 @@
     "test:contracts": "npm run build --silent && node --test tests/contracts/*.test.mjs",
     "test:browser": "npm run build --silent && node --test --test-concurrency=1 tests/browser/*.test.mjs",
     "test:foundation": "npm run build --silent && node --test tests/foundation/*.test.mjs",
+    "test:library": "npm run build --silent && node --test --test-concurrency=1 tests/library/*.test.mjs",
     "test:report": "npm run build --silent && node --test tests/report/*.test.mjs",
     "test:review": "npm run build --silent && node --test --test-concurrency=1 tests/review/*.test.mjs",
     "validate:ci": "node scripts/validate-ci.mjs",
@@ -42,11 +43,11 @@
     "globals": "^17.11.0",
     "playwright": "1.57.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.68.0",
-    "yaml": "^2.9.0"
+    "typescript-eslint": "^8.68.0"
   },
   "dependencies": {
     "ajv": "^8.20.0",
-    "sharp": "0.35.4"
+    "sharp": "0.35.4",
+    "yaml": "^2.9.0"
   }
 }

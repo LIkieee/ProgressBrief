@@ -1,271 +1,284 @@
 # ProgressBrief implementation status
 
-**Current state:** Gate 4 — Creator review loop passes. Gates 0–4 are
+**Current state:** Gate 5 — Memory skill and persistence passes. Gates 0–5 are
 implemented cumulatively in the commit containing this status update. Gates
-5–10 remain unimplemented; Gate 5 fails honestly because `test:library` is
+6–10 remain unimplemented; Gate 6 fails honestly because `test:recall` is
 absent.
 
-## Gate 4 obligations completed
+## Gate 5 obligations completed
 
-1. Implemented a loopback-only HTTP review server that always requests an
-   operating-system-assigned port, creates a fresh 256-bit session token, and
-   validates the `Host`, supplied `Origin`, session token, report ID, and
-   selected file roots before serving or mutating review state.
-2. Restricted the server to one report wrapper, one matching clean report,
-   that report's feedback API, and its SSE stream. Unknown report IDs,
-   traversal-shaped URLs, forged authority, cross-origin writes, out-of-root
-   files, and symlink escapes fail; there is no general filesystem endpoint.
-3. Implemented a separate creator-only review wrapper. It targets report
-   components by stable `cmp_` ID and a canonical SHA-256 content hash, captures
-   optional selected-text context, highlights the current target, and never
-   modifies the clean artifact itself.
-4. Implemented annotations and minimal literal inline corrections as feedback
-   operations. Inline edits require selected-text context and replacement text;
-   the deterministic correction helper preserves every stable ID, advances the
-   source-model revision, and refuses stale or non-unique targets.
-5. Implemented the versioned feedback queue with stable `fbq_` and `fbk_` IDs,
-   schema validation, serialized in-process mutations, sibling temporary files,
-   file flush, atomic rename, status updates, and durable conflict
-   reconciliation. Concurrent browser submissions do not lose items.
-6. Implemented exact displayed and clipboard-copyable handoffs for Codex
-   (`$progressbrief-report`) and Claude Code (`/progressbrief-report`), including
-   safely quoted queue, source-model, and clean-HTML paths.
-7. Implemented SSE live reload for changes to only the selected model or clean
-   HTML. The browser acceptance flow queues both operation kinds, copies the
-   Claude invocation, simulates the agent's revised clean artifact, and observes
-   the revised report without restarting the server.
-8. Added `progressbrief review --root ... --report-model ... --report-html ...
-   --queue ...` to the companion CLI and documented the feedback-application
-   protocol in the report skill and shallow workflow reference.
-9. Proved review controls are keyboard reachable and have zero serious or
-   critical axe violations. Proved structurally that the clean report served in
-   review is byte-for-byte the selected Gate 3 artifact and contains no token,
-   queue path, loopback address, review code, controls, or handoff invocation.
-10. Re-pointed the foundation falsifiability tripwire: Gate 4 is positively
-    available, while every unbuilt Gate 5–10 fails at the next required suite,
-    `test:library`.
+1. Expanded the canonical `progressbrief-memory` skill from its Gate 0 boundary
+   scaffold into an imperative Capture/Remember dispatcher. It keeps Recall and
+   Curate explicitly unavailable until their later gates, avoids the report
+   confirmation interview, and documents exact first-use, persistence, and undo
+   invocations in a shallow reference.
+2. Implemented first-use Work Library setup in a caller-selected visible
+   directory. Setup creates a validated YAML-frontmatter `workspace.md`,
+   chronological Markdown Worklog area, individual Markdown Knowledge Notes,
+   reports directory, small JSON Workspace map, and versioned mutation journal.
+   Report-only generation remains setup-free.
+3. Implemented Workspace configuration with employer→internal and
+   personal→private defaults, stable Workspace/project IDs, archived state, and
+   explicit repository association by resolved real path. A selected GitHub
+   remote is read with an argument-array `git` invocation and canonicalized;
+   unsupported discovered remotes retain the local association without blocking
+   setup.
+4. Implemented deterministic Capture/Remember classification for the documented
+   examples, including a mixed fragment that creates linked Worklog and
+   Knowledge records. Each write returns a one-line acknowledgement naming the
+   Workspace and destination; the companion CLI exposes first-use setup,
+   capture, and Workspace-scoped undo.
+5. Implemented search-before-write inside only the active Workspace. Exact
+   repeats are skipped; useful examples, caveats, or explicit sources enrich the
+   existing stable note; similar wording is never silently merged; explicit
+   related-note decisions create reciprocal links; supersession preserves and
+   marks the earlier note while the new note points back to it.
+6. Implemented schema validation at each Markdown serialization boundary.
+   Worklog and Knowledge records carry stable project/source relationships, and
+   mixed captures link the Worklog Entry to the resulting Knowledge Note.
+7. Implemented sibling temporary-file writes with file flush and atomic rename,
+   one bounded cross-process Work Library lock, dead-owner lock recovery, and a
+   prepared/committed/rolled-back mutation journal. The next operation recovers
+   prepared mutations left by an interrupted process.
+8. Implemented `undo that` behavior as restoration of only the last committed
+   ProgressBrief mutation in the selected Workspace. Mutations in a different
+   Workspace remain untouched.
+9. Implemented resolved-path authorization for every internal mutation target.
+   Traversal and existing symlink escapes fail closed; archived Workspace capture
+   and cross-Workspace Knowledge targets are rejected; archived Workspaces are
+   omitted from default listing.
+10. Added 14 substantive Gate 5 tests. The tests exercise real filesystem state,
+    an actual Git repository and canonical remote, separate Node processes
+    contending for the same lock, two concurrent process writes to one monthly
+    Worklog, and a killed writer that really truncates a target before automatic
+    journal recovery restores it.
+11. Re-pointed the foundation falsifiability tripwire: Gate 5 is positively
+    available, while every unbuilt Gate 6–10 fails at the next required suite,
+    `test:recall`.
 
 ## Files changed
 
-- `README.md`: records the Gate 4 capability boundary, current verifier, and
-  creator-review CLI example.
-- `package.json`: adds the substantive `test:review` suite.
-- `schemas/feedback-queue.schema.json`: requires selected-text context for
-  inline edits in addition to replacement text.
-- `skills/progressbrief-report/SKILL.md` and
-  `skills/progressbrief-report/references/report-workflow.md`: define the
-  durable-queue application, conflict, revision, rerender, and clean-export
-  protocol for the active agent.
-- `src/cli/main.ts`: exposes the bounded creator-review command and graceful
-  signal shutdown.
-- `src/index.ts`: exports the review server, feedback, targeting, correction,
-  conflict, and invocation APIs.
-- `src/review/feedback.ts`: stable targeting, literal inline correction,
-  versioned atomic queue persistence, status updates, and reconciliation.
-- `src/review/invocations.ts`: exact host-specific handoff construction.
-- `src/review/review-page.ts`: accessible creator-only annotation, edit,
-  clipboard, and SSE interface.
-- `src/review/server.ts`: loopback server, request validation, path
-  authorization, fixed-route serving, feedback API, and selected-file watcher.
-- `tests/review/cli.test.mjs`, `tests/review/feedback.test.mjs`, and
-  `tests/review/server.test.mjs`: seven substantive Node, HTTP, CLI, filesystem,
-  and real-Chromium acceptance tests.
-- `tests/foundation/foundation.test.mjs`: Gate 4 positive oracle and Gate 5–10
+- `README.md`: records the Gate 5 capability boundary, current verifier,
+  commands, and first-use/Capture/undo examples.
+- `package.json` and `package-lock.json`: add the substantive `test:library`
+  suite and promote the already-installed `yaml` parser to a runtime dependency
+  for standards-compliant Markdown frontmatter.
+- `skills/progressbrief-memory/SKILL.md` and
+  `skills/progressbrief-memory/references/library-workflow.md`: define the
+  implemented trigger, routing, setup, search-before-write, safety, CLI, and undo
+  protocol while preserving the Gate 6/8 boundary.
+- `src/cli/main.ts`: exposes `library init`, `memory capture`, and `memory undo`
+  without changing creator review behavior.
+- `src/index.ts`: exports the supported high-level Work Library API while
+  leaving crash-injection and raw persistence primitives internal.
+- `src/library/types.ts`: Work Library, Workspace, record, capture, resolution,
+  and mutation types.
+- `src/library/paths.ts`: slug generation and resolved containment/symlink
+  authorization.
+- `src/library/markdown.ts`: schema-validated Workspace, Worklog, and Knowledge
+  Markdown serialization/parsing.
+- `src/library/persistence.ts`: atomic writes, bounded cross-process locking,
+  stale-owner recovery, mutation transactions, interrupted-write recovery, and
+  undo primitives.
+- `src/library/workspace.ts`: first-use setup, small Workspace map, repository
+  association, active Workspace listing, archive state, and high-level undo.
+- `src/library/capture.ts`: Capture/Remember classification, scoped reads,
+  Worklog persistence, Knowledge search-before-write outcomes, linkage, and
+  acknowledgements.
+- `tests/library/setup-and-capture.test.mjs`,
+  `tests/library/knowledge-and-undo.test.mjs`,
+  `tests/library/boundaries-and-persistence.test.mjs`,
+  `tests/library/cli-memory.test.mjs`, and
+  `tests/library/helpers/library-worker.mjs`: 14 Gate 5 acceptance tests and the
+  real child-process race/crash helper.
+- `tests/foundation/foundation.test.mjs`: Gate 5 positive oracle and Gate 6–10
   falsifiability tripwire.
 - `docs/implementation/status.md`: this standalone handoff.
 
-No workspace snapshot, workspace-level `outputs/` or `docs/`, canonical
-history, or `supervisor/` file was modified. No dependency was added and the
-committed lockfile did not change.
+No schema, report renderer, review path, workspace-level snapshot, canonical
+history, or `supervisor/` file was modified. No HTML rendering behavior changed,
+so no new report screenshots or HTML inspection were required.
 
 ## Command and result ledger
 
 ### Required source, recovery, and audit inspection
 
 - `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g
-  'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'status.md' -g
-  'AUDIT-*.md' -g '*.md' docs/adr progressbrief/docs/implementation supervisor
-  outputs docs 2>/dev/null | sort && if [ -d progressbrief/.git ]; then git -C
-  progressbrief status --short --branch; else echo 'progressbrief git repository
-  absent'; fi` — passed; the repository existed and the worktree was clean.
-- `wc -l` on every required PRD, context, implementation-contract, runbook,
-  ADR, status, audit, halt, and supervisor-progress file — passed and established
-  bounded complete-read ranges.
-- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p' ...`,
-  and `sed -n '441,647p' ...` — passed; complete PRD read.
-- `sed -n '1,1000p' CONTEXT.md`, `sed -n '1,1000p'
-  docs/IMPLEMENTATION_CONTRACT.md`, and `sed -n '1,1000p'
-  docs/LOOP_RUNBOOK.md` — passed; complete canonical and normative reads.
-- `sed -n '1,100p'` over all six workspace ADRs and `sed -n '1,400p'
-  progressbrief/docs/implementation/status.md` — passed; complete reads.
-- Bounded `sed` reads covering all of `supervisor/AUDIT-gate0.md` through
-  `supervisor/AUDIT-gate3.md` — passed. The latest audit verdict was Gate 3
-  PASS with no required changes; all standing falsifiability and substance
-  checks were carried forward.
-- Bounded `sed` reads of `supervisor/HALT.md` and `supervisor/PROGRESS.md` —
-  passed; the earlier Chromium sandbox block was already resolved by the
-  supervising loop.
+  'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'docs/adr/**' -g
+  'progressbrief/docs/implementation/status.md' -g 'supervisor/AUDIT-*.md'
+  -g 'progressbrief/.git' -g 'progressbrief/package.json' | sort && ... git -C
+  progressbrief status --short --branch` — passed; the repository existed on
+  `main` and the worktree was clean.
+- `wc -l` over the PRD, context, implementation contract, runbook, six ADRs,
+  status, and all five audits — passed; established bounded complete-read ranges
+  for 2,476 lines.
+- Parallel bounded `sed` reads covering PRD lines 1–647, followed by complete
+  `cat`/bounded reads of `CONTEXT.md` and implementation-contract lines 1–280 —
+  passed; all product and technical authority was read completely.
+- `sed -n '1,220p' docs/LOOP_RUNBOOK.md` and complete reads of all six ADRs —
+  passed; Gate 5 obligations and stop conditions were confirmed.
+- Complete bounded reads of `supervisor/AUDIT-gate0.md` through
+  `supervisor/AUDIT-gate4.md` — passed. The latest verdict was Gate 4 PASS with
+  no required changes; its Gate 5 lock, concurrency, interruption, substantive
+  suite, and tripwire checks were carried forward.
+- `cat progressbrief/docs/implementation/status.md` — passed; Gate 4 was the
+  recorded completed state and there was no preserved work to recover.
 - `find .. -name AGENTS.md -print && git status --short --branch && git log
-  --oneline --decorate -6 && rg --files -g '!node_modules/**' -g
-  '!.npm-cache/**' -g '!dist/**' -g '!tmp/**' | sort` — passed; no `AGENTS.md`,
-  clean Gate 3 commit `897e416`, and no preserved work to recover.
-- `wc -l` plus complete bounded `sed` reads of `package.json`, TypeScript and
-  ESLint configuration, gate scripts, the foundation test, feedback schema and
-  fixtures, contract types/IDs/validation/export, renderer, browser tests,
-  CLI/index, and report skill files — passed.
-- `rg -n "progressbrief-report|Send to agent|feedback|review|Codex|Claude"
-  README.md SECURITY.md CONTRIBUTING.md skills docs src tests schemas fixtures
-  -g '!docs/implementation/status.md'` — passed; found no existing review
-  implementation or contradictory invocation contract.
-- `jq '{id,revision,components,visualizations}'
-  fixtures/snapshot-three-workstreams/golden-report-model.json && sed -n
-  '1,120p' schemas/common.schema.json && sed -n '1,120p' SECURITY.md` — passed;
-  established the stable target specimen and security boundary.
-- `sed -n '1,220p' src/contracts/report-semantics.ts && sed -n '1,120p'
-  tsconfig.build.json`, and later `sed` reads of revision behavior and its tests
-  — passed.
+  --oneline --decorate -6 && rg --files ... | sort` — passed; no `AGENTS.md`,
+  clean Gate 4 commit `df89215`, and the expected repository contents.
+- `wc -l`, complete grouped `cat`, and bounded `sed` reads over `package.json`,
+  TypeScript/ESLint configuration, verifier scripts, foundation tests, memory
+  skill, three Work Library schemas, contract types/IDs/validator, index, CLI,
+  and all current Workspace/Worklog/Knowledge fixtures — passed.
 
 ### Test-first implementation and focused repair
 
-- `npm run test:review` immediately after adding the acceptance suite — failed
-  as intended: both test files reported `ERR_MODULE_NOT_FOUND` for the absent
-  `dist/review/feedback.js` implementation.
-- `npm run build` after the first review-page implementation — failed as
-  intended on unescaped nested template literals in `review-page.ts`; the
-  embedded browser script was changed to safe string concatenation.
-- `npm run build` after that repair — passed.
-- `npm run test:review` — passed 6/6 before CLI integration.
-- `npm run build && npm run lint && npm run typecheck && npm run test:review` —
-  first failed at lint on the incoming-request chunk type; the request-body
-  conversion was narrowed to `Uint8Array`.
-- The repeated combined command then exposed strict Ajv compilation failures
-  in the new conditional schema. `npm run build --silent && node --test
-  tests/review/feedback.test.mjs` isolated the missing object type and then the
-  missing local `selectedText` property declaration. Both schema defects were
-  repaired without weakening the conditional requirement.
-- `npm run build --silent && node --test tests/review/feedback.test.mjs` —
-  passed 3/3 after the schema repairs.
-- `npm run build --silent && node --test --test-concurrency=1
-  tests/review/server.test.mjs` — passed 3/3.
-- `npm run test:review` — passed 7/7 after CLI integration.
-- `npm run build && npm run lint && npm run typecheck && node --test
-  tests/review/feedback.test.mjs` — passed after adding deterministic literal
-  correction and atomic status mutation.
-- `npm run test:review` — passed 7/7 after adding keyboard paths and stronger
-  structural exclusion assertions.
-- `npm run build && npm run lint && npm run typecheck && npm run test:review`
-  — passed after making first-write queue revision derive from the current
-  report and exercising durable conflict reconciliation.
-- `npm run build && npm run lint && npm run typecheck && npm run
-  test:contracts && npm run test:report && npm run test:browser && npm run
-  test:review && npm run validate:skills` — passed: 11 contract, 15 report, 10
-  renderer/browser, and 7 review tests; 0 failures, 0 skipped, 0 todo.
+- `npm run test:library` immediately after adding the first acceptance files —
+  failed as intended: all three test files reported that `captureMemory` was not
+  exported because the Work Library implementation did not exist.
+- `tail -24 package.json && npm run build` after the first implementation —
+  passed; this also exposed that `yaml` appeared in both dependency sections,
+  which was repaired before lockfile regeneration.
+- `npm install --package-lock-only --ignore-scripts && npm run test:library` —
+  passed 12/12 after initial implementation; the lockfile now classifies `yaml`
+  as runtime-only.
+- `sed -n '1,240p' README.md && cat
+  skills/progressbrief-memory/agents/openai.yaml` — passed; established the
+  documentation and host-metadata edit boundary.
+- `sed -n '1,180p' README.md && npm run build && npm run lint && ...` — build
+  passed and lint failed on three real findings: an invalid narrowed template
+  expression, a thrown lock-timeout symptom missing its caught cause, and one
+  unused test import. All three were fixed without suppressions.
+- Targeted `nl -ba` reads of the lint locations — passed and confirmed the
+  repairs.
+- `npm run lint && npm run typecheck && npm run test:library && npm run
+  validate:skills` — lint and typecheck passed; the suite then found a real
+  macOS `/var`→`/private/var` canonical-path defect in the CLI capture flow.
+- `npm run test:library && npm run validate:skills` after canonicalizing the
+  library root at capture entry — passed 13/13 and both skill validations.
+- Sequential `npm run build`, `npm run lint`, `npm run typecheck`, `npm run
+  test:contracts`, `npm run test:report`, `npm run test:browser`, `npm run
+  test:review`, `npm run test:library`, and `npm run validate:skills` — all
+  passed: 11 contract, 15 report, 10 browser, 7 review, and 13 initial library
+  tests; 0 failures, 0 skipped, 0 todo.
+- `npm run test:library` after strengthening automatic enrichment and
+  similar-wording non-merge coverage — passed 14/14.
+- `npm run build && npm run lint && npm run typecheck && npm run test:library
+  && npm audit --omit=dev` after narrowing the public API — passed; 14 library
+  tests and zero runtime vulnerabilities.
 
-### Review artifact generation and visual inspection
+### Manual Work Library artifact inspection
 
-- `node tmp/gate4-qa/generate.mjs && find tmp/gate4-qa -maxdepth 1 -type f
-  -print | sort && shasum -a 256 tmp/gate4-qa/review-selected-1440x900.png
-  tmp/gate4-qa/review-mobile-390x844-full.png
-  tmp/gate4-qa/clean-report.html` — passed; generated the selected-text desktop
-  state and full stacked mobile review state with a real loopback server.
-- `view_image` on `review-selected-1440x900.png` and
-  `review-mobile-390x844-full.png` at original detail — passed visual inspection
-  for hierarchy, wrapping, focus visibility, control labels, responsive stacking,
-  iframe/panel separation, and absence of overlap or clipped controls.
+- `find tmp -maxdepth 2 ... && git status --short && git diff --check && git
+  diff --stat` — passed; only expected Gate 5 source/status changes and ignored
+  earlier QA artifacts were present.
+- `mkdir -p tmp/gate5-qa` followed by real `progressbrief library init`,
+  `memory capture` Worklog, and `memory capture` Knowledge commands, then `find`,
+  bounded `sed`, and `jq` inspection — passed. The CLI returned three one-line
+  acknowledgements; the visible Workspace, monthly Worklog, individual
+  Knowledge Note, config, and three committed journal entries were inspected.
+- `shasum -a 256` over the five Gate 5 QA files and `wc -l` over new source,
+  tests, and skill files — passed; hashes and paths are recorded below.
 
 ### Gate oracle and integrity checks
 
-- `npm run verify:gate -- 4` — **passed**. `npm ci`, build, lint, typecheck, 4
-  foundation tests, both skill validations, CI validation, 11 contract tests,
-  15 report tests, 10 browser/renderer tests, and 7 review tests passed with 0
-  skipped and 0 todo.
-- `node scripts/verify-gate.mjs 5` — failed as required with `Gate 5 is not
-  implemented: missing package scripts test:library.`
-- `git status --short --branch && git diff --check && npm audit --omit=dev &&
-  rg -n --glob '!node_modules/**' --glob '!.npm-cache/**' --glob '!dist/**'
-  --glob '!tmp/**' '(--passWithNoTests|\|\| true|test\.skip|it\.todo|describe\.skip|continue-on-error:\s*true|process\.exit\(0\))' .`
-  — passed; zero runtime vulnerabilities, no whitespace errors, and only the
-  existing prohibition/ledger prose hits outside test and verifier code.
-- `git status --short`, `git diff --check`, `git diff --stat`, targeted `git
-  diff`, `wc -l src/review/*.ts tests/review/*.test.mjs`, and a read-only
-  `git diff --no-index /dev/null src/review/feedback.ts || true` inspection —
-  passed; the last command neutralized only `git diff --no-index`'s expected
-  difference status and was not part of any test or verifier.
-- `git diff --check && git status --short --ignored && git diff --stat && git
-  diff --name-only && git remote -v && git tag --list` — passed; no whitespace
-  errors, only expected source/status changes plus ignored local build/QA state,
-  and no remote or tag.
+- `git diff -- package.json package-lock.json
+  tests/foundation/foundation.test.mjs` — passed inspection: only the substantive
+  suite, runtime YAML classification, and correctly re-pointed tripwire changed.
+- `rg -n 'test\.skip|it\.todo|describe\.skip|--passWithNoTests|\|\| true|
+  continue-on-error:\s*true|process\.exit\(0\)' .` with dependency/build/QA
+  excludes plus `git diff --check` — passed; only pre-existing prohibition and
+  historical status prose hits, with zero suppressions in test or verifier code.
+- `npm run verify:gate -- 5` — **passed** cumulatively. `npm ci`, build, lint,
+  typecheck, 4 foundation tests, both skill validations, CI validation, 11
+  contract tests, 15 report tests, 10 browser tests, 7 review tests, and the
+  final 14 library tests passed with 0 failures, 0 skipped, and 0 todo.
+- `node scripts/verify-gate.mjs 6` — failed as required with `Gate 6 is not
+  implemented: missing package scripts test:recall.`
+- Final `git diff --check`, green-washing scan, boundary/status inspection,
+  `npm audit --omit=dev`, and clean-tree check after commit — passed; no remote
+  or tag exists and the committed worktree is clean.
 
-## Artifacts and visual evidence
+## Artifacts and evidence
 
-Local QA artifacts are intentionally ignored by Git but remain in this
-workspace for the immediate reviewing agent:
+Durable executable evidence is committed under `tests/library/`. Supplementary
+manual QA is ignored by Git and remains for the reviewing agent at
+`tmp/gate5-qa/ProgressBrief-Library/`:
 
-- Clean report: `tmp/gate4-qa/clean-report.html`
-  (`3c1188e833955ba7cb790df05bd369ba357d6c02cbd5a720161e94c62caea908`),
-  byte-identical to the independently audited Gate 3 clean report hash.
-- Selected-text desktop review at 1440 × 900:
-  `tmp/gate4-qa/review-selected-1440x900.png`
-  (`bcca6d58a48d9d42644dee69d8093337f8e0491fd313fc0911d16549a6518728`).
-- Full mobile review at 390 × 844 viewport width:
-  `tmp/gate4-qa/review-mobile-390x844-full.png`
-  (`721841a1e2a245d286bd6de73f4127f06d7aa2ac16371373f35f4d4309752a99`).
-- Source model and reproducible generator:
-  `tmp/gate4-qa/source-model.json` and `tmp/gate4-qa/generate.mjs`.
-
-The durable executable evidence is committed under `tests/review/`; the ignored
-screenshots are supplementary human visual-review evidence, not oracle inputs.
+- `config/library.json` —
+  `342705e36fa9e8a1efae31dd82db99201371c4c6a8386fcf0b5ea998427c7908`.
+- `config/mutation-journal.json` —
+  `811a47403bed6191c29c78df254e56d1aa3b12bf7e99e79b77220f61ee92dec8`.
+- `workspaces/northstar-systems/workspace.md` —
+  `c9835f16a2d032433b34359b291e7ce0a21795216874326f233f6cc21867c6a4`.
+- `workspaces/northstar-systems/worklog/2026/2026-08.md` —
+  `ea1dec48a032b57a92b64ca50759546fcdd27f8f8f3064dbe00f354194495ce4`.
+- `workspaces/northstar-systems/knowledge/knw_ecf506f5-c2f3-49ee-9d40-f15d2946e555.md`
+  — `acdd80d6dc4d4566b925d79c7c00be988e7f15f6ec127859cdeb42afc23379f4`.
 
 ## Judgment for review
 
-- Kept the clean report byte-identical and placed all review JavaScript and
-  controls in a nonce-protected same-origin wrapper around an iframe. This makes
-  review-material exclusion structural rather than a later sanitization step.
-- Used `127.0.0.1` with port `0` for a kernel-assigned port and a fresh 32-byte
-  random token per session. Query-token support is necessary for native
-  `EventSource`; state-changing requests also send a bearer token and require an
-  exact same-origin header.
-- Required an explicit allowed root and resolved real paths before listening.
-  The server exposes fixed report-ID routes only and never accepts a requested
-  filesystem path.
-- Canonicalized the complete component plus its linked visualization before
-  hashing, so key order does not create false conflicts and visual content
-  changes invalidate targets even when the component's display ID is stable.
-- Limited the deterministic inline correction helper to one unique literal
-  selection in a component heading, body, or list item. Ambiguous, visual, or
-  stale changes remain agent-mediated annotations and fail closed instead of
-  risking an unintended replacement.
-- Used an in-process serialization tail plus sibling-file flush and atomic
-  rename for the queue. This is sufficient for the single review server writer;
-  Work Library bounded locks and multi-process persistence remain Gate 5.
-- Displayed creator-only absolute paths in the explicit host invocation because
-  the active local agent needs exact locations. Structural tests prove those
-  paths and invocations never enter the finalized artifact.
-- Implemented the portable ADR-0005 queue handoff only. No one-click control of
-  an active Codex or Claude Code session was inferred or added.
-- Used native controls and a compact two-column/stacked layout; real keyboard,
-  axe, desktop, and mobile checks cover the authoring surface.
+- Used the operative whole-gate instruction over the runbook snapshot's older
+  one-obligation wording, consistent with the Gate 2 audit's F7 resolution.
+- Promoted the already-installed ISC-licensed `yaml` parser from development to
+  runtime so Markdown frontmatter is standards-compliant and safely parsed. A
+  hand-written YAML subset would create more persistence and security risk.
+- Chose one library-wide cross-process lock rather than per-Workspace locks.
+  Workspace writes are infrequent, while the config and mutation journal are
+  shared; global serialization gives a smaller corruption surface and a clear
+  bounded retry contract.
+- Used a prepared journal entry before content changes and a committed state
+  afterward. Dead PID detection removes only a lock whose recorded process is
+  gone; the next lock holder restores every `before` image from prepared
+  mutations before doing new work.
+- Kept fault injection and raw mutation primitives out of the package root API.
+  Acceptance helpers import compiled internal modules directly to prove a real
+  killed-writer recovery without exposing crash controls to product callers.
+- Made exact-repeat and automatic enrichment deterministic. Relatedness and
+  supersession require an explicit target/action from the active agent because
+  similar wording alone must never cause a merge or rewrite.
+- Used a small conservative classifier for the documented immediate examples;
+  the memory skill remains responsible for contextual semantic judgment. An
+  unmarked, non-durable fragment defaults to Worklog, and consequential
+  destination or Workspace ambiguity remains an agent question.
+- Stored the Workspace path map and mutation journal as the contract-permitted
+  small JSON machine state. Workspace, Worklog, and Knowledge content remains
+  visible Markdown and is schema-validated on every serializer/parser boundary.
+- Resolved local repository paths with `realpath` and invoked `git` with an
+  argument array. A discovered non-GitHub remote is omitted rather than blocking
+  local association; an explicitly supplied unsupported canonical remote fails
+  instead of being guessed into the GitHub-only schema.
+- Did not touch the renderer or review system. Gate 3/4 browser suites were
+  rerun, but generating new HTML or screenshots would not add evidence for this
+  persistence-only gate.
 
 ## Unresolved risks and next gate
 
-- File watching and Chromium proof are from the current native macOS
-  environment. Cross-platform clean-host behavior remains Gate 9.
-- `fs.watch` may coalesce multiple rapid writes, but any selected model or HTML
-  change sends a reload event and the browser reconnects automatically.
-- Clipboard access depends on browser permission. The exact invocation remains
-  visibly selectable when permission is unavailable, preserving the explicit
-  handoff contract.
-- Queue serialization covers concurrent requests inside one review-server
-  process. Multiple independent servers must not target the same queue; a
-  multi-process lock is not claimed.
-- Automatic active-session control remains intentionally outside the portable
-  V1 contract.
+- The Capture classifier is deliberately small and English-focused; natural
+  context interpretation is a skill/agent responsibility. Gate 5 proves the
+  canonical examples and safe destination behavior, not a standalone NLP model.
+- Lock ownership uses PID liveness, which is appropriate for supported local
+  hosts but cannot distinguish the extremely unlikely case of PID reuse after a
+  crash. The bounded timeout remains the fail-safe.
+- The mutation journal stores full prior Markdown for reliable undo. Very large
+  long-lived libraries may eventually need journal compaction, but no data is
+  opaque and V1 has no background compactor requirement.
+- Generated source IDs identify the active user fragment when no external source
+  was supplied. Gate 6 must decide how Recall presents conversational captures
+  versus resolvable file/URL source links without inventing a locator.
+- Cross-platform behavior is exercised only on the current native macOS host.
+  Native Linux and WSL2 clean-host proof, including lock/PID/filesystem behavior,
+  remains Gate 9.
+- Carried audit items remain: feedback-queue concurrency is per review-server
+  process (F13), `fs.watch` portability (F14), five visualization families lack
+  screenshot baselines (F11), and the Gate 10 path/secret, `.npmrc`, package
+  privacy, dependency/license, and release reviews remain outstanding.
 
-**Commit intent:** `feat: implement Gate 4 creator review loop`.
+**Commit intent:** `feat: implement Gate 5 Work Library persistence`.
 
-**Next gate:** Gate 5 — Memory skill and persistence. Begin with failing
-`test:library` acceptance coverage for first-use setup, Workspace/repository
-association, Capture/Remember classification, search-before-write behavior,
-atomic and locked mutations, undo, traversal and symlink rejection, archived
-Workspace exclusion, concurrent/interrupted writes, and cross-Workspace
-isolation. Do not begin Gate 6.
+**Next gate:** Gate 6 — Recall. Begin with failing `test:recall` coverage for
+portable lexical retrieval across path/frontmatter/title/heading/body fields;
+Workspace, project, time, topic, and visibility filters; query expansion and
+agent reranking; concise grounded answers with note/source links; stale and
+superseded conflicts; ambiguous Workspace selection; archived exclusion; and
+no-result behavior. Do not begin Gate 7.

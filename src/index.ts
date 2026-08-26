@@ -86,6 +86,28 @@ export type {
   ResolvedReportRequest,
   StructureResolution,
 } from "./report/types.js";
+export {
+  captureMemory,
+  classifyMemoryRequest,
+  readKnowledgeNotes,
+  readWorklogEntries,
+} from "./library/capture.js";
+export {
+  initializeWorkLibrary,
+  listActiveWorkspaces,
+  loadWorkspace,
+  setWorkspaceArchived,
+  undoLastMutation,
+} from "./library/workspace.js";
+export type {
+  CaptureClassification,
+  CaptureMemoryOptions,
+  CaptureMemoryResult,
+  KnowledgeNote,
+  KnowledgeResolution,
+  WorklogEntry,
+  WorkspaceDocument,
+} from "./library/types.js";
 
 export function assertSupportedNode(version = process.versions.node): void {
   const major = Number.parseInt(version.split(".")[0] ?? "", 10);
