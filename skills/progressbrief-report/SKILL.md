@@ -31,6 +31,13 @@ implications, separate attention and asks from movement, and keep next-period
 priorities explicit. Record material omissions in creator-only generation
 metadata instead of adding uncertainty boilerplate to the report.
 
+For a Deep Dive, keep the selected project or body of work explicit and let the
+purpose drive the structure. Use greater source depth where it changes the
+decision or interpretation. Plan at least one subject-appropriate visual and
+place claim evidence in the relevant section so reading view can expose the
+detail without overloading presentation view. Do not stretch the Snapshot
+backbone into a Deep Dive.
+
 Validate the source model against the versioned report contract and semantic
 reference checks. Treat the committed golden model as a deterministic renderer
 fixture, not as a wording template for new reports.
@@ -63,7 +70,9 @@ and controls out of the clean artifact.
 
 Check the repository's `docs/implementation/status.md` before invoking the
 companion CLI. Do not claim that a later-gate workflow is available when its
-gate is not recorded as passing. Gate 4 supports the Snapshot source model,
-deterministic clean HTML, browser inspection, creator feedback queues, explicit
-Codex and Claude Code handoffs, conflict detection, and live reload. Do not
-claim Work Library persistence or later-gate workflows are implemented.
+gate is not recorded as passing. Gate 7 supports Snapshot and Deep Dive source
+models through one report schema and renderer, deterministic clean HTML,
+browser inspection, creator feedback queues, explicit Codex and Claude Code
+handoffs, conflict detection, and live reload. Work Library persistence and
+Recall are available through `progressbrief-memory`; Curate, clean-host
+installation proof, and release proof remain later gates.

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0.0",
+  "mode": "deep-dive",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "selectedProjectIds": [
+    "prj_20000000-0000-4000-8000-000000000002"
+  ],
+  "audience": "Engineering and operations reviewers",
+  "purpose": "Explain why checkpoint batching was selected, how it changed replay behavior, and what must be validated before paging is enabled.",
+  "reportingPeriod": {
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "label": "Checkpoint-batch decision and validation"
+  },
+  "sections": [
+    {
+      "key": "problem",
+      "role": "context",
+      "title": "The problem to solve",
+      "summary": "A 50,000-record replay exceeded the operations window at the recorded 18-minute baseline.",
+      "claimKeys": ["operations-window"],
+      "projectIds": ["prj_20000000-0000-4000-8000-000000000002"]
+    },
+    {
+      "key": "decision",
+      "role": "decision-path",
+      "title": "Decision and implementation",
+      "summary": "Bounded checkpoint batches were selected and merged with focused tests and benchmark checks.",
+      "claimKeys": ["checkpoint-decision", "merged-implementation"],
+      "projectIds": ["prj_20000000-0000-4000-8000-000000000002"]
+    },
+    {
+      "key": "validation",
+      "role": "validation",
+      "title": "Measured result",
+      "summary": "The recorded replay completed in 6 minutes, a 12-minute reduction from baseline.",
+      "claimKeys": ["measured-result"],
+      "projectIds": ["prj_20000000-0000-4000-8000-000000000002"]
+    },
+    {
+      "key": "implications",
+      "role": "implications",
+      "title": "Operational implications",
+      "summary": "Replay-safe staging preserves comparison quality, while alert thresholds remain the next validation boundary.",
+      "claimKeys": ["replay-safety", "threshold-validation"],
+      "projectIds": ["prj_20000000-0000-4000-8000-000000000002"]
+    }
+  ],
+  "claims": [
+    {
+      "key": "operations-window",
+      "kind": "blocker",
+      "statement": "The recorded 50,000-record replay took 18 minutes and exceeded the operations window.",
+      "implication": "Replay duration was an operational constraint, not a cosmetic performance concern.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000003",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "key": "checkpoint-decision",
+      "kind": "decision",
+      "statement": "The implementation uses bounded checkpoint batches during replay.",
+      "implication": "Bounded batches reduce replay time while retaining explicit progress checkpoints.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "key": "merged-implementation",
+      "kind": "outcome",
+      "statement": "The checkpoint implementation merged with focused tests and successful benchmark checks.",
+      "implication": "The reported outcome includes reviewed implementation and recorded validation, not activity alone.",
+      "consequential": true,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000004"]
+    },
+    {
+      "key": "measured-result",
+      "kind": "outcome",
+      "statement": "Checkpoint batching reduced the recorded replay from 18 minutes to 6 minutes.",
+      "implication": "The 12-minute reduction brings the synthetic replay back inside the stated operations window.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000003",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "key": "replay-safety",
+      "kind": "learning",
+      "statement": "Staging load tests use replay-safe mode so duplicate callbacks do not invalidate comparisons.",
+      "implication": "The operating constraint explains why the before-and-after benchmark remains comparable.",
+      "consequential": false,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000001"]
+    },
+    {
+      "key": "threshold-validation",
+      "kind": "priority",
+      "statement": "Alert thresholds must be validated against replay spikes before paging is enabled.",
+      "implication": "Threshold validation prevents synthetic replay behavior from creating noisy operational alerts.",
+      "consequential": true,
+      "sourceIds": ["src_30000000-0000-4000-8000-000000000001"]
+    }
+  ]
+}

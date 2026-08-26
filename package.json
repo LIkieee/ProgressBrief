@@ -25,6 +25,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run test:foundation",
     "test:contracts": "npm run build --silent && node --test tests/contracts/*.test.mjs",
+    "test:deep-dive": "npm run build --silent && node --test --test-concurrency=1 tests/deep-dive/*.test.mjs",
     "test:browser": "npm run build --silent && node --test --test-concurrency=1 tests/browser/*.test.mjs",
     "test:foundation": "npm run build --silent && node --test tests/foundation/*.test.mjs",
     "test:library": "npm run build --silent && node --test --test-concurrency=1 tests/library/*.test.mjs",

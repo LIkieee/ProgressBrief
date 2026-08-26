@@ -1,269 +1,311 @@
 # ProgressBrief implementation status
 
-**Current state:** Gate 6 — Recall passes. Gates 0–6 are implemented
-cumulatively in the commit containing this status update. Gates 7–10 remain
-unimplemented; Gate 7 fails honestly because `test:deep-dive` is absent.
+**Current state:** Gate 7 — Deep Dive passes. Gates 0–7 are implemented
+cumulatively in the commit containing this status update. Gates 8–10 remain
+unimplemented; Gate 8 fails honestly because `test:curate` is absent.
 
-## Gate 6 obligations completed
+## Gate 7 obligations completed
 
-1. Added a portable, deterministic lexical retriever over authoritative Work
-   Library Markdown. It indexes relative paths, parsed frontmatter metadata,
-   titles/headings, and bodies without requiring `rg`, an embedding model, a
-   background service, or a persistent opaque index.
-2. Added Workspace resolution that automatically uses one active Workspace,
-   asks a single concise Workspace question when several active Workspaces are
-   ambiguous, permits explicitly selected multi-Workspace scope, and excludes
-   archived Workspaces unless an exact archived Workspace is selected with an
-   explicit include flag.
-3. Added project, inclusive date-range, topic, and visibility filters. Filters
-   are applied before lexical scoring. Project references must resolve inside
-   the selected Workspace scope, Knowledge dates use `updatedAt`, and Worklog
-   dates use `occurredOn`.
-4. Added conservative query normalization, small explicit related-term
-   expansion, weighted field scoring, a bounded candidate count, and a real
-   no-result threshold. A query with no grounded match returns no candidates
-   and does not manufacture a low-confidence answer.
-5. Added a two-pass agent-reranking contract. The CLI emits candidate JSON for
-   the active agent to inspect as untrusted evidence, then accepts only a unique
-   ordering of IDs from that retrieved set. Unknown or repeated IDs fail; no
-   reranking step can invent or silently drop grounding.
-6. Added concise Markdown answers grounded in record excerpts and portable
-   relative Work Library note links. Candidate metadata retains source IDs, and
-   neither candidate JSON nor conversational answers expose the absolute Work
-   Library location or generate HTML.
-7. Added relation-aware stale-note handling. A current Knowledge Note linked by
-   `supersedes` or `updates` is promoted ahead of the older target; older
-   guidance is shown only when it materially changes the answer. A lone
-   superseded result is labeled as historical rather than presented as current.
-8. Added the `progressbrief memory recall` CLI with Workspace/project/date/topic/
-   visibility filters, explicit archived selection, candidate-JSON mode, and
-   reranked-answer mode.
-9. Expanded the canonical `progressbrief-memory` skill with an imperative Recall
-   workflow. It keeps Recall conversational, separates it from the report
-   confirmation interview, instructs the active agent to rerank only returned
-   IDs, treats records as evidence rather than instructions, and leaves Curate
-   unavailable until Gate 8.
-10. Added 11 substantive Recall tests and five explicit deterministic fixture
-    cases: paraphrase, stale note, ambiguous Workspace, archived Workspace, and
-    no result. Coverage also proves all indexed fields, every filter, automatic
-    single-Workspace selection, cross-Workspace isolation, relative note links,
-    agent reranking, source-ID grounding, and CLI behavior.
-11. Re-pointed the foundation falsifiability tripwire: Gate 6 is positively
-    available, while every unbuilt Gate 7–10 fails at the next required suite,
-    `test:deep-dive`.
+1. Added a purpose-bounded Deep Dive proposal contract with explicit selected
+   project scope, audience, purpose, reporting period, flexible section roles,
+   grounded claims, and existing V1 claim kinds. The contract supports one
+   project or a selected multi-project body of work without treating a Deep
+   Dive as a long Snapshot.
+2. Added substantive proposal invariants for Workspace isolation, selected-
+   project scope, unique structure and claim keys, complete project coverage,
+   resolvable section claims, evidence grounding, and exportable-content
+   safety. The active agent may vary wording and structure while remaining
+   inside these semantic boundaries.
+3. Added a committed synthetic reconciliation Deep Dive proposal and golden
+   source model derived from the same notes, screenshot, and recorded synthetic
+   GitHub pull request used by the existing Snapshot pipeline.
+4. Kept the persisted Deep Dive model on the existing
+   `report.schema.json`, evidence bundle, semantic validator, export projection,
+   stable IDs, renderer, visual primitives, and creator review path. No
+   Deep-Dive-specific schema or renderer fork was introduced.
+5. Added greater evidence depth: the measured result is corroborated by three
+   source types, claim-to-source relationships stay structural, and the
+   recorded pull-request source is summarized at the issue, implementation,
+   tests, review, merge, and benchmark-check level available in the fixture.
+6. Added a two-visual composition through existing visual families: a timeline
+   communicates the decision path and a quantitative chart communicates replay
+   duration. Both retain text/table equivalents and valid replacement options.
+7. Added Deep-Dive-specific reading behavior inside the shared renderer.
+   Section-local claim context resolves public evidence labels from source IDs,
+   is expanded by default in reading view, and is hidden by the existing
+   presentation-view control. Snapshot output remains byte-identical to the
+   audited Gate 3 hash.
+8. Expanded `progressbrief-report` instructions with purpose-led structure,
+   selected-scope validation, corroboration, visual selection, and evidence-
+   placement rules. Updated capability boundaries so the skill does not claim
+   Curate, clean-host installation proof, or release proof.
+9. Added seven substantive Gate 7 tests covering explicit mode/purpose
+   resolution, flexible structure, scope and grounding negatives, shared-schema
+   export, deterministic shared rendering, Snapshot non-regression, two visual
+   families, greater source depth, required viewports, zero network requests,
+   reading/presentation behavior, and automated accessibility.
+10. Re-pointed the foundation falsifiability tripwire: Gate 7 is positively
+    available, while every unbuilt Gate 8–10 fails at the next normative suite,
+    `test:curate`.
 
 ## Files changed
 
-- `src/library/recall.ts`: portable scanning, indexing, filtering, query
-  expansion, scoring, relation-aware ordering, strict reranking, and concise
-  answer composition.
-- `src/index.ts`: exports the supported Recall API and types.
-- `src/cli/main.ts`: exposes `memory recall`, candidate JSON, filters, archived
-  opt-in, and reranked answers.
-- `skills/progressbrief-memory/SKILL.md` and
-  `skills/progressbrief-memory/references/recall-workflow.md`: define the
-  implemented Recall trigger boundary and two-pass active-agent workflow.
-- `fixtures/recall/cases.json`: names and supplies the five runbook-required
-  Recall cases.
-- `tests/recall/helpers/recall-fixture.mjs`: materializes three real Workspaces,
-  two projects, Knowledge/Worklog records, a nested Markdown path, visibility
-  variants, supersession, and an archived Workspace.
-- `tests/recall/retrieval.test.mjs`,
-  `tests/recall/filters-and-rerank.test.mjs`,
-  `tests/recall/boundaries-and-stale.test.mjs`, and
-  `tests/recall/cli.test.mjs`: 11 substantive Gate 6 acceptance tests.
-- `package.json`: adds the real `test:recall` runner. The dependency graph did
-  not change, so `package-lock.json` did not require an edit.
-- `tests/foundation/foundation.test.mjs`: positively asserts Gate 6 and requires
-  every future gate to fail at `test:deep-dive`.
-- `README.md`: records the Gate 6 boundary, verifier, command, and two-pass
-  Recall behavior.
+- `src/report/deep-dive-invariants.ts`: validates purpose-bounded Deep Dive
+  proposals against existing evidence and selected project scope.
+- `src/report/types.ts`: adds Deep Dive section roles and proposal types while
+  retaining the shared report-mode and structure types.
+- `src/renderer/render-report.ts`: adds mode-conditional section-local claim
+  evidence in reading view through the existing renderer.
+- `src/index.ts`: exports the Deep Dive proposal validator and proposal type.
+- `fixtures/deep-dive-reconciliation/agent-report-proposal.json`: committed
+  evidence-led proposal.
+- `fixtures/deep-dive-reconciliation/golden-report-model.json`: committed,
+  schema-valid source model with two visualizations and deeper claim evidence.
+- `fixtures/deep-dive-reconciliation/README.md`: records provenance and the
+  shared-contract/shared-renderer boundary.
+- `tests/deep-dive/flow.test.mjs`: purpose, scope, negative invariant, schema,
+  semantic, and export coverage.
+- `tests/deep-dive/rendering.test.mjs`: deterministic composition, exact
+  Snapshot hash, viewport, offline, view behavior, and accessibility coverage.
+- `package.json`: adds the real `test:deep-dive` runner. The dependency graph
+  did not change, so `package-lock.json` did not require an edit.
+- `tests/foundation/foundation.test.mjs`: positively asserts Gate 7 and requires
+  every future gate to fail at `test:curate`.
+- `skills/progressbrief-report/SKILL.md` and
+  `skills/progressbrief-report/references/report-workflow.md`: define the
+  implemented Deep Dive workflow and boundary.
+- `README.md`: records Gate 7 capability, verifier, and suite.
 - `docs/implementation/status.md`: this standalone handoff.
 
-No report schema, renderer, review path, Work Library mutation behavior,
+No persistent schema, Snapshot fixture, Work Library behavior, review server,
 workspace-level snapshot, canonical history, or `supervisor/` file was
-modified. Rendering did not change, so no new HTML or screenshot inspection was
-required; the cumulative browser suite regenerated and checked the existing
-renderer evidence.
+modified. The renderer change is conditional on `mode: "deep-dive"`; the
+audited Snapshot output hash remains
+`3c1188e833955ba7cb790df05bd369ba357d6c02cbd5a720161e94c62caea908`.
 
 ## Command and result ledger
 
 ### Required source, recovery, and audit inspection
 
-- `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g
-  'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'status.md' -g
-  'AUDIT-*.md' -g '*.md' docs/adr supervisor
-  progressbrief/docs/implementation outputs . 2>/dev/null | sort -u` — passed;
-  located every authoritative source, six prior audits, and the repository
-  status.
-- Parallel `wc -l` calls over the PRD, context, implementation contract,
-  runbook, six ADRs, status, all six `AUDIT-gate*.md` files, and supervisor
-  handoff files — passed; established complete-read bounds.
-- Parallel bounded `sed` reads covering PRD lines 1–647 plus complete
-  `CONTEXT.md` — passed; the product requirements and all 18 acceptance
-  criteria were read completely.
-- Bounded reads covering implementation-contract lines 1–280 plus complete
-  `LOOP_RUNBOOK.md` and all six workspace ADRs — passed; Gate 6 obligations,
-  normative oracle mapping, and delegated choices were confirmed.
-- Complete reads of `progressbrief/docs/implementation/status.md` and
-  `supervisor/AUDIT-gate0.md` through `supervisor/AUDIT-gate5.md` — passed. The
-  latest verdict was Gate 5 PASS with no required changes; its five-case Recall
-  requirement, real no-result warning, suite-substance check, and hand-read
-  tripwire warning were carried forward.
-- `git status --short --branch && git log --oneline --decorate -8 && find ..
-  -name AGENTS.md -print && rg --files | sort` — passed; no `AGENTS.md`, clean
-  Gate 5 commit `6ddabee`, and expected repository contents.
-- Parallel `wc -l`, complete `cat`, and bounded `sed` reads over `package.json`,
-  TypeScript/ESLint configuration, verifier scripts, foundation tripwire,
-  public API, CLI, Work Library types/workspace/capture/Markdown/persistence/
-  paths, memory skill and references, Work Library schemas and fixture records,
-  plus all 14 Gate 5 test bodies — passed; established the exact Recall
-  extension boundary before editing.
-- `node scripts/verify-gate.mjs 6` before implementation — failed as required:
-  `Gate 6 is not implemented: missing package scripts test:recall.`
+- `pwd && rg --files -g 'AGENTS.md' -g '!progressbrief/node_modules' -g
+  '!progressbrief/.git' . && find docs/adr supervisor -maxdepth 1 -type f
+  -print | sort && git -C progressbrief status --short --branch 2>/dev/null ||
+  true` — the initial chained discovery stopped after `rg` found no
+  `AGENTS.md`; `pwd` confirmed the workspace root. No state changed.
+- `find . -maxdepth 4 -type f -print` — passed; located the implementation
+  repository, six ADRs, status, and audits through Gate 6.
+- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md
+  docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md
+  progressbrief/docs/implementation/status.md supervisor/AUDIT-*.md
+  supervisor/PROGRESS.md supervisor/HALT.md` — passed; established complete-
+  read bounds.
+- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p'
+  outputs/PROGRESSBRIEF_PRD.md`, and `sed -n '441,647p'
+  outputs/PROGRESSBRIEF_PRD.md` — passed; read the PRD and all 18 acceptance
+  criteria completely.
+- `cat CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md
+  docs/adr/*.md` — passed; read the canonical language, locked defaults,
+  normative gate mapping, Gate 7 exit conditions, and all accepted trade-offs.
+- `cat supervisor/AUDIT-gate0.md supervisor/AUDIT-gate1.md
+  supervisor/AUDIT-gate2.md supervisor/AUDIT-gate3.md
+  supervisor/AUDIT-gate4.md supervisor/AUDIT-gate5.md
+  supervisor/AUDIT-gate6.md` — completed with output truncation in the combined
+  view; follow-up individual reads covered the truncated audits.
+- `cat supervisor/AUDIT-gate1.md` and parallel `cat
+  supervisor/AUDIT-gate2.md` / `cat supervisor/AUDIT-gate3.md` — passed. Gate
+  0 and Gates 4–6 were complete in the combined read; all prior audits were
+  therefore read completely. The latest verdict was Gate 6 PASS with no
+  required changes and an explicit instruction to preserve the shared schema,
+  renderer, and Snapshot hash.
+- `cat progressbrief/docs/implementation/status.md` — passed; confirmed Gate 6
+  complete, Gate 7 next, and no recovery work.
+- Parallel `git status --short --branch`, `git log --oneline --decorate -10`,
+  and `find .. -name AGENTS.md -print` in the repository — passed; the tree was
+  clean at audited commit `8cb14c5`, and no `AGENTS.md` applied.
+- `wc -l package.json schemas/report.schema.json schemas/evidence.schema.json
+  fixtures/snapshot-three-workstreams/golden-report-model.json src/report/*.ts
+  src/renderer/*.ts src/contracts/*.ts skills/progressbrief-report/SKILL.md
+  skills/progressbrief-report/references/*.md tests/report/*.test.mjs
+  tests/browser/*.test.mjs tests/foundation/foundation.test.mjs src/index.ts` —
+  passed; bounded the relevant implementation surface.
+- `cat package.json src/report/types.ts src/report/resolution.ts
+  src/report/structure.ts src/report/confirmation.ts` and `cat
+  schemas/report.schema.json schemas/evidence.schema.json
+  src/contracts/types.ts src/contracts/report-semantics.ts
+  src/contracts/export-projection.ts src/contracts/schema-validator.ts
+  src/contracts/revisions.ts src/contracts/ids.ts` — passed; read the report
+  request and persisted-contract surfaces.
+- `cat src/renderer/render-report.ts src/renderer/visualizations.ts
+  src/renderer/assets.ts src/renderer/html.ts`, `cat
+  skills/progressbrief-report/SKILL.md
+  skills/progressbrief-report/references/product-boundary.md
+  skills/progressbrief-report/references/report-workflow.md src/index.ts`, and
+  `cat tests/report/confirmation-and-structure.test.mjs
+  tests/report/golden-snapshot.test.mjs
+  tests/report/proposal-invariants.test.mjs tests/report/resolution.test.mjs
+  tests/browser/browser.test.mjs tests/browser/renderer.test.mjs
+  tests/foundation/foundation.test.mjs` — completed; output truncation in the
+  grouped view was followed by the targeted complete reads below.
+- `cat fixtures/snapshot-three-workstreams/golden-report-model.json`, `cat
+  src/renderer/visualizations.ts`, and `cat src/index.ts
+  skills/progressbrief-report/SKILL.md
+  skills/progressbrief-report/references/report-workflow.md
+  skills/progressbrief-report/references/product-boundary.md` — passed;
+  completely read the shared model, visual primitives, public API, and skill.
+- `cat fixtures/snapshot-three-workstreams/input/github/pr-184.json
+  fixtures/snapshot-three-workstreams/input/project-brief.md
+  fixtures/snapshot-three-workstreams/evidence.json
+  fixtures/snapshot-three-workstreams/agent-report-proposal.json` and `cat
+  src/report/proposal-invariants.ts` — passed; completely read the reusable
+  evidence/proposal fixtures and invariant pattern.
+- `find fixtures/snapshot-three-workstreams -maxdepth 4 -type f -print` —
+  passed; confirmed the exact source and fixture material available for reuse.
 
 ### Test-first implementation and focused repair
 
-- `npm run test:recall` immediately after adding the fixture and acceptance
-  files — failed as intended: 0/4 test files loaded because
-  `recallFromLibrary` was not exported, and the CLI rejected the unknown
-  `recall` action.
-- `npm run build` after the initial portable retriever/API implementation —
-  passed.
-- `npm run build && npm run test:recall` after the first CLI implementation —
-  failed during TypeScript build because `Visibility` was not exported and two
-  optional dates could carry `undefined`. Both were corrected without weakening
-  types.
-- `npm run build && npm run test:recall` after the type repair — build passed;
-  9/10 Recall tests passed. The remaining failure correctly showed that an
-  August shareable Knowledge Note matched the broad August filter intended for
-  a July Worklog negative. The test was sharpened with the intended `internal`
-  visibility constraint rather than changing search behavior.
-- `npm run test:recall` after the filter-test repair — passed 10/10 with 0
-  failures, 0 skipped, and 0 todo.
-- Complete reads of `README.md`, the memory skill, the foundation tripwire, and
-  the implementation diff — passed; established the documentation and
-  falsifiability edits.
-- `npm run lint && npm run typecheck && npm run test:foundation && npm run
-  test:recall && npm run validate:skills` — lint failed on one unused type
-  import in the new retriever. The import was removed; no suppression was
-  added.
-- The same focused command after that repair — passed: lint, strict typecheck,
-  4 foundation tests, 10 Recall tests, and both skill validations.
-- `npm run test:recall` after strengthening automatic single-Workspace
-  selection and absolute-path non-disclosure assertions — passed 10/10 with 0
-  failures, 0 skipped, and 0 todo.
-- A final complete read of `src/library/recall.ts`, the CLI, skill workflow, and
-  tripwire exposed a valid-schema supersession cycle that could make repeated
-  ordering oscillate. The reorderer was replaced with stable topological
-  ordering, relationship-successor expansion was made transitive, and a real
-  cyclic-note negative was added.
-- `npm run lint && npm run typecheck && npm run test:recall` after the cycle
-  repair — passed: lint, strict typecheck, and 11/11 Recall tests with 0 skipped
-  and 0 todo.
+- `npm run test:deep-dive` after adding the fixture, runner, and acceptance
+  tests — failed as intended: the production export
+  `validateDeepDiveProposal` did not exist and the renderer produced zero
+  section-local Deep Dive evidence containers. Two independent rendering
+  assertions already passed, proving the test harness was live.
+- `npm run test:deep-dive` after adding proposal types/invariants, the export,
+  and mode-conditional evidence rendering — 6/7 passed. The remaining failure
+  was a test wording mismatch (`18 minutes` versus the fixture's adjective
+  `18-minute`), not an implementation defect.
+- `npm run test:deep-dive` after making that assertion accept the two
+  grammatically equivalent forms — passed 7/7 with 0 failures, 0 skipped, and
+  0 todo.
+- `cat README.md tests/foundation/foundation.test.mjs
+  skills/progressbrief-report/SKILL.md
+  skills/progressbrief-report/references/report-workflow.md` — passed; grounded
+  the documentation, capability-boundary, and tripwire updates.
+- `npm run lint` — passed.
+- `npm run typecheck` — passed under strict TypeScript.
+- `npm run test:foundation` — passed 4/4 with the Gate 7 positive tripwire and
+  Gate 8–10 negative tripwire.
+- `git diff --check` — passed.
+- `git diff --stat`, `git status --short`, and a targeted `git diff -- ...`
+  over every modified tracked implementation file — passed; the diff remained
+  inside Gate 7 and no prior acceptance test was weakened.
+- `npm run build` — passed before manual rendering.
+- `node tmp/gate7-qa/generate.mjs` — passed; generated one HTML artifact and
+  three full-page screenshots from the committed model.
+- Visual inspection of `tmp/gate7-qa/presentation-1440x900.png`,
+  `tmp/gate7-qa/reading-1280x800.png`, and
+  `tmp/gate7-qa/mobile-390x844.png` at original resolution — passed; hierarchy,
+  timeline, quantitative chart, disclosures, claim evidence, and mobile
+  wrapping were legible with no clipping. The generator and outputs are ignored
+  QA artifacts and are not release inputs.
+- `npm run validate:skills` — passed for both canonical skills.
 
 ### Gate oracle and integrity checks
 
-- `npm run verify:gate -- 6` — **passed cumulatively**. `npm ci`, build, lint,
+- `npm run verify:gate -- 7` — **passed cumulatively**. `npm ci`, build, lint,
   typecheck, 4 foundation tests, both skill validations, local CI validation,
   11 contract tests, 15 report tests, 10 browser tests, 7 review tests, 14
-  library tests, and 10 Recall tests passed with 0 failures, 0 skipped, and 0
-  todo. Dependency installation reported zero vulnerabilities.
-- `git diff --check && npm run verify:gate -- 6` after the single-Workspace and
-  path non-disclosure strengthening — **passed cumulatively again** with the same
-  71 total tests across the seven substantive suites, 0 failures, 0 skipped,
-  and 0 todo.
-- `git diff --check && npm run verify:gate -- 6` after the topological-ordering
-  repair and cyclic-relation negative — **passed cumulatively on the final
-  implementation** with 72 total tests across the seven substantive suites, 0
-  failures, 0 skipped, and 0 todo.
-- `node scripts/verify-gate.mjs 7` — failed as required with `Gate 7 is not
-  implemented: missing package scripts test:deep-dive.`
-- `git status --short --branch && git diff --check && git diff --stat && rg -n
-  'test\.skip|it\.todo|describe\.skip|--passWithNoTests|\|\| true|
-  continue-on-error:\s*true|process\.exit\(0\)' ... && wc -l ...` — passed;
-  only the pre-existing prohibition in `CONTRIBUTING.md` matched, with no
-  suppression in verifier or test code. The memory skill remains 70 lines.
+  library tests, 11 Recall tests, and 7 Deep Dive tests passed: 79 substantive
+  tests total, 0 failures, 0 skipped, and 0 todo. Dependency installation
+  reported zero vulnerabilities.
+- `node scripts/verify-gate.mjs 8` — run twice to capture the explicit exit
+  code; both failed honestly with rc=1 and `Gate 8 is not implemented: missing
+  package scripts test:curate.`
+- `../supervisor/check-tripwire.sh 8` — passed: a real `assert.throws` loop
+  covers Gates 8–10 at `test:curate`, and Gate 7 has a positive
+  `doesNotThrow` assertion. The test body was also read directly.
+- `rg -n --glob '!node_modules/**' --glob '!dist/**' --glob
+  '!.npm-cache/**' --glob '!docs/implementation/status.md'
+  'test\.skip|it\.todo|describe\.skip|--passWithNoTests|\|\| true|continue-on-error:\s*true|process\.exit\(0\)'
+  .` — the only match was the pre-existing prohibition in `CONTRIBUTING.md`;
+  no verifier or test suppression exists.
 - `npm audit --omit=dev` — passed with zero runtime vulnerabilities.
+- Final parallel `cat schemas/report.schema.json`, `cat
+  src/report/deep-dive-invariants.ts tests/deep-dive/flow.test.mjs
+  tests/deep-dive/rendering.test.mjs`, and `cat
+  fixtures/deep-dive-reconciliation/agent-report-proposal.json
+  fixtures/deep-dive-reconciliation/golden-report-model.json
+  fixtures/deep-dive-reconciliation/README.md` — passed; re-read the shared
+  schema and every new production, acceptance, and fixture artifact before
+  commit preparation.
 
 ## Artifacts and evidence
 
-Durable evidence is committed and regenerated by the suite:
+Committed, reproducible evidence:
 
-- `fixtures/recall/cases.json` — exact five-case Recall manifest.
-- `tests/recall/retrieval.test.mjs` — field-native retrieval and paraphrase
-  expansion evidence.
-- `tests/recall/filters-and-rerank.test.mjs` — all filter dimensions and strict
-  agent-reranking evidence.
-- `tests/recall/boundaries-and-stale.test.mjs` — ambiguity, automatic selection,
-  archived exclusion/opt-in, Workspace isolation, stale guidance, and genuine
-  no-result evidence.
-- `tests/recall/cli.test.mjs` — candidate JSON, reranked answer, note link, and
-  absolute-path non-disclosure evidence.
+- `fixtures/deep-dive-reconciliation/agent-report-proposal.json` — purpose and
+  selected-scope proposal fixture.
+- `fixtures/deep-dive-reconciliation/golden-report-model.json` — shared-schema
+  Deep Dive source model.
+- `tests/deep-dive/flow.test.mjs` — proposal, scope, grounding, shared-schema,
+  semantic, and export evidence.
+- `tests/deep-dive/rendering.test.mjs` — deterministic shared renderer,
+  Snapshot hash, two-visual, source-depth, responsive/offline, view-mode, and
+  accessibility evidence.
 
-The tests create real Markdown Work Libraries under the operating system's
-temporary directory and inspect the public API/CLI. No network or live
-credential is used. No HTML artifact changed in Gate 6.
+Ignored manual QA artifacts in this workspace:
+
+- `tmp/gate7-qa/deep-dive.html`
+- `tmp/gate7-qa/presentation-1440x900.png`
+- `tmp/gate7-qa/reading-1280x800.png`
+- `tmp/gate7-qa/mobile-390x844.png`
+
+No network, live GitHub authentication, credential, or mutable external content
+is required to regenerate the committed evidence.
 
 ## Judgment for review
 
-- Used the operative whole-gate instruction over the runbook snapshot's older
-  one-obligation wording, consistent with the Gate 2 audit's F7 resolution.
-- Chose a disposable in-memory lexical index rebuilt from authoritative
-  Markdown on every Recall. V1 libraries are local and expected to be small;
-  this keeps retrieval portable and avoids new runtime dependencies or stale
-  machine state. The candidate limit is bounded at 50 and defaults to 12.
-- Weighted titles/headings and paths above bodies, with metadata between them.
-  At least one original term or two expanded terms must match and the record
-  must cross a score threshold, which preserves paraphrase recall without
-  making every query return an answer.
-- Kept query expansion deliberately explicit and small. The active agent, not
-  the lexical scorer, owns final semantic reranking; the two-pass ID allowlist
-  makes that judgment observable and prevents evidence injection.
-- Used `updatedAt` as a Knowledge Note's time-filter date and `occurredOn` for a
-  Worklog Entry. Durable knowledge is not an event; its latest meaningful
-  revision is the most useful interpretation of a Recall time filter.
-- Generated note links only from paths relative to the Work Library. Captured
-  records currently persist source IDs but not a dereferenceable source-locator
-  registry, so candidate metadata returns those IDs without inventing links.
-  The answer always links the supporting Markdown record and never exposes the
-  library's raw absolute path.
-- Treated `supersedes` and `updates` relationships as load-bearing current-over-
-  old signals. Agent reranking cannot put an older target ahead of its retrieved
-  successor, and unrelated current records remain independently rerankable.
-- Allowed explicit selection of multiple Workspaces because the PRD permits
-  cross-Workspace retrieval only when requested. An omitted selection never
-  crosses boundaries: one active Workspace is automatic; more than one yields
-  a clarification with zero candidates.
-- Did not touch the renderer. The full browser suite was rerun through the Gate
-  6 oracle, but new screenshots would not provide evidence for a retrieval-only
-  change.
+- Kept Deep Dive proposal types separate from Snapshot proposal case-handling
+  because the flows have different semantic invariants, while keeping both on
+  the same persisted report/evidence contracts and renderer. This is an
+  internal type boundary, not a second report schema or runtime pipeline.
+- Modeled `selectedProjectIds` as a non-empty list instead of a single project
+  so the same purpose-bounded contract supports either one project or a defined
+  body of work. Every section and source must remain inside that explicit
+  selection.
+- Retained `reportingPeriod` in Deep Dive proposals and source models because
+  the shared V1 report schema requires it. Purpose and selected scope, not the
+  dates, determine the mode and structure.
+- Reused the recorded synthetic reconciliation notes, dashboard, and pull-
+  request fixture. The Deep Dive source summary exposes more of the already
+  recorded PR metadata (linked issue, implementation/tests, review, merge, and
+  benchmark check) rather than inventing a new adapter or live source.
+- Used a timeline for the decision path and a quantitative chart for measured
+  change. They communicate different relationships through existing renderer
+  primitives and retain text/table equivalents.
+- Added reading behavior conditionally inside `renderReport` rather than
+  creating a Deep Dive renderer. Public evidence labels are resolved from the
+  claim's stable source IDs and placed next to the claim; creator-only locators
+  remain structurally absent.
+- Added no shared CSS so Snapshot output remains exactly byte-identical. Deep
+  Dive claim evidence uses existing semantic `<details>`, list, and small-text
+  styling. Automated accessibility and original-resolution visual inspection
+  both passed.
+- Required section-local claim evidence to be open in reading view and hidden
+  in presentation view. Ordinary component evidence drawers remain available
+  in both views for concise inspection.
+- Added no dependency, schema, CLI fork, report-model fork, or renderer fork.
 
 ## Unresolved risks and next gate
 
-- Query expansion is English-focused and intentionally small. Agent reranking
-  improves ordering but cannot recover a candidate that has no lexical or
-  expanded-term overlap. The contract explicitly defers FTS/embeddings until
-  measured failures justify them.
-- Source IDs remain grounded metadata rather than dereferenceable original
-  source links when Capture did not persist a locator. Recall links the
-  authoritative Work Library record; a future source registry must preserve the
-  creator-only/export boundary if added.
-- The current implementation rebuilds the index for each query. That is the
-  safest V1 default; a very large library may later justify a disposable cache
-  after profiling.
+- The committed Deep Dive proves one engineering/operations decision-review
+  scenario. Product, design, and research examples remain Gate 10 release
+  content; the proposal roles are flexible enough to omit irrelevant modules.
+- Public evidence is displayed by label beside claims, not as a clickable
+  source URL. This preserves the creator-only locator boundary; future public
+  source links would require an explicit safe export field rather than exposing
+  raw locators.
 - Cross-platform behavior is exercised only on the current native macOS host.
   Native Linux and WSL2 clean-host proof remains Gate 9.
 - Carried audit items remain: review live reload still relies on `fs.watch`
-  portability (F14), five visualization families lack screenshot baselines
-  (F11), and Gate 10 still owns the delimiter-adversarial path/secret tests,
-  `.npmrc`, package privacy, dependency/license, and release reviews.
+  portability (F14); five visualization families lack screenshot baselines
+  (F11); query expansion is English-focused (F17); and Gate 10 still owns
+  delimiter-adversarial path/secret tests, `.npmrc`, package privacy,
+  dependency/license, and release reviews.
 
-**Commit intent:** `feat: implement Gate 6 Recall`.
+**Commit intent:** `feat: implement Gate 7 Deep Dive`.
 
-**Next gate:** Gate 7 — Deep Dive. Begin with a failing substantive
-`test:deep-dive` suite for a purpose-bounded flow that reuses the existing report
-schema, evidence contracts, and renderer; adds greater evidence depth and a
-second valid visual composition; and verifies Deep Dive evidence placement and
-reading behavior without a parallel model or renderer fork. Do not begin Gate
-8.
+**Next gate:** Gate 8 — Curate. Begin with a failing substantive `test:curate`
+suite for duplicate, contradiction, stale-note, missing-link, and broad-note
+candidates; proposed merge, move, rewrite, relation, and supersession
+operations; explicit approval before substantial mutation; reversible writes;
+preserved history; and a rejection path that produces no mutation. Do not begin
+Gate 9.

@@ -248,6 +248,14 @@ function renderClaimContext(
     .map((id) => report.claims.find((claim) => claim.id === id))
     .filter((claim) => claim !== undefined);
   if (claims.length === 0) return "";
+  if (report.mode === "deep-dive") {
+    return `<details class="claim-context" data-reading-context data-deep-dive-evidence open><summary>Claim context and evidence</summary><ul>${claims.map((claim) => {
+      const labels = claim.sourceIds
+        .map((sourceId) => report.evidence.sources.find(({ id }) => id === sourceId)?.publicLabel)
+        .filter((label) => label !== undefined);
+      return `<li><strong>${escapeHtml(claim.statement)}</strong> ${escapeHtml(claim.implication)}<br><small>Evidence: ${labels.map(escapeHtml).join(" · ")}</small></li>`;
+    }).join("")}</ul></details>`;
+  }
   return `<details class="claim-context" data-reading-context><summary>Why this matters</summary><ul>${claims.map((claim) => `<li><strong>${escapeHtml(claim.statement)}</strong> ${escapeHtml(claim.implication)}</li>`).join("")}</ul></details>`;
 }
 

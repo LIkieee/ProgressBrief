@@ -45,6 +45,7 @@ export {
   replaceVisualizationFamily,
 } from "./renderer/visualizations.js";
 export { createConfirmationPlan } from "./report/confirmation.js";
+export { validateDeepDiveProposal } from "./report/deep-dive-invariants.js";
 export { validateSnapshotProposal } from "./report/proposal-invariants.js";
 export {
   resolveReportMode,
@@ -81,6 +82,7 @@ export type {
   StartReviewServerOptions,
 } from "./review/server.js";
 export type {
+  AgentDeepDiveProposal,
   AgentReportProposal,
   ConfirmationPlan,
   ResolvedReportRequest,

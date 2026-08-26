@@ -29,6 +29,11 @@ For a new Snapshot, propose Orientation, Movement, Attention, and Forward view.
 Omit empty modules. Confirm a new proposal once; do not reconfirm an explicit or
 previously accepted structure.
 
+For a new Deep Dive, do not reuse the Snapshot backbone by default. Propose a
+purpose-specific path such as context, decision path, implementation,
+validation, and implications, then omit any role the evidence does not support.
+Keep every section inside the explicitly selected project or body-of-work scope.
+
 ## Confirm only material uncertainty
 
 Ask one question at a time and no more than five in total. Prefer concise
@@ -53,6 +58,12 @@ confirmation, and omit unsupported or ambiguous claims.
 Evaluate proposals by invariants rather than exact wording or array order. A
 valid proposal stays within one Workspace, covers the selected workstreams,
 maps referenced claims and evidence, and confirms or omits ambiguity.
+
+For a Deep Dive, validate the selected project scope separately from Workspace
+scope. Use multiple corroborating sources for consequential interpretation when
+available, and add another valid visual composition only when it clarifies a
+different relationship. Place supporting source labels with the related claim
+context in reading view; keep presentation view concise.
 
 ## Create the source model
 

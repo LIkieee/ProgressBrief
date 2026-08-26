@@ -29,9 +29,18 @@ export type SnapshotSectionRole =
   | "attention"
   | "forward-view";
 
+export type DeepDiveSectionRole =
+  | "context"
+  | "decision-path"
+  | "implementation"
+  | "validation"
+  | "implications";
+
+export type ReportSectionRole = SnapshotSectionRole | DeepDiveSectionRole;
+
 export interface StructureSection {
   key: string;
-  role: SnapshotSectionRole;
+  role: ReportSectionRole;
   title: string;
 }
 
@@ -127,6 +136,31 @@ export interface AgentReportProposal {
   sections: ProposedSection[];
   claims: ProposedClaim[];
   caseHandling: ProposalCaseHandling[];
+}
+
+export interface ProposedDeepDiveSection {
+  key: string;
+  role: DeepDiveSectionRole;
+  title: string;
+  summary: string;
+  claimKeys: string[];
+  projectIds: string[];
+}
+
+export interface AgentDeepDiveProposal {
+  schemaVersion: "1.0.0";
+  mode: "deep-dive";
+  workspaceId: string;
+  selectedProjectIds: string[];
+  audience: string;
+  purpose: string;
+  reportingPeriod: {
+    start: string;
+    end: string;
+    label: string;
+  };
+  sections: ProposedDeepDiveSection[];
+  claims: ProposedClaim[];
 }
 
 export type ProposalValidationResult = ContractValidationResult;
