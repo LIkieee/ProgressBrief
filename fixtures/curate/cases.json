@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "candidateKinds": [
+    "duplicate",
+    "contradiction",
+    "stale-note",
+    "missing-link",
+    "broad-note"
+  ],
+  "operationKinds": [
+    "merge",
+    "move",
+    "rewrite",
+    "relation",
+    "supersession"
+  ]
+}

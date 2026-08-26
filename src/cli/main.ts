@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 
 import {
   assertSupportedNode,
+  applyCurationProposal,
   captureMemory,
+  discoverCurationCandidates,
   initializeWorkLibrary,
   PRODUCT_NAME,
   recallFromLibrary,
@@ -12,7 +15,11 @@ import {
   startReviewServer,
   undoLastMutation,
 } from "../index.js";
-import type { RecallSearchOptions, Visibility } from "../index.js";
+import type {
+  CurationProposal,
+  RecallSearchOptions,
+  Visibility,
+} from "../index.js";
 
 interface PackageMetadata {
   version: string;
@@ -34,14 +41,15 @@ function printHelp(): void {
       "       progressbrief library init --directory <directory> --workspace <name> --kind <employer|personal> [--project <name>] [--repository <directory>]",
       "       progressbrief memory capture --library <directory> --workspace <id-or-slug> --text <fragment> [--date <YYYY-MM-DD>]",
       "       progressbrief memory recall --library <directory> --query <question> [--workspace <id-or-slug>] [--project <id-or-slug>] [--from <YYYY-MM-DD>] [--to <YYYY-MM-DD>] [--topic <topic>] [--visibility <private|internal|shareable>]",
+      "       progressbrief memory curate --library <directory> --workspace <id-or-slug> [--include-archived true] [--proposal <file> --approve true]",
       "       progressbrief memory undo --library <directory> --workspace <id-or-slug>",
       "",
       "Commands:",
       "  review  Start the loopback-only creator review wrapper on a random port.",
       "  library Initialize a visible Work Library and Workspace.",
-      "  memory  Capture, Remember, Recall, or undo within explicit Workspace boundaries.",
+      "  memory  Capture, Remember, Recall, Curate, or undo within explicit Workspace boundaries.",
       "",
-      "Curate and installation commands arrive in later gates.",
+      "Installation commands arrive in a later gate.",
       "",
     ].join("\n"),
   );
@@ -155,7 +163,7 @@ async function runLibrary(arguments_: readonly string[]): Promise<void> {
 
 async function runMemory(arguments_: readonly string[]): Promise<void> {
   const [action, ...rest] = arguments_;
-  if (action !== "capture" && action !== "recall" && action !== "undo") {
+  if (action !== "capture" && action !== "recall" && action !== "curate" && action !== "undo") {
     throw new Error(`Unknown memory action: ${action ?? ""}`);
   }
   const allowed = action === "capture"
@@ -174,6 +182,8 @@ async function runMemory(arguments_: readonly string[]): Promise<void> {
           "--format",
           "--rerank",
         ])
+      : action === "curate"
+        ? new Set(["--library", "--workspace", "--include-archived", "--proposal", "--approve"])
       : new Set(["--library", "--workspace"]);
   const options = parseOptions(rest, allowed);
   const libraryDirectory = requiredOption(options, "--library");
@@ -214,6 +224,31 @@ async function runMemory(arguments_: readonly string[]): Promise<void> {
       ...(rerankedIds === undefined ? {} : { rerankedIds }),
     });
     process.stdout.write(`${result.answer}\n`);
+    return;
+  }
+  if (action === "curate") {
+    const workspace = requiredOption(options, "--workspace");
+    const includeArchived = booleanOption(options.get("--include-archived"), "--include-archived");
+    const proposalPath = options.get("--proposal");
+    if (proposalPath === undefined) {
+      if (options.has("--approve")) throw new Error("--approve requires --proposal <file>.");
+      const discovery = await discoverCurationCandidates({
+        libraryDirectory,
+        workspace,
+        includeArchived,
+      });
+      process.stdout.write(`${JSON.stringify(discovery, null, 2)}\n`);
+      return;
+    }
+    const proposal = JSON.parse(await readFile(proposalPath, "utf8")) as CurationProposal;
+    const result = await applyCurationProposal({
+      libraryDirectory,
+      workspace,
+      proposal,
+      approved: booleanOption(options.get("--approve"), "--approve"),
+      includeArchived,
+    });
+    process.stdout.write(`${result.acknowledgement}\n`);
     return;
   }
   const workspace = requiredOption(options, "--workspace");

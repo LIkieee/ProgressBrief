@@ -13,6 +13,8 @@ For Capture, Remember, correction, or first-use setup, also read
 companion CLI.
 For Recall, also read [the Recall workflow](references/recall-workflow.md)
 before searching or answering.
+For Curate, also read [the Curate workflow](references/curate-workflow.md)
+before discovering candidates or proposing any mutation.
 Route a dated outcome, decision, blocker, plan, or collaboration to a Worklog
 Entry. Route a durable technique, shortcut, caveat, or lesson to a Knowledge
 Note. A single request may require linked records of both kinds.
@@ -62,9 +64,26 @@ the report confirmation interview for these interactions.
 - Return no result rather than guessing. Do not generate HTML or start the
   report confirmation interview for ordinary Recall.
 
+## Curate intentionally
+
+- Run Curate only after an explicit request. Candidate discovery is read-only;
+  present the affected note IDs, reason, and proposed operation before asking
+  for approval.
+- Treat duplicate, contradiction, stale-note, missing-link, and broad-note
+  findings as candidates, not facts. Similar wording alone never authorizes a
+  merge.
+- Use merge, move, rewrite, relation, and supersession operations only within
+  the selected Workspace. A move changes project placement inside that
+  Workspace; it never crosses the privacy boundary.
+- Apply a proposal only after the user explicitly approves it. If approval is
+  absent or rejected, do not mutate notes or the journal.
+- Stop and re-propose when a note hash changed after discovery. Preserve note
+  files and superseded content, and keep the approved mutation reversible with
+  the active Workspace's ordinary undo command.
+
 ## Use implemented capabilities only
 
 Check the repository's `docs/implementation/status.md` before invoking the
 companion CLI. Persistence is available after Gate 5 and Recall after Gate 6.
-Do not claim that Curate succeeded until Gate 8 is recorded as passing; offer a
-proposed curation plan without implying that workflow ran.
+Curate is available after Gate 8. Do not claim clean-host installation or
+release proof until their later gates are recorded as passing.

@@ -17,7 +17,7 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently implements Gates 0–7: the foundation, semantic
+The repository currently implements Gates 0–8: the foundation, semantic
 contracts, Snapshot report path, deterministic clean HTML renderer, and the
 creator review loop, plus Work Library persistence. The review wrapper supports
 stable component and text
@@ -31,8 +31,13 @@ filters; query expansion; agent reranking; grounded note links; and current-over
 superseded handling. Deep Dive reuses the same report schema, evidence model,
 renderer, export projection, and review loop with purpose-bounded structure,
 deeper corroboration, an additional visual composition, and section-local
-evidence in reading view. Curate, clean-host installation, and release proof
-remain later gates and are not claimed as implemented yet.
+evidence in reading view. Curate uses an explicit proposal boundary: read-only
+discovery surfaces duplicate, contradiction, stale-note, missing-link, and
+broad-note candidates;
+approved merge, move, rewrite, relation, and supersession operations apply as
+one reversible mutation while rejected proposals change no library bytes.
+Clean-host installation and release proof remain later gates and are not
+claimed as implemented yet.
 
 ## Requirements
 
@@ -48,7 +53,7 @@ Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 7
+npm run verify:gate -- 8
 ```
 
 Individual foundation checks are also stable:
@@ -67,6 +72,7 @@ npm run test:review
 npm run test:library
 npm run test:recall
 npm run test:deep-dive
+npm run test:curate
 ```
 
 Start creator review for an existing source model and clean HTML artifact:
@@ -110,6 +116,20 @@ The memory skill first requests `--format candidates`, reranks only the returned
 record IDs, and repeats the query with `--rerank <id,id>`. If Workspace scope is
 ambiguous or there is no grounded result, Recall asks once or returns no result
 instead of guessing.
+
+Discover Curate candidates without mutating the Work Library:
+
+```sh
+progressbrief memory curate \
+  --library "$PWD/ProgressBrief Library" \
+  --workspace example-company
+```
+
+After reviewing a versioned proposal and explicitly approving it, apply it with
+`--proposal <file> --approve true`. Omitting or rejecting approval leaves both
+the Markdown notes and mutation journal unchanged. Approved curation preserves
+note files, records one atomic Workspace mutation, and remains reversible with
+`progressbrief memory undo`.
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when
 its required suite is absent; future suites are never represented by passing

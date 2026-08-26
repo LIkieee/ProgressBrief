@@ -23,4 +23,5 @@
 
 Markdown Worklog and Knowledge files are authoritative. Configuration and the
 mutation journal are small JSON machine-state files. Do not edit a generated
-host copy of this skill.
+host copy of this skill. Curate uses its separate proposal-and-approval
+workflow; do not treat Capture's immediate-write rule as Curate approval.

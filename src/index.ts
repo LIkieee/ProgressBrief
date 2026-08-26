@@ -114,6 +114,25 @@ export type {
   RecallSearchResult,
   RecallWorkspaceChoice,
 } from "./library/recall.js";
+export {
+  applyCurationProposal,
+  createCurationProposal,
+  discoverCurationCandidates,
+  validateCurationProposal,
+} from "./library/curate.js";
+export type {
+  ApplyCurationProposalOptions,
+  ApplyCurationProposalResult,
+  CreateCurationProposalInput,
+  CurationCandidate,
+  CurationCandidateKind,
+  CurationDiscoveryResult,
+  CurationOperation,
+  CurationOperationKind,
+  CurationProposal,
+  CurationValidationResult,
+  DiscoverCurationCandidatesOptions,
+} from "./library/curate.js";
 export type {
   CaptureClassification,
   CaptureMemoryOptions,

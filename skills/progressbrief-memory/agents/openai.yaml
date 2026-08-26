@@ -1,4 +1,4 @@
 interface:
   display_name: "ProgressBrief Memory"
-  short_description: "Capture and recall professional work memory"
+  short_description: "Capture, recall, and curate professional work memory"
   default_prompt: "Use $progressbrief-memory to remember this work lesson in my Work Library."
