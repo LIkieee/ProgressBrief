@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/evidence.schema.json",
+  "title": "ProgressBrief evidence bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "workspaceId", "sources"],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "workspaceId": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "workspaceId",
+          "kind",
+          "title",
+          "publicLabel",
+          "observedAt",
+          "summary",
+          "creatorOnly"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+          },
+          "workspaceId": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+          },
+          "projectIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/projectId"
+            }
+          },
+          "kind": {
+            "enum": [
+              "pasted-note",
+              "local-file",
+              "screenshot",
+              "local-git",
+              "github-pull-request",
+              "work-library"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "publicLabel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "observedAt": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "creatorOnly": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["locators", "rawExcerpt"],
+            "properties": {
+              "locators": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/locator"
+                }
+              },
+              "rawExcerpt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

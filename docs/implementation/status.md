@@ -1,127 +1,181 @@
 # ProgressBrief implementation status
 
-**Current state:** Gate 0 — Repository foundation passed locally on 2026-08-26.
+**Current state:** Gate 1 — Fixture and semantic contracts passed locally on
+2026-08-26. Gate 0 remains passed at commit `b06f2e1`; its independent audit is
+the workspace-level `supervisor/AUDIT-gate0.md` and required no repairs.
 
-## Gate 0 obligations completed
+## Gate 1 obligations completed
 
-1. Added the MIT license plus honest README, contribution, and security guidance.
-2. Created one ESM npm package on Node.js 24 with a committed lockfile, a small
-   compiled CLI foundation, and a repository-local npm cache configuration.
-3. Enabled strict TypeScript checks, ESLint, Node's unit-test runner, and a
-   macOS/Linux GitHub Actions matrix on Node.js 24.
-4. Initialized `progressbrief-report` and `progressbrief-memory` with the
-   standard skill-creator initializer, replaced generated guidance with
-   imperative product-boundary instructions, and validated both skills.
-5. Implemented the normative cumulative `verify:gate` mapping for Gates 0–10.
-   Gate 0 performs install, build, lint, typecheck, foundation unit tests,
-   skill validation, and static CI validation. Missing future suite scripts
-   block future gates before any command runs.
-6. Added this implementation ledger and copied the six accepted ADRs into the
-   repository documentation.
+1. Added a complete, entirely synthetic Snapshot fixture for one product
+   engineer, three workstreams, mixed notes, one local file, one 960 × 540 PNG
+   screenshot, and recorded synthetic GitHub pull-request metadata.
+2. Mapped all eleven distinct required fixture cases in
+   `fixture-manifest.json`: a strongly evidenced outcome, ambiguous activity,
+   blocker, explicit ask, decision with rationale, next priority, reusable
+   knowledge, superseded memory, malicious HTML, fake credential, and absolute
+   path sentinel.
+3. Added strict JSON Schema 2020-12 contracts for report, evidence, design,
+   visualization, workspace, Worklog Entry, Knowledge Note, and feedback queue
+   documents, backed by a versioned shared definition schema and Ajv validation.
+4. Added UUID-v4 stable-ID generation with type prefixes for every persisted
+   entity and immutable revision advancement that preserves the report and all
+   nested IDs.
+5. Added valid fixtures for all eight required schemas plus invalid schema
+   fixtures for malformed IDs, invalid visibility defaults, bad feedback
+   targets, and unexpected fields.
+6. Added semantic report validation for unique and resolvable references,
+   claim-to-source relationships, one-Workspace boundaries, section/component
+   ownership, visualization/claim relationships, reporting periods, and
+   contiguous revision history.
+7. Added negative semantic and export cases for missing evidence,
+   cross-Workspace references, raw absolute paths, and suspected credentials.
+8. Added an explicit export projection type and implementation that reconstructs
+   the public model field by field. Creator-only locators, raw excerpts,
+   generation metadata, artifact paths, malicious HTML, secret sentinels, and
+   path sentinels cannot enter the projection; defense-in-depth scanning blocks
+   unsafe values that appear in otherwise exportable fields without echoing them.
+9. Added 11 substantive Gate 1 contract tests with zero skipped or todo tests and
+   preserved the Gate 0 falsifiability tripwire by moving future-gate failure
+   assertions to the next missing suite, `test:report`.
 
 ## Files changed
 
-- Foundation and packaging: `.gitignore`, `.npmrc`, `.nvmrc`, `package.json`,
-  `package-lock.json`, `tsconfig.json`, `tsconfig.build.json`,
-  `eslint.config.js`, `src/index.ts`, and `src/cli/main.ts`.
-- Public guidance: `LICENSE`, `README.md`, `CONTRIBUTING.md`, and `SECURITY.md`.
-- CI and verification: `.github/workflows/ci.yml`, `scripts/gate-map.mjs`,
-  `scripts/verify-gate.mjs`, `scripts/validate-ci.mjs`, and
-  `scripts/validate-skills.mjs`.
-- Skills: both `skills/*/SKILL.md`, both `skills/*/agents/openai.yaml`, and both
-  `skills/*/references/product-boundary.md` files.
-- Tests and layout: `tests/foundation/foundation.test.mjs`; committed layout
-  sentinels under `src/{contracts,evidence,github,library,renderer,review,security}`,
-  `schemas`, `fixtures/snapshot-three-workstreams`, and
-  `tests/{browser,contracts,install,integration,security}`.
-- Repository decisions and status: `docs/adr/0001-*.md` through
-  `docs/adr/0006-*.md` and this file.
+- Package and public status: `package.json`, `package-lock.json`, `README.md`,
+  and `src/index.ts`.
+- Contracts: `schemas/common.schema.json` plus the eight required
+  `schemas/*.schema.json` documents.
+- Contract implementation: `src/contracts/ids.ts`, `revisions.ts`, `types.ts`,
+  `schema-validator.ts`, `report-semantics.ts`, and `export-projection.ts`.
+- Synthetic corpus: everything under
+  `fixtures/snapshot-three-workstreams/`, including source inputs, normalized
+  evidence, Work Library specimens, valid/invalid contract fixtures, and the
+  raster screenshot.
+- Acceptance evidence: `tests/contracts/fixture.test.mjs`,
+  `schemas.test.mjs`, `identity-and-revision.test.mjs`, and
+  `report-semantics-and-export.test.mjs`.
+- Falsifiability preservation: `tests/foundation/foundation.test.mjs`.
+- Layout sentinels removed because their directories now contain real files:
+  `fixtures/snapshot-three-workstreams/.gitkeep`, `schemas/.gitkeep`,
+  `src/contracts/.gitkeep`, and `tests/contracts/.gitkeep`.
+- This implementation ledger.
 
 ## Command ledger
 
-Read-only discovery and required-source review:
+Required-source and state review:
 
-- `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g 'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'status.md' -g 'AUDIT-*.md' -g 'docs/adr/**' -g 'progressbrief/docs/adr/**' | sort && git -C progressbrief status --short --branch 2>&1 || true` — completed; confirmed that `progressbrief/` did not exist.
-- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md; if [ -d supervisor ]; then rg --files supervisor | sort; fi; find . -maxdepth 2 -type d | sort` — passed; found no `supervisor/AUDIT-*.md` files.
-- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p' outputs/PROGRESSBRIEF_PRD.md`, and `sed -n '441,700p' outputs/PROGRESSBRIEF_PRD.md` — passed as an initial complete PRD read; combined display truncation prompted the two explicit reads below.
-- `sed -n '1,330p' outputs/PROGRESSBRIEF_PRD.md` and `sed -n '331,700p' outputs/PROGRESSBRIEF_PRD.md` — passed; complete PRD read confirmed.
-- `sed -n '1,320p' docs/IMPLEMENTATION_CONTRACT.md` — passed; complete contract read confirmed.
-- `sed -n '1,240p' docs/LOOP_RUNBOOK.md; sed -n '1,100p' CONTEXT.md; for f in docs/adr/*.md; do sed -n '1,20p' "$f"; done` — passed; complete runbook, context, and ADR reads confirmed.
-- `wc -l /Users/likunkkk/.codex/skills/.system/skill-creator/SKILL.md && sed -n '1,520p' /Users/likunkkk/.codex/skills/.system/skill-creator/SKILL.md` — passed; complete required skill-creator instructions read.
-- `wc -l /Users/likunkkk/.codex/skills/.system/skill-creator/references/openai_yaml.md && sed -n '1,260p' /Users/likunkkk/.codex/skills/.system/skill-creator/references/openai_yaml.md && node --version && npm --version && git config --get user.name && git config --get user.email` — passed; Node `v24.16.0`, npm `11.13.0`, and an existing repository identity were available.
+- `pwd && rg --files -g 'AGENTS.md' -g '!progressbrief/node_modules' -g '!node_modules' && find docs/adr -type f -maxdepth 2 -print | sort && find supervisor -maxdepth 1 -type f -name 'AUDIT-*.md' -print | sort && if [ -d progressbrief ]; then git -C progressbrief status --short --branch; fi` — stopped after `rg` found no `AGENTS.md`; no repository mutation occurred.
+- `pwd; rg --files -g 'AGENTS.md' ... || :; find docs/adr ...; find supervisor ...; git -C progressbrief status --short --branch` — passed; found six ADRs, `supervisor/AUDIT-gate0.md`, and a clean `main` branch.
+- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md supervisor/AUDIT-*.md; wc -l progressbrief/docs/implementation/status.md` — passed; established complete-read boundaries.
+- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p' ...`, and `sed -n '441,647p' ...` — passed; complete PRD read.
+- `sed -n '1,61p' CONTEXT.md; sed -n '1,160p' docs/IMPLEMENTATION_CONTRACT.md` and `sed -n '161,280p' docs/IMPLEMENTATION_CONTRACT.md; sed -n '1,188p' docs/LOOP_RUNBOOK.md` — passed; complete canonical language, contract, and runbook read.
+- `for f in docs/adr/*.md; do ...; done; sed -n '1,140p' supervisor/AUDIT-gate0.md; sed -n '1,127p' progressbrief/docs/implementation/status.md` plus `sed -n '141,249p' supervisor/AUDIT-gate0.md` — passed; complete ADR, prior status, and required audit read. The audit verdict was PASS with no Gate 1 repairs; F1/F2 required preserving falsifiability and proving suite substance.
+- `git status --short --branch; git log -3 --oneline --decorate; rg --files ...; sed` over `package.json`, the gate scripts, foundation tests, and source entry points — passed; confirmed Gate 0 commit `b06f2e1`, a clean tree, and Gate 1 as earliest unmet.
+- `sed` over both TypeScript configurations and ESLint config plus `find fixtures schemas src tests ...` — passed; confirmed only Gate 0 sentinels existed in Gate 1 directories.
+- `sed` over both skill files and both product-boundary references — passed; found no Gate 1 contradiction or required skill edit.
 
-Repository creation and focused implementation checks:
+Test-first implementation and focused checks:
 
-- `mkdir -p progressbrief/skills && git init -b main progressbrief && python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/init_skill.py progressbrief-report --path progressbrief/skills --resources references --interface 'display_name=ProgressBrief Report' --interface 'short_description=Create evidence-aware professional reports' --interface 'default_prompt=Use $progressbrief-report to turn my work evidence into a concise Snapshot.' && python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/init_skill.py progressbrief-memory --path progressbrief/skills --resources references --interface 'display_name=ProgressBrief Memory' --interface 'short_description=Capture and recall professional work memory' --interface 'default_prompt=Use $progressbrief-memory to remember this work lesson in my Work Library.' && find progressbrief -maxdepth 4 -type f | sort && git -C progressbrief status --short --branch` — passed; created the local repository and both standard skill scaffolds.
-- `sed -n '1,240p' skills/progressbrief-report/SKILL.md; sed -n '1,100p' skills/progressbrief-report/agents/openai.yaml; sed -n '1,240p' skills/progressbrief-memory/SKILL.md; sed -n '1,100p' skills/progressbrief-memory/agents/openai.yaml` — passed; inspected generated scaffolds before editing.
-- `npm test` — failed as intended before implementation with
-  `ERR_MODULE_NOT_FOUND` for `scripts/gate-map.mjs`.
-- `npm install --save-dev typescript @types/node eslint @eslint/js typescript-eslint globals yaml` — failed because the host's global npm cache contains root-owned files; no global configuration or ownership was changed.
-- `npm install --cache .npm-cache --save-dev typescript @types/node eslint @eslint/js typescript-eslint globals yaml` — passed; 92 packages installed, zero vulnerabilities.
-- `npm test` — passed; initial three foundation tests passed.
-- `python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report && python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-memory` — failed because host Python lacked PyYAML; this environmental failure was resolved with a disposable virtual environment below.
-- `npm run build && node dist/cli/main.js --version && node dist/cli/main.js --help` — passed; emitted and exercised CLI version/help output.
-- `npm run lint` — passed.
-- `npm run typecheck` — passed.
-- `npm run validate:skills` — passed for both canonical skills.
-- `npm run validate:ci` — passed for the parsed macOS/Linux workflow matrix.
-- `npm test && npm ci` — passed; four foundation tests passed and the committed dependency graph installed cleanly with zero vulnerabilities.
-- `PB_SKILL_VENV=$(mktemp -d /private/tmp/pb-skill-validation.XXXXXX) && python3 -m venv "$PB_SKILL_VENV" && "$PB_SKILL_VENV/bin/pip" install --quiet PyYAML && "$PB_SKILL_VENV/bin/python" /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report && "$PB_SKILL_VENV/bin/python" /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-memory && printf '%s\n' "$PB_SKILL_VENV"` — passed; both standard skill-creator validations reported `Skill is valid!`; disposable artifact: `/private/tmp/pb-skill-validation.KpcswO`.
-- `npm run verify:gate -- 1` — failed as expected with missing `test:contracts`, proving the earliest unimplemented future gate cannot pass cosmetically.
-- `npm run verify:gate -- 0` — passed the complete Gate 0 oracle: install, build, lint, typecheck, four foundation tests, skill validation, and static CI validation.
-- `git add --all && git diff --cached --check && git status --short && git diff --cached --stat && sed -n '1,220p' package.json && sed -n '1,240p' scripts/verify-gate.mjs && sed -n '1,240p' scripts/gate-map.mjs` — stopped at `git diff --cached --check` after identifying extra blank lines at end of newly created text files.
-- `git diff --cached --name-only -z | xargs -0 perl -0pi -e 's/\n+\z/\n/' && git add --all && git diff --cached --check && git status --short && git diff --cached --stat && sed -n '1,220p' package.json && sed -n '1,180p' scripts/gate-map.mjs && sed -n '1,180p' scripts/verify-gate.mjs` — passed; normalized trailing newlines and inspected the staged gate implementation.
-- `npm install --save-dev @types/node@24` — passed; aligned compile-time Node types with the Node.js 24 runtime baseline, zero vulnerabilities.
+- `npm run test:contracts` — failed as intended before implementation: four test files could not resolve the not-yet-created Gate 1 contract modules; 0 pass, 4 fail, 0 skipped, 0 todo.
+- `npm install ajv@^8.17.1` — passed; installed Ajv 8.20.0 and its four runtime packages, changed the lockfile, and reported zero vulnerabilities.
+- `command -v magick; command -v convert; command -v sips; command -v qlmanage` — passed; only macOS `sips` and `qlmanage` were available.
+- `sips -s format png ...rollout-dashboard-source.svg --out ...rollout-dashboard.png; file ...; wc -c ...` — conversion failed because `sips` could not decode SVG; no PNG was written.
+- `qlmanage -t -s 960 -o /private/tmp ...; ls ...; mv ...; file ...; wc -c ...` — failed because Quick Look sandbox initialization was not permitted; no fixture output was written.
+- `python3 -c "import PIL; print(PIL.__version__)"` — failed read-only capability check because Pillow was not installed; Python was not used to create or edit files.
+- `swift --version` — passed; found Swift 6.2.4.
+- `swift scripts/generate-fixture-screenshot.swift ...; file ...; wc -c ...` — failed because Swift's default module cache was not writable; no PNG was written.
+- `mkdir -p /private/tmp/progressbrief-swift-module-cache; CLANG_MODULE_CACHE_PATH=/private/tmp/progressbrief-swift-module-cache SWIFT_MODULECACHE_PATH=/private/tmp/progressbrief-swift-module-cache swift scripts/generate-fixture-screenshot.swift fixtures/snapshot-three-workstreams/input/rollout-dashboard.png; file fixtures/snapshot-three-workstreams/input/rollout-dashboard.png; wc -c fixtures/snapshot-three-workstreams/input/rollout-dashboard.png` — passed after the temporary task-specific cache was selected; produced a 34,578-byte, 960 × 540 RGBA PNG. The temporary generator and SVG source were then removed, leaving only the final synthetic raster fixture.
+- Local image inspection of `fixtures/snapshot-three-workstreams/input/rollout-dashboard.png` — passed; labels, bars, 18-minute baseline, 6-minute current value, and synthetic marker were legible with no clipping.
+- `npm run test:contracts` — first implementation run reported 6 pass and 3 fail: direct TypeScript tests could not resolve compiled `.js` imports, and Ajv strict-required checks rejected conditional branches without local property declarations.
+- `sed` over `node_modules/ajv/dist/2020.d.ts` and `node_modules/ajv/package.json`, plus `rg 'export default|export =' ...` — passed; confirmed Ajv exposes the named `Ajv2020` class and the required types.
+- `npm run test:contracts` — next run failed during TypeScript build because the Ajv default import was not constructable under NodeNext module resolution.
+- `npm run test:contracts` — passed after using the named Ajv export and compiled test targets: 11 pass, 0 fail, 0 skipped, 0 todo.
+- `npm run build; npm run lint; npm run typecheck; npm run test:foundation` — all passed; foundation reported 4 pass, 0 fail, 0 skipped, 0 todo.
+- `sed` over `README.md` and `package-lock.json`, followed by `git diff --stat; git status --short` — passed; inspected dependency placement and the complete worktree delta before final hardening.
+- `npm run test:contracts; npm run lint; npm run typecheck` — all passed after adding duplicate-reference, fixture-reference, nested-ID, reporting-period, and general absolute-path checks; contract tests remained 11 pass, 0 fail, 0 skipped, 0 todo.
 
-Finalization checks:
+Gate and falsifiability oracles:
 
-- `git add --all && npm run verify:gate -- 0 && git diff --cached --check && git status --short --branch` — passed twice: first after adding this ledger, then after strengthening the sanity assertion to cover every future gate from 1 through 10. Both complete Gate 0 runs passed; the staged diff had no whitespace errors and every intended file was staged with no unstaged change.
+- `npm run verify:gate -- 1` — passed the cumulative Gate 1 oracle: clean install, build, lint, typecheck, 4 foundation tests, both skill validations, static macOS/Linux CI validation, and 11 contract tests. All tests reported zero skipped and zero todo.
+- `for gate in 2 3 4 5 6 7 8 9 10; do gate_log="/private/tmp/progressbrief-gate-${gate}.log"; if npm run verify:gate -- "$gate" >"$gate_log" 2>&1; then echo "Gate $gate unexpectedly passed"; exit 1; else echo "Gate $gate failed as expected: $(tail -n 1 "$gate_log")"; fi; done` — passed as a negative-oracle check: every future gate failed before execution. Gate 2 failed on missing `test:report`; later gates cumulatively named that suite and every subsequent missing suite through Gate 10's `test:security` and `test:release`.
+- `git add --all; git diff --cached --check; git status --short --branch; git diff --cached --stat; git diff --cached --name-status` — passed; staged 57 intended paths, found no whitespace errors, and exposed no unrelated file.
+- `git diff --cached -- package.json src/index.ts src/contracts tests/contracts tests/foundation/foundation.test.mjs; git diff --cached -- schemas/common.schema.json schemas/report.schema.json schemas/evidence.schema.json; rg -n "passWithNoTests|test\\.skip|it\\.todo|describe\\.skip|\\.only\\(|exit 0|continue-on-error" scripts tests package.json .github -g '!node_modules' -g '!.npm-cache' -g '!dist'` — passed; manual diff review found the expected implementation. The only scan hits were the two `continue-on-error` rejection checks in `scripts/validate-ci.mjs`; no test or verifier bypass was present.
+- Final `npm run verify:gate -- 1` — passed again from the staged tree after the README and status update: clean install, build, lint, typecheck, 4 foundation tests, skill and CI validation, and 11 contract tests; zero failed, skipped, or todo tests.
+- `git status --short --branch; git diff --check; git diff --cached --check` — passed; every intended change remained staged with no unstaged or whitespace error.
 
 ## Artifacts and evidence
 
-- Locked dependency graph: `package-lock.json`.
-- Cumulative oracle: `scripts/gate-map.mjs` and `scripts/verify-gate.mjs`.
-- Foundation acceptance test: `tests/foundation/foundation.test.mjs`.
-- Static CI evidence: `.github/workflows/ci.yml` plus
-  `scripts/validate-ci.mjs`.
-- Canonical validated skills: `skills/progressbrief-report/` and
-  `skills/progressbrief-memory/`.
-- Reproducible local build output: ignored `dist/cli/main.js`,
-  `dist/index.js`, declarations, and source maps.
-- No HTML or screenshots were generated because Gate 0 changed no rendering.
+- Complete fixture manifest:
+  `fixtures/snapshot-three-workstreams/fixture-manifest.json`.
+- Raw synthetic inputs:
+  `fixtures/snapshot-three-workstreams/input/messy-notes.md`,
+  `input/project-brief.md`, `input/github/pr-184.json`, and
+  `input/rollout-dashboard.png` under the same fixture root.
+- Normalized evidence and Work Library specimens:
+  `fixtures/snapshot-three-workstreams/evidence.json` and `library/`.
+- Valid and invalid contract corpus:
+  `fixtures/snapshot-three-workstreams/contracts/`.
+- Versioned contracts: `schemas/`.
+- Validation and export boundary: `src/contracts/`.
+- Executable evidence: `tests/contracts/` and
+  `tests/foundation/foundation.test.mjs`.
+- No report HTML or report screenshots were generated because Gate 1 did not
+  change rendering. The only image is the intentionally committed input
+  screenshot fixture, which was inspected directly.
 
 ## Judgment for review
 
-- Used one workflow file with a two-OS matrix rather than separate macOS and
-  Linux files; the static validator requires both `ubuntu-latest` and
-  `macos-latest`.
-- Used Node's built-in `node:test` runner to avoid an unnecessary test-runner
-  dependency while retaining executable unit tests.
-- Used development-only `yaml` parsing for meaningful static workflow and
-  skill validation; the product has no runtime dependency yet.
-- Made future gates fail on absent required package scripts instead of adding
-  passing placeholders. The foundation test asserts this for every Gate 1–10.
-  Gate 10 adds a `test:release` suite for the contract's release-content checks.
-- Added a project `.npmrc` pointing at ignored `.npm-cache` because the host's
-  global npm cache is unusable and global configuration is out of scope.
-- Kept the two Gate 0 skill bodies deliberately bounded and honest about
-  later-gate capabilities rather than implementing report or memory behavior
-  early.
+- Added Ajv as the only runtime dependency because complete JSON Schema 2020-12
+  validation materially reduces contract and security risk compared with a
+  hand-written partial validator; all other Gate 1 behavior uses Node APIs.
+- Added a ninth shared `common.schema.json` behind the eight required documents
+  so ID, visibility, date, and schema-version constraints cannot drift.
+- Used the contract's required prefixes and added explicit `dsg_`, `wsp_`,
+  `prj_`, `wlg_`, `knw_`, and `fbq_` prefixes for persisted types the contract
+  names but does not assign a literal prefix. All use opaque UUID v4 values.
+- Kept `contracts/valid/report.json` deliberately small and labeled it as a
+  source-model contract specimen, not the Gate 2 complete Snapshot or
+  `golden-report-model.json`.
+- Represented semantic/export negative cases as a committed valid base report
+  plus explicit mutation recipe. This avoids four large duplicated reports
+  while materializing deterministic invalid documents in tests. Schema-level
+  invalid fixtures remain standalone invalid documents.
+- Made the export projection an explicit reconstruction instead of deleting
+  forbidden keys from a clone. This keeps creator-only fields unrepresentable
+  in the export type and makes newly added source fields opt-in to export.
+- Preserved public source labels and safe summaries as selected report content;
+  did not sanitize ordinary internal content. Creator-only locators and raw
+  evidence are separate and excluded structurally.
+- Generated the synthetic raster input locally after two OS converters failed;
+  no generator or macOS-only build requirement remains in the repository.
+- Changed test imports to compiled `dist/` modules and made the focused test
+  scripts build first. Production TypeScript retains NodeNext `.js` imports,
+  and clean-checkout test commands remain self-contained.
+- Preserved the audit's F1 tripwire: Gate 1 is now available, while every gate
+  2–10 is asserted to fail on `test:report`. The new suite runs a real test
+  runner over four non-empty files and reports 11 passing tests, addressing F2.
 
 ## Commit intent
 
-Commit the complete passing foundation and this ledger together as
-`chore: establish Gate 0 repository foundation`.
+Commit the complete passing Gate 1 change and this ledger together as
+`feat: define Gate 1 semantic contracts`.
 
 ## Unresolved risks and next gate
 
-- GitHub Actions has been parsed and statically validated but not run remotely;
-  authorized macOS/Linux CI execution remains a Gate 10 release requirement.
-- Report, browser, review, library, recall, Deep Dive, Curate, install, and
-  security suites do not exist yet. This is intentional, and their gates fail.
-- No acceptance criterion in PRD section 19 is claimed complete by Gate 0.
+- The source-model schema supports both report modes, but no agent-authored
+  report workflow exists yet. Do not treat the small valid report specimen as
+  a completed Snapshot.
+- Cross-document references require `validateReportModel` in addition to JSON
+  Schema validation; JSON Schema alone cannot prove referential integrity.
+- Version `1.0.0` is the only accepted contract version. Migration behavior is
+  intentionally deferred until a later version exists.
+- Gate 0 audit advisories about the repository-local npm cache and
+  `"private": true` remain release-polish decisions due by Gate 10.
+- Authorized remote CI is still a Gate 10 requirement; no remote exists and no
+  remote operation was attempted.
 
-**Next gate:** Gate 1 — Fixture and semantic contracts. Begin with the complete
-three-workstream synthetic fixture, then add the versioned schemas, stable ID
-and revision behavior, valid/invalid fixtures, and the export projection before
-requiring `test:contracts` to pass.
+**Next gate:** Gate 2 — Snapshot report path. Implement the
+`progressbrief-report` workflow, period/audience/mode/structure resolution,
+confirmation and `generate now`, claim-to-source mapping, a complete Snapshot,
+the committed schema-valid `golden-report-model.json`, and invariant tests for
+all eleven fixture cases. The next suite must be the substantive `test:report`;
+do not begin Gate 3 rendering work.

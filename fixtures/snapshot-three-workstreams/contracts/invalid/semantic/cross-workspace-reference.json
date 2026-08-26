@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "basePath": "contracts/valid/report.json",
+  "mutations": [
+    {
+      "path": ["evidence", "sources", 0, "workspaceId"],
+      "value": "wsp_10000000-0000-4000-8000-000000000099"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "knw_e0000000-0000-4000-8000-000000000001",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "title": "Limit reconciliation to four workers",
+  "visibility": "internal",
+  "status": "current",
+  "projectIds": [
+    "prj_20000000-0000-4000-8000-000000000002"
+  ],
+  "topics": ["reconciliation", "workers"],
+  "body": "Use no more than four concurrent reconciliation workers under the current synthetic vendor limit.",
+  "examples": ["Set the worker ceiling to four for staging replay runs."],
+  "caveats": ["Reconfirm the ceiling if the vendor limit changes again."],
+  "sourceIds": [
+    "src_30000000-0000-4000-8000-000000000001"
+  ],
+  "relationships": [
+    {
+      "type": "supersedes",
+      "targetId": "knw_d0000000-0000-4000-8000-000000000001"
+    }
+  ],
+  "createdAt": "2026-08-23T18:14:00Z",
+  "updatedAt": "2026-08-23T18:14:00Z"
+}

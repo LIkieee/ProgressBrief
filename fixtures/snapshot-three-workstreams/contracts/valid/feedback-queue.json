@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fbq_a0000000-0000-4000-8000-000000000001",
+  "reportId": "rpt_40000000-0000-4000-8000-000000000001",
+  "reportRevision": 1,
+  "queueVersion": 1,
+  "updatedAt": "2026-08-24T10:00:00Z",
+  "items": [
+    {
+      "id": "fbk_b0000000-0000-4000-8000-000000000001",
+      "kind": "annotation",
+      "target": {
+        "componentId": "cmp_60000000-0000-4000-8000-000000000001",
+        "selectedText": "18 minutes to 6 minutes",
+        "contentHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request": "Keep the sample size next to this comparison.",
+      "status": "pending",
+      "createdAt": "2026-08-24T10:00:00Z"
+    }
+  ]
+}

@@ -17,10 +17,12 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently contains the Gate 0 foundation: the strict
-TypeScript/Node.js project, two canonical skill packages, local validation,
-and cumulative gate verification. Report generation, persistence, and review
-features are delivered by later gates and are not claimed as implemented yet.
+The repository currently contains the Gate 0 foundation and Gate 1 semantic
+contracts: a complete synthetic three-workstream fixture, eight versioned JSON
+Schemas, stable entity IDs and report revisions, semantic reference checks,
+and a creator-only-safe export projection. Report generation, rendering,
+persistence, and review features are delivered by later gates and are not
+claimed as implemented yet.
 
 ## Requirements
 
@@ -32,11 +34,11 @@ Native Windows and PowerShell are outside the V1 support boundary.
 
 ## Development
 
-Install exactly the committed dependency graph and run the foundation gate:
+Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 0
+npm run verify:gate -- 1
 ```
 
 Individual foundation checks are also stable:
@@ -48,6 +50,7 @@ npm run typecheck
 npm test
 npm run validate:skills
 npm run validate:ci
+npm run test:contracts
 ```
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when
@@ -60,7 +63,7 @@ oracle and is expected to fail before that work exists.
 - `skills/progressbrief-report` is the canonical report-generation skill.
 - `skills/progressbrief-memory` is the canonical Work Library skill.
 - `src/` contains the shared TypeScript CLI and implementation.
-- `schemas/` contains versioned interchange contracts as later gates add them.
+- `schemas/` contains the versioned interchange and persistence contracts.
 - `fixtures/` and `tests/` contain synthetic acceptance evidence.
 - `docs/implementation/status.md` is the resumable gate ledger.
 

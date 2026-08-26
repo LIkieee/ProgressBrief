@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "wsp_10000000-0000-4000-8000-000000000001",
+  "slug": "northstar-systems",
+  "name": "Northstar Systems",
+  "kind": "employer",
+  "defaultVisibility": "internal",
+  "archived": false,
+  "projects": [
+    {
+      "id": "prj_20000000-0000-4000-8000-000000000001",
+      "slug": "enterprise-rollout",
+      "name": "Enterprise rollout",
+      "repositoryAssociations": []
+    },
+    {
+      "id": "prj_20000000-0000-4000-8000-000000000002",
+      "slug": "reconciliation-pipeline",
+      "name": "Reconciliation pipeline",
+      "repositoryAssociations": [
+        {
+          "resolvedRealPath": "/Users/casey/Northstar/reconciliation-service",
+          "canonicalRemoteUrl": "https://github.com/northstar-systems/reconciliation-service"
+        }
+      ]
+    },
+    {
+      "id": "prj_20000000-0000-4000-8000-000000000003",
+      "slug": "developer-experience",
+      "name": "Developer experience",
+      "repositoryAssociations": []
+    }
+  ],
+  "createdAt": "2026-08-01T12:00:00Z",
+  "updatedAt": "2026-08-23T18:00:00Z"
+}

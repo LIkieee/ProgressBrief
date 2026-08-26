@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "dsg_90000000-0000-4000-8000-000000000001",
+  "audience": "Casey's engineering manager and cross-functional partners",
+  "pageJob": "Make movement, attention, and the next decision legible in under five minutes.",
+  "tone": "Calm, concrete, and operational",
+  "colors": {
+    "background": "#f7f5ef",
+    "surface": "#ffffff",
+    "text": "#182126",
+    "mutedText": "#56646b",
+    "accent": "#146c72",
+    "border": "#c7d0d2"
+  },
+  "typography": {
+    "displayRole": "System sans serif with compact display spacing",
+    "bodyRole": "System sans serif optimized for reading",
+    "numericRole": "Tabular system numerals"
+  },
+  "layoutConcept": "A narrative spine with the three workstreams aligned to a shared weekly horizon.",
+  "visualSignature": "A checkpoint path echoes the staged rollout and reconciliation batches without dashboard ornament."
+}

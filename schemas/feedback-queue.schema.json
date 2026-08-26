@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/feedback-queue.schema.json",
+  "title": "ProgressBrief feedback queue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "reportId",
+    "reportRevision",
+    "queueVersion",
+    "updatedAt",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/feedbackQueueId"
+    },
+    "reportId": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/reportId"
+    },
+    "reportRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "queueVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "updatedAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "target", "request", "status", "createdAt"],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/feedbackId"
+          },
+          "kind": {
+            "enum": ["annotation", "inline-edit"]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["componentId", "contentHash"],
+            "properties": {
+              "componentId": {
+                "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/componentId"
+              },
+              "selectedText": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "contentHash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "request": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "replacementText": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "status": {
+            "enum": ["pending", "applied", "conflict"]
+          },
+          "createdAt": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "kind": { "const": "inline-edit" } },
+              "required": ["kind"]
+            },
+            "then": {
+              "required": ["replacementText"],
+              "properties": { "replacementText": true }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

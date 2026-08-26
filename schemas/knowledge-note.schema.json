@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/knowledge-note.schema.json",
+  "title": "ProgressBrief Knowledge Note",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "workspaceId",
+    "title",
+    "visibility",
+    "status",
+    "projectIds",
+    "topics",
+    "body",
+    "examples",
+    "caveats",
+    "sourceIds",
+    "relationships",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/knowledgeId"
+    },
+    "workspaceId": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "visibility": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/visibility"
+    },
+    "status": {
+      "enum": ["current", "superseded"]
+    },
+    "projectIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/projectId"
+      }
+    },
+    "topics": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      }
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000
+      }
+    },
+    "caveats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000
+      }
+    },
+    "sourceIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "targetId"],
+        "properties": {
+          "type": {
+            "enum": ["related", "updates", "supersedes"]
+          },
+          "targetId": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/knowledgeId"
+          }
+        }
+      }
+    },
+    "createdAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    },
+    "updatedAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    }
+  }
+}

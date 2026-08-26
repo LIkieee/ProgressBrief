@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "sources": [
+    {
+      "id": "src_30000000-0000-4000-8000-000000000001",
+      "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+      "projectIds": [
+        "prj_20000000-0000-4000-8000-000000000002"
+      ],
+      "kind": "pasted-note",
+      "title": "Casey's unedited notes",
+      "publicLabel": "Rollout planning notes",
+      "observedAt": "2026-08-23T18:00:00Z",
+      "summary": "Mixed synthetic notes include the recorded reconciliation outcome and one unresolved activity.",
+      "creatorOnly": {
+        "locators": [
+          {
+            "kind": "local-path",
+            "value": "/Users/casey/Northstar/notes/week-2026-08-23.md"
+          }
+        ],
+        "rawExcerpt": "<script>unsafe fixture</script> ghp_fixture000000000000000000000000000000 /Users/casey/Northstar/private/reconciliation.env"
+      }
+    }
+  ]
+}

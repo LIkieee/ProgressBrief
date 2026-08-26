@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "wlg_f0000000-0000-4000-8000-000000000001",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "occurredOn": "2026-08-21",
+  "createdAt": "2026-08-23T18:10:00Z",
+  "updatedAt": "2026-08-23T18:10:00Z",
+  "projectIds": [
+    "prj_20000000-0000-4000-8000-000000000002"
+  ],
+  "visibility": "internal",
+  "category": "outcome",
+  "summary": "Reduced the synthetic reconciliation replay from 18 minutes to 6 minutes.",
+  "details": "Merged checkpoint batching after tests and the recorded benchmark passed.",
+  "sourceIds": [
+    "src_30000000-0000-4000-8000-000000000001"
+  ],
+  "relatedKnowledgeIds": [
+    "knw_c0000000-0000-4000-8000-000000000001"
+  ]
+}

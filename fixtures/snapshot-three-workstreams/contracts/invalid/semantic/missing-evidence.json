@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "basePath": "contracts/valid/report.json",
+  "mutations": [
+    {
+      "path": ["claims", 0, "sourceIds", 0],
+      "value": "src_30000000-0000-4000-8000-000000000099"
+    }
+  ]
+}

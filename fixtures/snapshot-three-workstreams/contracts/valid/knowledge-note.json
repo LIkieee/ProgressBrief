@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "knw_c0000000-0000-4000-8000-000000000001",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "title": "Use replay-safe mode for staging load tests",
+  "visibility": "internal",
+  "status": "current",
+  "projectIds": [
+    "prj_20000000-0000-4000-8000-000000000002"
+  ],
+  "topics": ["load-testing", "staging"],
+  "body": "Staging load tests must enable replay-safe mode because the callback fixture may deliver a callback twice.",
+  "examples": ["Enable replay-safe mode before comparing synthetic run durations."],
+  "caveats": ["This note applies only to the synthetic fixture environment."],
+  "sourceIds": [
+    "src_30000000-0000-4000-8000-000000000001"
+  ],
+  "relationships": [],
+  "createdAt": "2026-08-23T18:12:00Z",
+  "updatedAt": "2026-08-23T18:12:00Z"
+}

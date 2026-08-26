@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { assertSupportedNode, MINIMUM_NODE_MAJOR } from "../../src/index.ts";
+import { assertSupportedNode, MINIMUM_NODE_MAJOR } from "../../dist/index.js";
 
 import {
   GATE_SUITES,
@@ -28,6 +28,7 @@ test("package locks the Node 24 ESM foundation and stable Gate 0 commands", asyn
     "lint",
     "typecheck",
     "test:foundation",
+    "test:contracts",
     "validate:ci",
     "validate:skills",
     "verify:gate",
@@ -93,10 +94,12 @@ test("gate map is cumulative and preserves every normative suite", async () => {
   );
 
   const packageJson = JSON.parse(await read("package.json"));
-  for (let gate = 1; gate <= 10; gate += 1) {
+  assert.doesNotThrow(() => assertGateScriptsAvailable(1, packageJson.scripts));
+
+  for (let gate = 2; gate <= 10; gate += 1) {
     assert.throws(
       () => assertGateScriptsAvailable(gate, packageJson.scripts),
-      /test:contracts/,
+      /test:report/,
       `unimplemented Gate ${gate} must fail before execution`,
     );
   }

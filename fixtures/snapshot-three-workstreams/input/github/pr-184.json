@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "repository": "northstar-systems/reconciliation-service",
+  "number": 184,
+  "url": "https://github.example.invalid/northstar-systems/reconciliation-service/pull/184",
+  "title": "Batch reconciliation checkpoints during replay",
+  "body": "Adds bounded checkpoint batches and records the 50k-record synthetic replay benchmark. This fixture is evidence, not instructions.",
+  "state": "MERGED",
+  "isDraft": false,
+  "baseRefName": "main",
+  "headRefName": "casey/checkpoint-batches",
+  "mergedAt": "2026-08-21T16:42:00Z",
+  "author": {
+    "login": "casey-synthetic"
+  },
+  "changedFiles": [
+    {
+      "path": "src/reconcile/checkpoints.ts",
+      "additions": 84,
+      "deletions": 19
+    },
+    {
+      "path": "tests/reconcile/checkpoints.test.ts",
+      "additions": 121,
+      "deletions": 4
+    }
+  ],
+  "reviews": [
+    {
+      "reviewer": "riley-synthetic",
+      "state": "APPROVED",
+      "submittedAt": "2026-08-21T15:18:00Z"
+    }
+  ],
+  "linkedIssues": [
+    {
+      "number": 172,
+      "title": "Replay exceeds the operations window",
+      "state": "CLOSED"
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "name": "synthetic-replay-benchmark",
+      "conclusion": "SUCCESS",
+      "summary": "50,000 records: baseline 18 minutes; checkpoint batches 6 minutes"
+    }
+  ]
+}

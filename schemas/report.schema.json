@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/report.schema.json",
+  "title": "ProgressBrief report source model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "revision",
+    "mode",
+    "workspaceId",
+    "title",
+    "audience",
+    "purpose",
+    "reportingPeriod",
+    "sections",
+    "components",
+    "claims",
+    "evidence",
+    "design",
+    "visualizations",
+    "creatorOnly",
+    "renderedArtifacts",
+    "revisionHistory"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/reportId"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mode": {
+      "enum": ["snapshot", "deep-dive"]
+    },
+    "workspaceId": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "reportingPeriod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "label"],
+      "properties": {
+        "start": {
+          "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/date"
+        },
+        "end": {
+          "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/date"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "summary", "claimIds", "componentIds"],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sectionId"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "claimIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/claimId"
+            }
+          },
+          "componentIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/componentId"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "sectionId", "kind"],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/componentId"
+          },
+          "sectionId": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sectionId"
+          },
+          "kind": {
+            "enum": [
+              "narrative",
+              "bullet-list",
+              "callout",
+              "visual",
+              "evidence-disclosure"
+            ]
+          },
+          "heading": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          },
+          "visualizationId": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/visualizationId"
+          }
+        },
+        "anyOf": [
+          { "required": ["body"], "properties": { "body": true } },
+          { "required": ["items"], "properties": { "items": true } },
+          { "required": ["visualizationId"], "properties": { "visualizationId": true } }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": { "kind": { "const": "visual" } },
+              "required": ["kind"]
+            },
+            "then": {
+              "required": ["visualizationId"],
+              "properties": { "visualizationId": true }
+            }
+          }
+        ]
+      }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement", "implication", "consequential", "sourceIds"],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/claimId"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "implication": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "consequential": {
+            "type": "boolean"
+          },
+          "sourceIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "$ref": "https://progressbrief.dev/schemas/v1/evidence.schema.json"
+    },
+    "design": {
+      "$ref": "https://progressbrief.dev/schemas/v1/design.schema.json"
+    },
+    "visualizations": {
+      "type": "array",
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/visualization.schema.json"
+      }
+    },
+    "creatorOnly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputSummary", "omissions"],
+      "properties": {
+        "inputSummary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["reason", "sourceIds"],
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              },
+              "sourceIds": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "renderedArtifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "contentHash", "createdAt", "creatorOnlyPath"],
+        "properties": {
+          "kind": { "enum": ["source-html", "export-html", "screenshot", "pdf"] },
+          "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "createdAt": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+          },
+          "creatorOnlyPath": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "revisionHistory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["revision", "createdAt", "summary"],
+        "properties": {
+          "revision": { "type": "integer", "minimum": 1 },
+          "createdAt": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+          },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 500 }
+        }
+      }
+    }
+  }
+}

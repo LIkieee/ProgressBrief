@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "knw_d0000000-0000-4000-8000-000000000001",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "title": "Use eight reconciliation workers",
+  "visibility": "internal",
+  "status": "superseded",
+  "projectIds": [
+    "prj_20000000-0000-4000-8000-000000000002"
+  ],
+  "topics": ["reconciliation", "workers"],
+  "body": "The earlier synthetic runbook allowed eight concurrent reconciliation workers.",
+  "examples": [],
+  "caveats": ["A later vendor limit made this guidance obsolete."],
+  "sourceIds": [
+    "src_30000000-0000-4000-8000-000000000001"
+  ],
+  "relationships": [],
+  "createdAt": "2026-08-10T13:00:00Z",
+  "updatedAt": "2026-08-23T18:14:00Z"
+}

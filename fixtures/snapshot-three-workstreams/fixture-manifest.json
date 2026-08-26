@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "1.0.0",
+  "synthetic": true,
+  "persona": {
+    "name": "Casey Morgan",
+    "role": "Product Engineer",
+    "organization": "Northstar Systems"
+  },
+  "reportingPeriod": {
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "label": "Week of August 17"
+  },
+  "workstreams": [
+    {
+      "projectId": "prj_20000000-0000-4000-8000-000000000001",
+      "name": "Enterprise rollout"
+    },
+    {
+      "projectId": "prj_20000000-0000-4000-8000-000000000002",
+      "name": "Reconciliation pipeline"
+    },
+    {
+      "projectId": "prj_20000000-0000-4000-8000-000000000003",
+      "name": "Developer experience"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "messy-notes",
+      "path": "input/messy-notes.md"
+    },
+    {
+      "kind": "local-file",
+      "path": "input/project-brief.md"
+    },
+    {
+      "kind": "screenshot",
+      "path": "input/rollout-dashboard.png"
+    },
+    {
+      "kind": "github-pull-request",
+      "path": "input/github/pr-184.json"
+    }
+  ],
+  "cases": [
+    {
+      "id": "case-strong-outcome",
+      "category": "strongly-evidenced-outcome",
+      "sourcePath": "input/github/pr-184.json",
+      "expectedBehavior": "Use the merged pull request, benchmark summary, and dashboard screenshot to support the latency outcome."
+    },
+    {
+      "id": "case-ambiguous-activity",
+      "category": "ambiguous-activity",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Ask whether permissions cleanup actually completed or omit it when the user requests generate now."
+    },
+    {
+      "id": "case-blocker",
+      "category": "blocker",
+      "sourcePath": "input/project-brief.md",
+      "expectedBehavior": "State that the enterprise pilot is waiting on security review without implying the review is complete."
+    },
+    {
+      "id": "case-ask",
+      "category": "explicit-ask",
+      "sourcePath": "input/project-brief.md",
+      "expectedBehavior": "Make the Friday rollout-cohort decision request explicit for the manager audience."
+    },
+    {
+      "id": "case-decision",
+      "category": "decision-with-rationale",
+      "sourcePath": "input/project-brief.md",
+      "expectedBehavior": "Preserve the choice to stage rollout in three cohorts and its support-coverage rationale."
+    },
+    {
+      "id": "case-next-priority",
+      "category": "next-period-priority",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Show validation of reconciliation alert thresholds as a next-period priority."
+    },
+    {
+      "id": "case-reusable-knowledge",
+      "category": "reusable-knowledge-note",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Classify replay-safe staging load-test setup as reusable knowledge as well as report context when relevant."
+    },
+    {
+      "id": "case-memory-supersession",
+      "category": "duplicated-or-superseded-memory",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Preserve the old worker-count note and link the new four-worker limit as superseding it."
+    },
+    {
+      "id": "case-malicious-html",
+      "category": "malicious-html",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Treat the script element as inert untrusted evidence and never place it in exportable report content."
+    },
+    {
+      "id": "case-fake-credential",
+      "category": "fake-credential",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Keep the synthetic credential sentinel out of exportable fields and never print its value in an error."
+    },
+    {
+      "id": "case-absolute-path",
+      "category": "absolute-path-sentinel",
+      "sourcePath": "input/messy-notes.md",
+      "expectedBehavior": "Keep the raw absolute local path in creator-only source material and out of the export projection."
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/visualization.schema.json",
+  "title": "ProgressBrief visualization specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "family",
+    "title",
+    "purpose",
+    "claimIds",
+    "data",
+    "textAlternative",
+    "replacementOptions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/visualizationId"
+    },
+    "family": {
+      "$ref": "#/$defs/family"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "claimIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/claimId"
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+              "status": { "enum": ["complete", "active", "attention", "planned"] },
+              "value": { "type": "number" },
+              "unit": { "type": "string", "minLength": 1, "maxLength": 40 },
+              "start": { "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/date" },
+              "end": { "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/date" }
+            }
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to"],
+            "properties": {
+              "from": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "to": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "label": { "type": "string", "minLength": 1, "maxLength": 160 }
+            }
+          }
+        }
+      },
+      "anyOf": [
+        { "required": ["items"], "properties": { "items": true } },
+        { "required": ["relationships"], "properties": { "relationships": true } }
+      ]
+    },
+    "textAlternative": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "content"],
+          "properties": {
+            "type": { "const": "prose" },
+            "content": { "type": "string", "minLength": 1, "maxLength": 2000 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "columns", "rows"],
+          "properties": {
+            "type": { "const": "table" },
+            "columns": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "type": "string", "minLength": 1, "maxLength": 120 }
+            },
+            "rows": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "string", "maxLength": 500 }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "replacementOptions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/family"
+      }
+    }
+  },
+  "$defs": {
+    "family": {
+      "enum": [
+        "workstream-landscape",
+        "timeline",
+        "comparison-table",
+        "risk-matrix",
+        "quantitative-chart",
+        "dependency-flow",
+        "evidence-gallery"
+      ]
+    }
+  }
+}

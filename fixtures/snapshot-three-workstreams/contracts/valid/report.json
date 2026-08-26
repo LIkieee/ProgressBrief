@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "rpt_40000000-0000-4000-8000-000000000001",
+  "revision": 1,
+  "mode": "snapshot",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "title": "Casey's weekly progress",
+  "audience": "Casey's engineering manager and cross-functional partners",
+  "purpose": "Explain meaningful movement and the next decision for the week.",
+  "reportingPeriod": {
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "label": "Week of August 17"
+  },
+  "sections": [
+    {
+      "id": "sec_50000000-0000-4000-8000-000000000001",
+      "title": "Movement",
+      "summary": "Checkpoint batching shortened the recorded synthetic replay.",
+      "claimIds": [
+        "clm_70000000-0000-4000-8000-000000000001"
+      ],
+      "componentIds": [
+        "cmp_60000000-0000-4000-8000-000000000001",
+        "cmp_60000000-0000-4000-8000-000000000002"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "cmp_60000000-0000-4000-8000-000000000001",
+      "sectionId": "sec_50000000-0000-4000-8000-000000000001",
+      "kind": "narrative",
+      "heading": "Reconciliation pipeline",
+      "body": "The recorded 50,000-record replay moved from 18 minutes to 6 minutes after checkpoint batching."
+    },
+    {
+      "id": "cmp_60000000-0000-4000-8000-000000000002",
+      "sectionId": "sec_50000000-0000-4000-8000-000000000001",
+      "kind": "visual",
+      "visualizationId": "viz_80000000-0000-4000-8000-000000000001"
+    }
+  ],
+  "claims": [
+    {
+      "id": "clm_70000000-0000-4000-8000-000000000001",
+      "statement": "Checkpoint batching reduced the recorded synthetic replay from 18 minutes to 6 minutes.",
+      "implication": "The replay now fits inside the ten-minute operations window used by the fixture.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001"
+      ]
+    }
+  ],
+  "evidence": {
+    "schemaVersion": "1.0.0",
+    "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+    "sources": [
+      {
+        "id": "src_30000000-0000-4000-8000-000000000001",
+        "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+        "projectIds": [
+          "prj_20000000-0000-4000-8000-000000000002"
+        ],
+        "kind": "pasted-note",
+        "title": "Casey's unedited notes",
+        "publicLabel": "Rollout planning notes",
+        "observedAt": "2026-08-23T18:00:00Z",
+        "summary": "Mixed synthetic notes include the recorded reconciliation outcome and one unresolved activity.",
+        "creatorOnly": {
+          "locators": [
+            {
+              "kind": "local-path",
+              "value": "/Users/casey/Northstar/notes/week-2026-08-23.md"
+            }
+          ],
+          "rawExcerpt": "<script>unsafe fixture</script> ghp_fixture000000000000000000000000000000 /Users/casey/Northstar/private/reconciliation.env"
+        }
+      }
+    ]
+  },
+  "design": {
+    "schemaVersion": "1.0.0",
+    "id": "dsg_90000000-0000-4000-8000-000000000001",
+    "audience": "Casey's engineering manager and cross-functional partners",
+    "pageJob": "Make movement, attention, and the next decision legible in under five minutes.",
+    "tone": "Calm, concrete, and operational",
+    "colors": {
+      "background": "#f7f5ef",
+      "surface": "#ffffff",
+      "text": "#182126",
+      "mutedText": "#56646b",
+      "accent": "#146c72",
+      "border": "#c7d0d2"
+    },
+    "typography": {
+      "displayRole": "System sans serif with compact display spacing",
+      "bodyRole": "System sans serif optimized for reading",
+      "numericRole": "Tabular system numerals"
+    },
+    "layoutConcept": "A narrative spine with three workstreams aligned to one weekly horizon.",
+    "visualSignature": "A checkpoint path echoes staged rollout and reconciliation batches without dashboard ornament."
+  },
+  "visualizations": [
+    {
+      "schemaVersion": "1.0.0",
+      "id": "viz_80000000-0000-4000-8000-000000000001",
+      "family": "quantitative-chart",
+      "title": "Synthetic replay duration",
+      "purpose": "Compare the recorded baseline and checkpoint-batch replay durations.",
+      "claimIds": [
+        "clm_70000000-0000-4000-8000-000000000001"
+      ],
+      "data": {
+        "items": [
+          {
+            "label": "Baseline",
+            "value": 18,
+            "unit": "minutes",
+            "status": "complete"
+          },
+          {
+            "label": "Checkpoint batches",
+            "value": 6,
+            "unit": "minutes",
+            "status": "complete"
+          }
+        ]
+      },
+      "textAlternative": {
+        "type": "table",
+        "columns": ["Run", "Duration"],
+        "rows": [
+          ["Baseline", "18 minutes"],
+          ["Checkpoint batches", "6 minutes"]
+        ]
+      },
+      "replacementOptions": ["comparison-table", "timeline"]
+    }
+  ],
+  "creatorOnly": {
+    "inputSummary": "One normalized contract specimen derived from the synthetic fixture; this is not the Gate 2 golden report.",
+    "omissions": [
+      {
+        "reason": "Permissions cleanup remains ambiguous and must be confirmed or omitted.",
+        "sourceIds": [
+          "src_30000000-0000-4000-8000-000000000001"
+        ]
+      }
+    ]
+  },
+  "renderedArtifacts": [],
+  "revisionHistory": [
+    {
+      "revision": 1,
+      "createdAt": "2026-08-24T09:00:00Z",
+      "summary": "Created the Gate 1 source-model contract specimen."
+    }
+  ]
+}

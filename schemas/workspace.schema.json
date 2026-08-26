@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/workspace.schema.json",
+  "title": "ProgressBrief workspace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "slug",
+    "name",
+    "kind",
+    "defaultVisibility",
+    "archived",
+    "projects",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 80
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "kind": {
+      "enum": ["employer", "personal"]
+    },
+    "defaultVisibility": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/visibility"
+    },
+    "archived": {
+      "type": "boolean"
+    },
+    "projects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "slug", "name", "repositoryAssociations"],
+        "properties": {
+          "id": {
+            "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/projectId"
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "repositoryAssociations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["resolvedRealPath"],
+              "properties": {
+                "resolvedRealPath": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "canonicalRemoteUrl": {
+                  "type": "string",
+                  "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\\.git)?$"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "createdAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    },
+    "updatedAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "employer" } },
+        "required": ["kind"]
+      },
+      "then": {
+        "properties": { "defaultVisibility": { "const": "internal" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "kind": { "const": "personal" } },
+        "required": ["kind"]
+      },
+      "then": {
+        "properties": { "defaultVisibility": { "const": "private" } }
+      }
+    }
+  ]
+}

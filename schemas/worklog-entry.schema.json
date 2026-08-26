@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/worklog-entry.schema.json",
+  "title": "ProgressBrief Worklog Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "workspaceId",
+    "occurredOn",
+    "createdAt",
+    "updatedAt",
+    "projectIds",
+    "visibility",
+    "category",
+    "summary",
+    "details",
+    "sourceIds",
+    "relatedKnowledgeIds"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/worklogId"
+    },
+    "workspaceId": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/workspaceId"
+    },
+    "occurredOn": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/date"
+    },
+    "createdAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    },
+    "updatedAt": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/timestamp"
+    },
+    "projectIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/projectId"
+      }
+    },
+    "visibility": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/visibility"
+    },
+    "category": {
+      "enum": ["outcome", "decision", "blocker", "plan", "collaboration", "activity"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "details": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 5000
+    },
+    "sourceIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+      }
+    },
+    "relatedKnowledgeIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/knowledgeId"
+      }
+    }
+  }
+}

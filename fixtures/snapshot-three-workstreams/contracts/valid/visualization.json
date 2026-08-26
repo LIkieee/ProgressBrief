@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "viz_80000000-0000-4000-8000-000000000001",
+  "family": "quantitative-chart",
+  "title": "Synthetic replay duration",
+  "purpose": "Compare the recorded baseline and checkpoint-batch replay durations.",
+  "claimIds": [
+    "clm_70000000-0000-4000-8000-000000000001"
+  ],
+  "data": {
+    "items": [
+      {
+        "label": "Baseline",
+        "value": 18,
+        "unit": "minutes",
+        "status": "complete"
+      },
+      {
+        "label": "Checkpoint batches",
+        "value": 6,
+        "unit": "minutes",
+        "status": "complete"
+      }
+    ]
+  },
+  "textAlternative": {
+    "type": "table",
+    "columns": ["Run", "Duration"],
+    "rows": [
+      ["Baseline", "18 minutes"],
+      ["Checkpoint batches", "6 minutes"]
+    ]
+  },
+  "replacementOptions": ["comparison-table", "timeline"]
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://progressbrief.dev/schemas/v1/design.schema.json",
+  "title": "ProgressBrief design brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "audience",
+    "pageJob",
+    "tone",
+    "colors",
+    "typography",
+    "layoutConcept",
+    "visualSignature"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/schemaVersion"
+    },
+    "id": {
+      "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/designId"
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "pageJob": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "tone": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["background", "surface", "text", "mutedText", "accent", "border"],
+      "properties": {
+        "background": { "$ref": "#/$defs/color" },
+        "surface": { "$ref": "#/$defs/color" },
+        "text": { "$ref": "#/$defs/color" },
+        "mutedText": { "$ref": "#/$defs/color" },
+        "accent": { "$ref": "#/$defs/color" },
+        "border": { "$ref": "#/$defs/color" }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["displayRole", "bodyRole", "numericRole"],
+      "properties": {
+        "displayRole": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "bodyRole": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "numericRole": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "layoutConcept": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "visualSignature": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    }
+  },
+  "$defs": {
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    }
+  }
+}
