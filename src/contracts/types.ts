@@ -98,6 +98,7 @@ export interface VisualizationSpecification {
     items?: Array<{
       label: string;
       description?: string;
+      sourceId?: string;
       status?: "complete" | "active" | "attention" | "planned";
       value?: number;
       unit?: string;

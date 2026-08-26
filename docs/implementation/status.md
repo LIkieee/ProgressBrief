@@ -1,190 +1,282 @@
 # ProgressBrief implementation status
 
-**Current state:** Gate 2 — Snapshot report path passed locally on 2026-08-26.
-Gate 0 remains passed at `b06f2e1`, and Gate 1 remains passed at `fae655f`.
-Their independent audits are the workspace-level `supervisor/AUDIT-gate0.md`
-and `supervisor/AUDIT-gate1.md`; both verdicts are PASS with no required repair.
+**Current state:** Gate 3 — Renderer, visuals, and export passes. Gates 0–3
+are implemented cumulatively at the pending commit described below. Gates 4–10
+remain unimplemented; Gate 4 fails honestly because `test:review` is absent.
 
-## Gate 2 obligations completed
+## Gate 3 obligations completed
 
-1. Expanded the canonical `progressbrief-report` skill from its Gate 1 boundary
-   into a concise, executable report workflow. It now covers mode, audience,
-   purpose, period, evidence, structure precedence, confirmation, proposal
-   invariants, source-model construction, and the still-unimplemented renderer
-   boundary.
-2. Added deterministic mode and reporting-period resolution for Snapshot and
-   Deep Dive intent; weekly, biweekly, monthly, quarterly, and custom periods;
-   explicit audience and purpose; and a setup-free `generate now` fallback.
-3. Added structure resolution with the required precedence: user-supplied,
-   previously accepted, agent-proposed, then the default Snapshot backbone.
-   Deep Dive requires an evidence-led proposal rather than silently receiving a
-   Snapshot structure.
-4. Added a bounded confirmation planner that asks one material question at a
-   time, emits no more than five concise questions, and immediately stops and
-   omits unresolved evidence on `generate now`.
-5. Added invariant evaluation for agent-authored Snapshot claim and structure
-   proposals. A runtime shape guard returns a validation error for malformed
-   agent output before deeper evaluation. The invariants prove one-Workspace
-   behavior, workstream coverage, supported
-   claim-to-source mappings, conditional semantic sections, safe handling of all
-   eleven fixture cases, omission of ambiguity on `generate now`, preserved
-   memory supersession, and exclusion of unsafe exportable content.
-6. Added a committed agent-authored proposal specimen whose ordering and wording
-   may vary while the invariants remain true. Negative tests cover missing and
-   unknown evidence, incomplete case handling, unsafe case dispositions,
-   unpreserved memory history, and HTML, credential, and absolute-path sentinels.
-7. Added the complete schema-valid `golden-report-model.json` Snapshot with
-   stable report, section, component, claim, source, visualization, and design
-   IDs; Orientation, Movement, Attention, and Forward view; two verified public
-   workstreams; six source-linked claims; evidence disclosure; one visualization
-   specification; and creator-only omission metadata for the unresolved third
-   workstream activity.
-8. Added 15 substantive Gate 2 report tests with zero skipped or todo tests and
-   re-pointed the Gate 0 falsifiability tripwire: Gate 2 is positively available,
-   and every unbuilt Gate 3–10 must fail on the next missing suite,
-   `test:browser`.
+1. Implemented deterministic clean-report rendering from the validated export
+   projection. Fixed inputs produce byte-identical semantic HTML and SHA-256
+   export metadata; the render timestamp is explicit rather than ambient.
+2. Implemented a self-contained clean artifact with inline CSS and SVG, system
+   fonts, restrictive no-script/no-network CSP, escaped untrusted strings,
+   atomic export writes, creator-only field exclusion, and no remote runtime.
+3. Implemented responsive reading and presentation experiences with CSS-only
+   controls, anchor navigation, native disclosures, mobile layout, A4 and US
+   Letter print rules, and essential content that remains present without
+   JavaScript.
+4. Implemented all seven initial visual families: workstream landscape,
+   timeline, comparison table, risk matrix, quantitative chart, dependency
+   flow, and screenshot/evidence gallery. Every visual includes a prose or
+   table equivalent.
+5. Implemented an allowlisted replacement path that preserves visualization
+   identity, claims, data, and text alternative without mutating the source
+   specification.
+6. Implemented public-label evidence disclosure without creator locators, plus
+   reading-only claim implications. The low-noise presentation view suppresses
+   this extra context while leaving consequential content intact.
+7. Implemented automatic raster processing in the export path: evidence-gallery
+   items refer to stable evidence source IDs; supplied screenshot evidence is
+   validated, rotated, bounded, resized, encoded as WebP, and embedded as a data
+   URI. The 10 MiB source limit and 40 MiB finalized-HTML limit fail with
+   actionable asset names.
+8. Added substantive Node and Playwright acceptance coverage for deterministic
+   bytes, automatic embedded assets, every visual family, replacement,
+   escaping, self-containment, presentation/reading/mobile viewports, mobile
+   chart legibility, overflow and clipping, no-JavaScript content, zero
+   requests, CSP, keyboard paths, axe, and both print formats.
+9. Re-pointed the foundation falsifiability tripwire: Gate 3 is positively
+   available, while every unbuilt Gate 4–10 fails at the next required suite,
+   `test:review`.
+10. Generated and visually inspected the clean HTML, all three required
+    viewport screenshots, the embedded evidence-gallery path, and every page of
+    both print formats. One observed defect—7 px chart labels on mobile—was
+    captured by a failing acceptance assertion and repaired to a measured
+    12 px rendered height.
 
 ## Files changed
 
-- Package surface and public status: `package.json`, `README.md`, and
-  `src/index.ts`.
-- Report implementation: `src/report/types.ts`, `resolution.ts`,
-  `structure.ts`, `confirmation.ts`, and `proposal-invariants.ts`.
-- Report skill: `skills/progressbrief-report/SKILL.md` and
-  `references/report-workflow.md`.
-- Gate 2 fixture artifacts:
-  `fixtures/snapshot-three-workstreams/agent-report-proposal.json`,
-  `golden-report-model.json`, and the fixture `README.md`.
-- Acceptance evidence: `tests/report/resolution.test.mjs`,
-  `confirmation-and-structure.test.mjs`, `proposal-invariants.test.mjs`, and
-  `golden-snapshot.test.mjs`.
-- Falsifiability preservation: `tests/foundation/foundation.test.mjs`.
-- This implementation ledger.
+- `.gitignore`: ignores local `tmp/` QA artifacts.
+- `package.json`, `package-lock.json`: add the substantive
+  `test:browser` suite, Playwright, axe, and pinned Sharp dependencies.
+- `schemas/visualization.schema.json`, `src/contracts/types.ts`: add the
+  optional stable evidence `sourceId` link for visualization items.
+- `src/renderer/html.ts`: central HTML and attribute escaping.
+- `src/renderer/assets.ts`: raster optimization plus source/final size limits.
+- `src/renderer/visualizations.ts`: seven semantic visual families,
+  source-linked embedded gallery images, text alternatives, and replacement.
+- `src/renderer/render-report.ts`: deterministic HTML composition,
+  responsive/print CSS, evidence disclosure, automatic asset export, metadata,
+  and atomic writes.
+- `src/index.ts`: exports the Gate 3 renderer, asset, visualization, and type
+  surface.
+- `tests/browser/renderer.test.mjs`: deterministic renderer, visualization,
+  automatic embedded-image, escaping, and asset-limit acceptance tests.
+- `tests/browser/browser.test.mjs`: real Chromium viewport, offline,
+  no-JavaScript, keyboard, accessibility, and print acceptance tests.
+- `tests/foundation/foundation.test.mjs`: Gate 3 positive oracle and Gate
+  4–10 falsifiability tripwire.
+- `docs/implementation/status.md`: this standalone handoff.
 
-## Command ledger
+No workspace snapshot, `outputs/`, authoritative workspace `docs/`,
+canonical history, or `supervisor/` file was modified.
 
-Required-source and repository-state review:
+## Command and result ledger
 
-- `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g 'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'docs/adr/**' -g 'progressbrief/docs/implementation/status.md' -g 'supervisor/AUDIT-*.md' -g 'AGENTS.md' -g 'CLAUDE.md' | sort && git -C progressbrief status --short --branch 2>&1 || true && git -C progressbrief log --oneline --decorate -8 2>&1 || true` — passed; found all required sources, a clean `main`, and Gate 1 at `fae655f`.
-- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md progressbrief/docs/implementation/status.md supervisor/AUDIT-*.md` — passed; established complete-read boundaries for 1,878 lines.
-- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p' ...`, and `sed -n '441,647p' ...` — passed; complete PRD read.
-- `sed -n '1,61p' CONTEXT.md`, `sed -n '1,160p' docs/IMPLEMENTATION_CONTRACT.md`, and `sed -n '161,280p' ...` — passed; complete canonical language and implementation contract read.
-- `sed -n '1,188p' docs/LOOP_RUNBOOK.md`, `for f in docs/adr/*.md; do sed -n '1,999p' "$f"; done`, and `sed -n '1,181p' progressbrief/docs/implementation/status.md` — passed; complete runbook, ADR, and prior status read.
-- `sed` over lines 1–140 and 141–249 of `supervisor/AUDIT-gate0.md`, and lines 1–140 and 141–254 of `supervisor/AUDIT-gate1.md` — passed; both audit verdicts were PASS. Gate 2 inherited the standing tripwire and substantive-suite checks.
-- `rg --files -g '!node_modules' -g '!.npm-cache' -g '!dist' | sort` in the implementation repository — passed; enumerated the complete tracked source surface.
-- `wc -l` over `package.json`, verifier scripts, foundation tests, report schemas and contract modules, report skill files, fixture inputs, and contract tests — passed; established inspection boundaries.
-- `sed` over `package.json`, `scripts/gate-map.mjs`, `scripts/verify-gate.mjs`, `tests/foundation/foundation.test.mjs`, TypeScript and ESLint configuration, source entry points, and all report-skill files — passed; confirmed Gate 2 was the earliest missing suite and that the tripwire targeted `test:report` before the edit.
-- `sed -n '1,260p' /Users/likunkkk/.codex/skills/.system/skill-creator/SKILL.md` plus `wc -l ... && sed -n '261,620p' ...` — passed; complete required skill-creator guidance read.
-- `sed` over all existing contract types, semantic and export validators, ID and revision modules, contract tests, report/evidence/design/visualization/common schemas, fixture manifest, normalized evidence, raw inputs, Work Library specimens, and the Gate 1 report specimen — passed; no authoritative conflict found.
-- `sed -n '1,240p' README.md` — passed; confirmed the Gate 1 public capability boundary before updating it.
+### Required source and recovery inspection
 
-Test-first implementation and focused checks:
+- `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g 'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'docs/adr/**' -g 'progressbrief/docs/implementation/status.md' -g 'supervisor/AUDIT-*.md' | sort && if [ -d progressbrief/.git ]; then git -C progressbrief status --short --branch; else echo 'NO_PROGRESSBRIEF_GIT'; fi && wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/* 2>/dev/null && if [ -f progressbrief/docs/implementation/status.md ]; then wc -l progressbrief/docs/implementation/status.md; fi && if ls supervisor/AUDIT-*.md >/dev/null 2>&1; then wc -l supervisor/AUDIT-*.md; fi`
+  — passed; found the dirty preserved Gate 3 attempt.
+- `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`,
+  `sed -n '221,440p' ...`, and `sed -n '441,700p' ...` — passed;
+  complete PRD read.
+- `sed -n '1,340p' docs/IMPLEMENTATION_CONTRACT.md`,
+  `sed -n '1,260p' docs/LOOP_RUNBOOK.md`, `sed -n '1,120p'
+  CONTEXT.md`, and `sed` over every `docs/adr/*.md` — passed; complete
+  authoritative read with no product conflict.
+- `sed` over the complete existing status and all three
+  `supervisor/AUDIT-gate*.md` files, including separate bounded chunks after
+  one combined output truncated — passed; latest audit verdict was Gate 2 PASS
+  with no required changes.
+- `find .. -name AGENTS.md -print` — passed; no repository AGENTS file.
+- `sed -n '1,260p' .../pdf/SKILL.md` — passed; loaded the PDF render and
+  inspection workflow before writing print QA artifacts.
+- `git status --short --branch && git log --oneline --decorate -6 && git diff
+  --stat && git diff --check && git diff -- package.json src/index.ts
+  tests/foundation/foundation.test.mjs` — passed; reconciled the preserved
+  work against Gate 2 commit `9e085ab`.
+- Complete `sed` reads of every preserved renderer and browser-test file,
+  relevant contract types, export projection, schemas, golden model, package
+  scripts, TypeScript configuration, and ESLint configuration — passed.
 
-- `npm run test:report` immediately after adding the Gate 2 suite — failed as intended: 0 pass, 6 fail because `dist/report/confirmation.js`, `proposal-invariants.js`, `resolution.js`, and `golden-report-model.json` did not exist.
-- `npm run test:report` after the first implementation — failed during build with three `TS18048` errors because optional reusable-knowledge handling was not narrowed.
-- `npm run test:report` after the type narrowing — reported 14 pass and 1 fail; the implementation returned the correct ambiguity error, but the assertion was case-sensitive.
-- `npm run test:report && npm run build && npm run lint && npm run typecheck && npm run validate:skills` after the assertion correction — all passed; report tests were 15 pass, 0 fail, 0 skipped, 0 todo, and both skills validated.
-- `python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — failed because the host Python lacked PyYAML; no repository change occurred.
-- `command -v uv || true; command -v pipx || true` — passed; found `uv` and no `pipx`.
-- `uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — failed because the host-owned default uv cache was not writable; no repository change occurred.
-- `UV_CACHE_DIR=/private/tmp/progressbrief-uv-cache uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — passed using the task-specific temporary cache; reported `Skill is valid!`.
-- `npm run test:report && npm run test:contracts && npm run test:foundation && npm run lint && npm run typecheck` — all passed: 15 report, 11 contract, and 4 foundation tests; zero failed, skipped, or todo tests.
-- `npm run verify:gate -- 2` — first cumulative run passed install, build, lint, typecheck, 4 foundation tests, both skill validations, local CI validation, 11 contract tests, and 15 report tests.
-- `git status --short --branch && git diff --stat && git diff --check`; manual `git diff` over package, tripwire, public API, report implementation, tests, README, skill, and fixture documentation; and `rg -n "passWithNoTests|test\\.skip|it\\.todo|describe\\.skip|\\.only\\(|exit 0|continue-on-error|\\|\\| true" scripts tests package.json .github skills ...` — passed. The only scan hits were the two `continue-on-error` rejection checks in `scripts/validate-ci.mjs`; no bypass exists.
-- `git add --all && git diff --cached --check && git status --short --branch && git diff --cached --stat && git diff --cached --name-status` — passed; staged the 19 intended Gate 2 paths with no whitespace errors or unrelated file.
-- `node -e "...JSON.parse..."` over the two new JSON artifacts and `wc -l` over report skill, implementation, and tests — passed; both artifacts parsed and the skill remained 54 lines with a 59-line shallow reference.
-- `for gate_number in 3 4 5 6 7 8 9 10; do ... npm run verify:gate -- "$gate_number" ...; done` — passed as a negative-oracle check: every future gate failed before execution on `test:browser` and its subsequent missing cumulative suites.
-- Direct original-resolution inspection of `rollout-dashboard.png` — passed; the image supports the 18-minute to 6-minute comparison but not the draft's ten-minute-window implication. That unsupported implication was removed from both the proposal and golden model.
-- Fresh-context read-only forward test of `progressbrief-report` against the raw fixture — completed without repository edits. It followed `generate now`, omitted the ambiguous activity, grounded consequential claims, excluded all three unsafe sentinels, and respected the renderer boundary. It exposed an unspecified weekly-period anchor, which was repaired in the workflow and resolver.
-- `sed` over the resolver, period tests, and workflow reference after an atomic patch context failure — passed; confirmed the failed patch had made no partial change before the corrected patch was applied.
-- `npm run test:report && npm run lint && npm run typecheck && npm run validate:skills && UV_CACHE_DIR=/private/tmp/progressbrief-uv-cache uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` after the forward-test repair — all passed; report tests remained 15 pass with zero skipped or todo tests, and both skill validators passed.
-- `npm run test:report && npm run lint && npm run typecheck` after staged-review hardening — all passed; malformed agent output now returns an invalid-shape result without changing the 15-test count.
-- Final `npm run verify:gate -- 2` — passed the complete cumulative Gate 2 oracle again after all implementation, evidence, wording, skill, and runtime-shape changes: install, build, lint, typecheck, 4 foundation tests, skills, CI validation, 11 contract tests, and 15 report tests.
+### Preserved Gate 3 test-first work
 
-## Artifacts and evidence
+These commands were recorded by the blocked invocation whose work this
+invocation recovered:
 
-- Complete agent-authored proposal specimen:
-  `fixtures/snapshot-three-workstreams/agent-report-proposal.json`.
-- Complete source-model boundary for Gate 3:
-  `fixtures/snapshot-three-workstreams/golden-report-model.json`.
-- Request and interaction behavior: `src/report/resolution.ts`,
-  `structure.ts`, and `confirmation.ts`.
-- Proposal acceptance boundary: `src/report/proposal-invariants.ts`.
-- Executable acceptance evidence: `tests/report/`.
-- Agent-facing workflow: `skills/progressbrief-report/SKILL.md` and
-  `references/report-workflow.md`.
-- No report HTML, PDF, or report screenshot was generated because Gate 2 did not
-  implement or change rendering. The existing synthetic input screenshot was
-  inspected only as evidence while reviewing a claim.
+- `npm run test:browser` before implementation — failed as intended with
+  missing renderer modules and browser dependencies.
+- `npm install --save-exact sharp@0.34.4 && npm install --save-dev
+  --save-exact playwright@1.56.1 @axe-core/playwright@4.11.0` — completed.
+- `npm run test:browser` — 3 pass, 6 fail; exposed the browser revision
+  mismatch and one over-broad escaping assertion.
+- `npm install --save-dev --save-exact playwright@1.57.0` — completed and
+  aligned with cached Chromium 1200.
+- `npm run test:browser` — 4 pass, 5 Chromium-launch failures caused by the
+  prior managed sandbox's denied macOS Mach registration.
+- `node --input-type=module -e 'import { chromium } from "playwright"; const
+  browser = await chromium.launch({channel:"chromium", headless:true}); ...'`
+  — failed; alternate full Chromium launch was blocked by the same environment.
+- `npm run build && npm run lint && npm run typecheck` — build passed; initial
+  lint exposed browser globals before the callback declaration was corrected.
+- `npm run build --silent && node --test tests/browser/renderer.test.mjs` —
+  passed 4/4 non-browser tests.
+- `npm audit --omit=dev --json` with Sharp 0.34.4 — found one high-severity
+  libvips advisory.
+- `npm install --save-exact sharp@0.35.4 && npm run build && npm run lint &&
+  npm run typecheck && npm audit --omit=dev` — passed; zero runtime
+  vulnerabilities.
+- `npm run verify:gate -- 3` — all earlier suites passed; failed only because
+  Chromium could not launch in the prior sandbox.
+- `git status --short --branch && git diff --stat && git diff --name-only &&
+  git diff --check` — passed diagnostic; worktree was intentionally preserved.
+
+### Recovery, visual repair, and automatic asset integration
+
+- `npm run test:browser` on recovery — passed 9/9; real Chromium launched and
+  every preserved assertion executed.
+- `find /Users/likunkkk/.codex -name
+  mark_artifact_operation_started.mjs -print` — passed; located the PDF skill
+  marker.
+- `node .../pdf/container_tools/mark_artifact_operation_started.mjs
+  --operation-kind create --expected-output-count 2 --output-format pdf` —
+  passed exactly once before writing the two QA PDFs.
+- Inline Playwright generation via `node --input-type=module -e '<renderer and
+  artifact generation program>'` — passed; wrote clean HTML, presentation,
+  reading, and mobile screenshots, plus A4 and Letter PDFs under `tmp/`.
+- `pdfinfo tmp/pdfs/golden-snapshot-a4.pdf && pdfinfo
+  tmp/pdfs/golden-snapshot-letter.pdf && mkdir -p tmp/pdfs/rendered-a4
+  tmp/pdfs/rendered-letter && pdftoppm -png -r 110 ... && pdftotext
+  tmp/pdfs/golden-snapshot-a4.pdf - | sed -n '1,220p' && find tmp/pdfs
+  -maxdepth 2 -type f -print | sort` — passed; each PDF is three pages with the
+  expected A4 or Letter page size, no JavaScript, and intact text.
+- `view_image` on all three viewport screenshots and all six rendered PDF
+  pages — passed visual inspection for clipping, overlap, glyphs, hierarchy,
+  and section transitions; mobile chart labels were identified as too small.
+- Mobile Chromium measurement via `node --input-type=module -e '<chart label
+  bounding-box probe>'` — passed and measured a 7 px chart-label height.
+- `npm run test:browser` after adding the legibility assertion — failed as
+  intended: 8 pass, 1 fail at the measured 7 px mobile label.
+- `npm run test:browser` after the first CSS rule — failed as intended: 8
+  pass, 1 fail because the existing SVG selector had greater specificity.
+- `npm run test:browser` after the scoped responsive rule — passed 9/9; the
+  mobile chart label measured 12 px.
+- Inline Playwright regeneration plus `pdftoppm` and `pdfinfo` — passed;
+  regenerated the latest screenshots/PDFs and re-rendered every print page.
+- `view_image` on the repaired mobile screenshot and updated chart-bearing
+  A4/Letter pages — passed visual inspection.
+- `rg` and `sed` over visualization/common schemas and source-ID references
+  — passed; established the smallest additive stable source-link contract.
+- `npm run build --silent && node --test tests/browser/renderer.test.mjs`
+  after adding the automatic gallery test — failed as intended because
+  `renderReportWithAssets` did not exist.
+- `npm run build --silent && node --test tests/browser/renderer.test.mjs`
+  after implementation — passed 5/5.
+- `npm run build && npm run lint && npm run typecheck && npm run
+  test:contracts && npm run test:browser` — passed: build, lint, typecheck,
+  11/11 contract tests, and 10/10 browser/renderer tests.
+- Inline Playwright generation of `evidence-gallery.html` and its component
+  screenshot — passed.
+- `view_image` on `evidence-gallery-1280x800.png` — passed; embedded WebP
+  evidence is sharp, aligned, labeled, and accompanied by a text alternative.
+- `npm run verify:gate -- 3` — **passed**. Install, build, lint, typecheck,
+  4 foundation tests, both skill validations, CI validation, 11 contract tests,
+  15 report tests, and 10 browser/renderer tests all passed with 0 skipped and
+  0 todo.
+- `node scripts/verify-gate.mjs 4` — failed as expected with
+  `Gate 4 is not implemented: missing package scripts test:review.`
+- `npm audit --omit=dev` — passed; zero runtime dependency vulnerabilities.
+- `git status --short --branch && git diff --check && git diff --stat && git
+  diff --name-only && find tmp/gate3-qa tmp/pdfs -type f -maxdepth 3 -print0 |
+  sort -z | xargs -0 shasum -a 256` — passed; no whitespace errors and QA
+  artifact hashes recorded below.
+- `git diff --check && rg -n --glob '!node_modules/**' --glob
+  '!.npm-cache/**' --glob '!dist/**' --glob '!tmp/**'
+  '(--passWithNoTests|\|\| true|test\.skip|it\.todo|describe\.skip|continue-on-error:\s*true|process\.exit\(0\))'
+  . && git status --short --ignored ...` — passed; the only scan hit is
+  `CONTRIBUTING.md` explicitly prohibiting `--passWithNoTests`, and `tmp/` is
+  confirmed ignored.
+
+## Artifacts and visual evidence
+
+Local QA artifacts are intentionally ignored by Git but remain in this workspace
+for the immediate reviewing agent:
+
+- Clean golden HTML: `tmp/gate3-qa/golden-snapshot.html`
+  (`bdc313cd71c9ae9e1f29ff6e746aeabc32ac0d85baafce69f1f4b56c6c757d99`).
+- Presentation 1440 × 900:
+  `tmp/gate3-qa/presentation-1440x900.png`
+  (`45c7f019d45a776745d89cadade8e4c81076665f99551af140364f3761677062`).
+- Reading 1280 × 800: `tmp/gate3-qa/reading-1280x800.png`
+  (`888fa0c2f53076fe6822faa95549dc6c5a405777d406c4fd4cb57b983c5979b7`).
+- Mobile 390 × 844: `tmp/gate3-qa/mobile-390x844.png`
+  (`1ea1892cc0542d3604e1c0c2e6991d58a672302989118765de8f4cada7943d05`).
+- Source-linked gallery HTML and screenshot:
+  `tmp/gate3-qa/evidence-gallery.html` and
+  `tmp/gate3-qa/evidence-gallery-1280x800.png`.
+- A4 PDF: `tmp/pdfs/golden-snapshot-a4.pdf`
+  (`05565674a5d62085e34f3fd3d5738d981febded12106ab365e0a15ce5da14c3f`).
+- US Letter PDF: `tmp/pdfs/golden-snapshot-letter.pdf`
+  (`b009481be10a2625c9a60830492535823dfc57a9ae898fcfa9819beb514915de`).
+- Six page-render PNGs:
+  `tmp/pdfs/rendered-a4/page-{1,2,3}.png` and
+  `tmp/pdfs/rendered-letter/page-{1,2,3}.png`.
+
+The executable acceptance evidence is committed in
+`tests/browser/renderer.test.mjs` and `tests/browser/browser.test.mjs`;
+the ignored QA artifacts are supplementary visual-review evidence, not oracle
+inputs.
 
 ## Judgment for review
 
-- Interpreted the user's instruction to complete one whole gate as overriding
-  the runbook's older one-obligation iteration wording; all Gate 2 obligations
-  were completed, and no Gate 3 implementation was attempted.
-- Used an unqualified weekly request as the most recent completed
-  Monday-through-Sunday period; `this week` means Monday through today. An
-  unqualified biweekly request uses the two most recent completed weeks, while
-  monthly and quarterly requests use the current calendar period through today.
-  This reversible default was made explicit after fresh-context testing exposed
-  the ambiguity and matches the fixture's completed Aug 17–23 week.
-- Chose Snapshot as the `generate now` fallback only when mode remains
-  unresolved. This permits setup-free generation without inventing a Deep Dive
-  purpose.
-- Kept agent proposals separate from persisted report models. Proposals use
-  stable semantic keys and are evaluated by invariants; opaque persisted IDs are
-  assigned once in the source model. No proposal JSON Schema was added because
-  proposals are not a persistent or interchange contract in Gate 2.
-- Made required Snapshot modules conditional on included content rather than
-  universally mandatory, preserving the PRD rule that empty modules are
-  omitted. This fixture requires all four roles because it contains movement,
-  attention, and a forward priority.
-- Represented all three fixture workstreams in the proposal structure but
-  omitted the only Developer experience activity from exportable content under
-  `generate now` because its completion is unresolved. The golden Snapshot
-  publicly communicates the two verified workstreams and records the third
-  workstream omission only in creator metadata.
-- Included replay-safe knowledge because it explains the benchmark's
-  comparability. Kept four-versus-eight-worker supersession as memory-only
-  because it does not materially explain this reporting period; history remains
-  preserved in the Gate 1 Work Library specimens.
-- Kept design and visualization specifications in the golden model because the
-  report schema requires the renderer boundary, but did not implement or claim
-  HTML, browser, accessibility, print, offline, asset, or export behavior.
-- Required an evidence-led proposal for Deep Dive structure rather than applying
-  the Snapshot default. Gate 2 resolves mode but does not implement the Gate 7
-  Deep Dive flow.
-- Added no dependency. The existing Ajv contract validation and Node standard
-  library remain sufficient for Gate 2.
-- Applied the `skill-creator` guidance by keeping the skill concise, moving
-  detailed workflow into one shallow reference, validating with both repository
-  and skill-creator validators, and running a fresh-context read-only forward
-  test. It materially clarified the period anchor and `generate now` precedence.
-
-## Commit intent
-
-Commit the complete passing Gate 2 change and this ledger together as
-`feat: implement Gate 2 Snapshot report path`.
+- Added Sharp because reliable bounded raster decode, rotation, resize, and WebP
+  encoding materially reduce portability and malformed-image risk. It is pinned
+  to 0.35.4 after the earlier version's libvips advisory; the runtime audit is
+  clean.
+- Used CSS-only radio controls for presentation and reading behavior. Final HTML
+  therefore remains fully functional under `script-src 'none'`.
+- Kept rendering on the existing allowlist export projection, then escaped every
+  model string and enforced final size. Creator-only locators are structurally
+  unavailable to the renderer.
+- Used an explicit `renderedAt` input so HTML/export metadata remain
+  deterministic under fixed inputs.
+- Added optional `sourceId` to visualization items as the smallest stable,
+  non-display-text link between a gallery item and normalized screenshot
+  evidence. The export path rejects unknown, duplicate, non-screenshot,
+  unreferenced, and missing raster inputs.
+- Kept gallery raster bytes outside persistent JSON and accepted them only as
+  explicit export inputs. This avoids base64 in the semantic model while still
+  producing a single self-contained artifact.
+- Set the mobile chart acceptance floor at 10 rendered pixels and implemented a
+  scoped 22-SVG-unit responsive rule that measures 12 px at 390 px. This repaired
+  legibility without affecting desktop/print geometry.
+- Kept QA artifacts ignored rather than committing environment-rendered binaries;
+  their paths and hashes are recorded for the immediate audit, while the
+  deterministic tests are the durable evidence.
+- Did not add skips, fallbacks, conditional browser bypasses, or placeholder
+  assertions for the prior sandbox failure. The real Chromium suite is the Gate
+  3 oracle.
 
 ## Unresolved risks and next gate
 
-- The agent proposal validator is intentionally an in-process invariant boundary,
-  not a persisted schema. A later feature that stores proposals must add a
-  versioned contract rather than treating the current TypeScript interface and
-  runtime shape guard as a file format.
-- Period resolution is calendar-based in UTC. Host-local timezone interpretation
-  and natural-language date breadth may need expansion when real CLI parsing is
-  introduced, but the current explicit-date and cadence behavior is deterministic.
-- The golden model is source data, not rendered proof. No HTML determinism,
-  responsive behavior, CSP, offline behavior, accessibility, print, or asset
-  limits have passed yet.
-- Gate 1's path-regex advisory, repository-local npm cache, `npm test` breadth,
-  and `private: true` remain Gate 10 review items.
-- Authorized remote CI remains a Gate 10 requirement; no remote operation was
-  attempted.
+- The Gate 3 browser proof is from the current native macOS environment and
+  pinned Playwright Chromium. Cross-platform clean-host evidence remains Gate 9,
+  and authorized CI/release proof remains Gate 10.
+- The golden report visually exercises the quantitative chart; the source-linked
+  evidence gallery received a separate visual inspection. The other five initial
+  families have semantic/string acceptance coverage but do not yet have committed
+  screenshot baselines.
+- PDFs are visually correct but are not tagged PDFs; Gate 3's accessibility
+  oracle targets the semantic offline HTML and reports zero serious/critical axe
+  violations. The product contract does not promise tagged-PDF accessibility.
+- QA screenshots and PDFs are ignored local evidence, so a clean clone must
+  regenerate them; the browser suite itself is clean-clone reproducible.
 
-**Next gate:** Gate 3 — Renderer, visuals, and export. Build the deterministic
-self-contained HTML renderer from `golden-report-model.json`, presentation and
-reading behavior, visualization replacement, evidence disclosure, screenshot,
-print, offline, CSP, accessibility, and asset-limit checks. The next substantive
-suite must be `test:browser`; do not begin creator review work.
+**Commit intent:** `feat: implement Gate 3 renderer and export`.
+
+**Next gate:** Gate 4 — Creator review loop. Begin with a failing
+`test:review` acceptance suite for loopback binding, per-session token and
+request validation, stable annotation targeting, durable atomic queues, exact
+Codex/Claude invocations, SSE reload, conflict handling, and structural
+exclusion from clean export. Do not begin Gate 5.

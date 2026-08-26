@@ -1,5 +1,6 @@
 dist/
 node_modules/
 .npm-cache/
+tmp/
 *.log
 .DS_Store

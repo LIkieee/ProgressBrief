@@ -56,6 +56,9 @@
             "properties": {
               "label": { "type": "string", "minLength": 1, "maxLength": 160 },
               "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+              "sourceId": {
+                "$ref": "https://progressbrief.dev/schemas/v1/common.schema.json#/$defs/sourceId"
+              },
               "status": { "enum": ["complete", "active", "attention", "planned"] },
               "value": { "type": "number" },
               "unit": { "type": "string", "minLength": 1, "maxLength": 40 },

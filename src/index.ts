@@ -16,6 +16,34 @@ export type {
   ReportExportProjection,
   ReportSourceModel,
 } from "./contracts/types.js";
+export {
+  MAX_FINAL_HTML_BYTES,
+  MAX_SOURCE_ASSET_BYTES,
+  assertFinalHtmlSize,
+  optimizeRasterAsset,
+} from "./renderer/assets.js";
+export type {
+  EmbeddedRasterAsset,
+  OptimizedRasterAsset,
+  RasterAssetInput,
+  ReportRasterAssetInput,
+} from "./renderer/assets.js";
+export {
+  renderReport,
+  renderReportWithAssets,
+  writeReportExport,
+} from "./renderer/render-report.js";
+export type {
+  RenderOptions,
+  RenderedExportMetadata,
+  RenderedReport,
+  WriteReportExportOptions,
+} from "./renderer/render-report.js";
+export {
+  VISUALIZATION_FAMILIES,
+  renderVisualization,
+  replaceVisualizationFamily,
+} from "./renderer/visualizations.js";
 export { createConfirmationPlan } from "./report/confirmation.js";
 export { validateSnapshotProposal } from "./report/proposal-invariants.js";
 export {
