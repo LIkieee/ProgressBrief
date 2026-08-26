@@ -1,0 +1,3 @@
+# Use Codex as the reference environment and support Claude Code as a first-class install target
+
+Codex will be the reference development and full acceptance environment, while Claude Code remains a first-class V1 distribution target rather than a best-effort compatibility claim. Host adapters may differ, but a new Claude Code user must be able to install ProgressBrief and complete representative report and memory workflows without editing the package or debugging host-specific failures; automated clean-install smoke tests enforce that promise. Official V1 operating-system support covers native macOS, native Linux, and Windows through WSL2; native Windows and PowerShell are deferred until dedicated end-to-end testing exists.

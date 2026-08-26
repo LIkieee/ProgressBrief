@@ -1,0 +1,3 @@
+# Complete V1 through multiple gated implementation loops
+
+The implementation target is the complete committed V1 scope, not a report-only alpha. Work proceeds through bounded invocations in the PRD's dependency order: each invocation completes exactly one testable obligation, passes the cumulative oracle for its current gate, updates status, commits, and stops; an outer loop launches the next invocation. The Snapshot vertical slice is an early integration gate rather than a stopping point, and completion requires every section 19 acceptance criterion plus the release oracle and authorized CI evidence to pass.

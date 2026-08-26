@@ -1,0 +1,4 @@
+interface:
+  display_name: "ProgressBrief Report"
+  short_description: "Create evidence-aware professional reports"
+  default_prompt: "Use $progressbrief-report to turn my work evidence into a concise Snapshot."

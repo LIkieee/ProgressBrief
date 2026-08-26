@@ -1,0 +1,42 @@
+{
+  "name": "progressbrief",
+  "version": "0.0.0",
+  "description": "Turn work evidence into concise, evidence-aware HTML reports.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "progressbrief": "./dist/cli/main.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "skills"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run test:foundation",
+    "test:foundation": "node --test tests/foundation/*.test.mjs",
+    "validate:ci": "node scripts/validate-ci.mjs",
+    "validate:skills": "node scripts/validate-skills.mjs",
+    "verify:gate": "node scripts/verify-gate.mjs",
+    "verify": "node scripts/verify-gate.mjs 10"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.3",
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.68.0",
+    "yaml": "^2.9.0"
+  }
+}
