@@ -16,6 +16,23 @@ export type {
   ReportExportProjection,
   ReportSourceModel,
 } from "./contracts/types.js";
+export { createConfirmationPlan } from "./report/confirmation.js";
+export { validateSnapshotProposal } from "./report/proposal-invariants.js";
+export {
+  resolveReportMode,
+  resolveReportRequest,
+  resolveReportingPeriod,
+} from "./report/resolution.js";
+export {
+  DEFAULT_SNAPSHOT_STRUCTURE,
+  resolveStructure,
+} from "./report/structure.js";
+export type {
+  AgentReportProposal,
+  ConfirmationPlan,
+  ResolvedReportRequest,
+  StructureResolution,
+} from "./report/types.js";
 
 export function assertSupportedNode(version = process.versions.node): void {
   const major = Number.parseInt(version.split(".")[0] ?? "", 10);

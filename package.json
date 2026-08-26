@@ -26,6 +26,7 @@
     "test": "npm run test:foundation",
     "test:contracts": "npm run build --silent && node --test tests/contracts/*.test.mjs",
     "test:foundation": "npm run build --silent && node --test tests/foundation/*.test.mjs",
+    "test:report": "npm run build --silent && node --test tests/report/*.test.mjs",
     "validate:ci": "node scripts/validate-ci.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "verify:gate": "node scripts/verify-gate.mjs",

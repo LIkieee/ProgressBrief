@@ -17,12 +17,14 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently contains the Gate 0 foundation and Gate 1 semantic
-contracts: a complete synthetic three-workstream fixture, eight versioned JSON
-Schemas, stable entity IDs and report revisions, semantic reference checks,
-and a creator-only-safe export projection. Report generation, rendering,
-persistence, and review features are delivered by later gates and are not
-claimed as implemented yet.
+The repository currently contains the Gate 0 foundation, Gate 1 semantic
+contracts, and the Gate 2 Snapshot report path. The report skill can resolve
+mode, audience, purpose, reporting period, and structure; run a bounded
+confirmation plan including `generate now`; evaluate agent-authored claims by
+content invariants; and produce a schema-valid report source model. The
+synthetic fixture includes the complete golden Snapshot used by later renderer
+tests. HTML rendering, persistence, and creator review arrive in later gates
+and are not claimed as implemented yet.
 
 ## Requirements
 
@@ -38,7 +40,7 @@ Install exactly the committed dependency graph and run the current gate:
 
 ```sh
 npm ci
-npm run verify:gate -- 1
+npm run verify:gate -- 2
 ```
 
 Individual foundation checks are also stable:
@@ -51,6 +53,7 @@ npm test
 npm run validate:skills
 npm run validate:ci
 npm run test:contracts
+npm run test:report
 ```
 
 `verify:gate` is cumulative. A gate that has not been implemented fails when

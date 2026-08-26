@@ -1,181 +1,190 @@
 # ProgressBrief implementation status
 
-**Current state:** Gate 1 — Fixture and semantic contracts passed locally on
-2026-08-26. Gate 0 remains passed at commit `b06f2e1`; its independent audit is
-the workspace-level `supervisor/AUDIT-gate0.md` and required no repairs.
+**Current state:** Gate 2 — Snapshot report path passed locally on 2026-08-26.
+Gate 0 remains passed at `b06f2e1`, and Gate 1 remains passed at `fae655f`.
+Their independent audits are the workspace-level `supervisor/AUDIT-gate0.md`
+and `supervisor/AUDIT-gate1.md`; both verdicts are PASS with no required repair.
 
-## Gate 1 obligations completed
+## Gate 2 obligations completed
 
-1. Added a complete, entirely synthetic Snapshot fixture for one product
-   engineer, three workstreams, mixed notes, one local file, one 960 × 540 PNG
-   screenshot, and recorded synthetic GitHub pull-request metadata.
-2. Mapped all eleven distinct required fixture cases in
-   `fixture-manifest.json`: a strongly evidenced outcome, ambiguous activity,
-   blocker, explicit ask, decision with rationale, next priority, reusable
-   knowledge, superseded memory, malicious HTML, fake credential, and absolute
-   path sentinel.
-3. Added strict JSON Schema 2020-12 contracts for report, evidence, design,
-   visualization, workspace, Worklog Entry, Knowledge Note, and feedback queue
-   documents, backed by a versioned shared definition schema and Ajv validation.
-4. Added UUID-v4 stable-ID generation with type prefixes for every persisted
-   entity and immutable revision advancement that preserves the report and all
-   nested IDs.
-5. Added valid fixtures for all eight required schemas plus invalid schema
-   fixtures for malformed IDs, invalid visibility defaults, bad feedback
-   targets, and unexpected fields.
-6. Added semantic report validation for unique and resolvable references,
-   claim-to-source relationships, one-Workspace boundaries, section/component
-   ownership, visualization/claim relationships, reporting periods, and
-   contiguous revision history.
-7. Added negative semantic and export cases for missing evidence,
-   cross-Workspace references, raw absolute paths, and suspected credentials.
-8. Added an explicit export projection type and implementation that reconstructs
-   the public model field by field. Creator-only locators, raw excerpts,
-   generation metadata, artifact paths, malicious HTML, secret sentinels, and
-   path sentinels cannot enter the projection; defense-in-depth scanning blocks
-   unsafe values that appear in otherwise exportable fields without echoing them.
-9. Added 11 substantive Gate 1 contract tests with zero skipped or todo tests and
-   preserved the Gate 0 falsifiability tripwire by moving future-gate failure
-   assertions to the next missing suite, `test:report`.
+1. Expanded the canonical `progressbrief-report` skill from its Gate 1 boundary
+   into a concise, executable report workflow. It now covers mode, audience,
+   purpose, period, evidence, structure precedence, confirmation, proposal
+   invariants, source-model construction, and the still-unimplemented renderer
+   boundary.
+2. Added deterministic mode and reporting-period resolution for Snapshot and
+   Deep Dive intent; weekly, biweekly, monthly, quarterly, and custom periods;
+   explicit audience and purpose; and a setup-free `generate now` fallback.
+3. Added structure resolution with the required precedence: user-supplied,
+   previously accepted, agent-proposed, then the default Snapshot backbone.
+   Deep Dive requires an evidence-led proposal rather than silently receiving a
+   Snapshot structure.
+4. Added a bounded confirmation planner that asks one material question at a
+   time, emits no more than five concise questions, and immediately stops and
+   omits unresolved evidence on `generate now`.
+5. Added invariant evaluation for agent-authored Snapshot claim and structure
+   proposals. A runtime shape guard returns a validation error for malformed
+   agent output before deeper evaluation. The invariants prove one-Workspace
+   behavior, workstream coverage, supported
+   claim-to-source mappings, conditional semantic sections, safe handling of all
+   eleven fixture cases, omission of ambiguity on `generate now`, preserved
+   memory supersession, and exclusion of unsafe exportable content.
+6. Added a committed agent-authored proposal specimen whose ordering and wording
+   may vary while the invariants remain true. Negative tests cover missing and
+   unknown evidence, incomplete case handling, unsafe case dispositions,
+   unpreserved memory history, and HTML, credential, and absolute-path sentinels.
+7. Added the complete schema-valid `golden-report-model.json` Snapshot with
+   stable report, section, component, claim, source, visualization, and design
+   IDs; Orientation, Movement, Attention, and Forward view; two verified public
+   workstreams; six source-linked claims; evidence disclosure; one visualization
+   specification; and creator-only omission metadata for the unresolved third
+   workstream activity.
+8. Added 15 substantive Gate 2 report tests with zero skipped or todo tests and
+   re-pointed the Gate 0 falsifiability tripwire: Gate 2 is positively available,
+   and every unbuilt Gate 3–10 must fail on the next missing suite,
+   `test:browser`.
 
 ## Files changed
 
-- Package and public status: `package.json`, `package-lock.json`, `README.md`,
-  and `src/index.ts`.
-- Contracts: `schemas/common.schema.json` plus the eight required
-  `schemas/*.schema.json` documents.
-- Contract implementation: `src/contracts/ids.ts`, `revisions.ts`, `types.ts`,
-  `schema-validator.ts`, `report-semantics.ts`, and `export-projection.ts`.
-- Synthetic corpus: everything under
-  `fixtures/snapshot-three-workstreams/`, including source inputs, normalized
-  evidence, Work Library specimens, valid/invalid contract fixtures, and the
-  raster screenshot.
-- Acceptance evidence: `tests/contracts/fixture.test.mjs`,
-  `schemas.test.mjs`, `identity-and-revision.test.mjs`, and
-  `report-semantics-and-export.test.mjs`.
+- Package surface and public status: `package.json`, `README.md`, and
+  `src/index.ts`.
+- Report implementation: `src/report/types.ts`, `resolution.ts`,
+  `structure.ts`, `confirmation.ts`, and `proposal-invariants.ts`.
+- Report skill: `skills/progressbrief-report/SKILL.md` and
+  `references/report-workflow.md`.
+- Gate 2 fixture artifacts:
+  `fixtures/snapshot-three-workstreams/agent-report-proposal.json`,
+  `golden-report-model.json`, and the fixture `README.md`.
+- Acceptance evidence: `tests/report/resolution.test.mjs`,
+  `confirmation-and-structure.test.mjs`, `proposal-invariants.test.mjs`, and
+  `golden-snapshot.test.mjs`.
 - Falsifiability preservation: `tests/foundation/foundation.test.mjs`.
-- Layout sentinels removed because their directories now contain real files:
-  `fixtures/snapshot-three-workstreams/.gitkeep`, `schemas/.gitkeep`,
-  `src/contracts/.gitkeep`, and `tests/contracts/.gitkeep`.
 - This implementation ledger.
 
 ## Command ledger
 
-Required-source and state review:
+Required-source and repository-state review:
 
-- `pwd && rg --files -g 'AGENTS.md' -g '!progressbrief/node_modules' -g '!node_modules' && find docs/adr -type f -maxdepth 2 -print | sort && find supervisor -maxdepth 1 -type f -name 'AUDIT-*.md' -print | sort && if [ -d progressbrief ]; then git -C progressbrief status --short --branch; fi` — stopped after `rg` found no `AGENTS.md`; no repository mutation occurred.
-- `pwd; rg --files -g 'AGENTS.md' ... || :; find docs/adr ...; find supervisor ...; git -C progressbrief status --short --branch` — passed; found six ADRs, `supervisor/AUDIT-gate0.md`, and a clean `main` branch.
-- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md supervisor/AUDIT-*.md; wc -l progressbrief/docs/implementation/status.md` — passed; established complete-read boundaries.
+- `pwd && rg --files -g 'PROGRESSBRIEF_PRD.md' -g 'CONTEXT.md' -g 'IMPLEMENTATION_CONTRACT.md' -g 'LOOP_RUNBOOK.md' -g 'docs/adr/**' -g 'progressbrief/docs/implementation/status.md' -g 'supervisor/AUDIT-*.md' -g 'AGENTS.md' -g 'CLAUDE.md' | sort && git -C progressbrief status --short --branch 2>&1 || true && git -C progressbrief log --oneline --decorate -8 2>&1 || true` — passed; found all required sources, a clean `main`, and Gate 1 at `fae655f`.
+- `wc -l outputs/PROGRESSBRIEF_PRD.md CONTEXT.md docs/IMPLEMENTATION_CONTRACT.md docs/LOOP_RUNBOOK.md docs/adr/*.md progressbrief/docs/implementation/status.md supervisor/AUDIT-*.md` — passed; established complete-read boundaries for 1,878 lines.
 - `sed -n '1,220p' outputs/PROGRESSBRIEF_PRD.md`, `sed -n '221,440p' ...`, and `sed -n '441,647p' ...` — passed; complete PRD read.
-- `sed -n '1,61p' CONTEXT.md; sed -n '1,160p' docs/IMPLEMENTATION_CONTRACT.md` and `sed -n '161,280p' docs/IMPLEMENTATION_CONTRACT.md; sed -n '1,188p' docs/LOOP_RUNBOOK.md` — passed; complete canonical language, contract, and runbook read.
-- `for f in docs/adr/*.md; do ...; done; sed -n '1,140p' supervisor/AUDIT-gate0.md; sed -n '1,127p' progressbrief/docs/implementation/status.md` plus `sed -n '141,249p' supervisor/AUDIT-gate0.md` — passed; complete ADR, prior status, and required audit read. The audit verdict was PASS with no Gate 1 repairs; F1/F2 required preserving falsifiability and proving suite substance.
-- `git status --short --branch; git log -3 --oneline --decorate; rg --files ...; sed` over `package.json`, the gate scripts, foundation tests, and source entry points — passed; confirmed Gate 0 commit `b06f2e1`, a clean tree, and Gate 1 as earliest unmet.
-- `sed` over both TypeScript configurations and ESLint config plus `find fixtures schemas src tests ...` — passed; confirmed only Gate 0 sentinels existed in Gate 1 directories.
-- `sed` over both skill files and both product-boundary references — passed; found no Gate 1 contradiction or required skill edit.
+- `sed -n '1,61p' CONTEXT.md`, `sed -n '1,160p' docs/IMPLEMENTATION_CONTRACT.md`, and `sed -n '161,280p' ...` — passed; complete canonical language and implementation contract read.
+- `sed -n '1,188p' docs/LOOP_RUNBOOK.md`, `for f in docs/adr/*.md; do sed -n '1,999p' "$f"; done`, and `sed -n '1,181p' progressbrief/docs/implementation/status.md` — passed; complete runbook, ADR, and prior status read.
+- `sed` over lines 1–140 and 141–249 of `supervisor/AUDIT-gate0.md`, and lines 1–140 and 141–254 of `supervisor/AUDIT-gate1.md` — passed; both audit verdicts were PASS. Gate 2 inherited the standing tripwire and substantive-suite checks.
+- `rg --files -g '!node_modules' -g '!.npm-cache' -g '!dist' | sort` in the implementation repository — passed; enumerated the complete tracked source surface.
+- `wc -l` over `package.json`, verifier scripts, foundation tests, report schemas and contract modules, report skill files, fixture inputs, and contract tests — passed; established inspection boundaries.
+- `sed` over `package.json`, `scripts/gate-map.mjs`, `scripts/verify-gate.mjs`, `tests/foundation/foundation.test.mjs`, TypeScript and ESLint configuration, source entry points, and all report-skill files — passed; confirmed Gate 2 was the earliest missing suite and that the tripwire targeted `test:report` before the edit.
+- `sed -n '1,260p' /Users/likunkkk/.codex/skills/.system/skill-creator/SKILL.md` plus `wc -l ... && sed -n '261,620p' ...` — passed; complete required skill-creator guidance read.
+- `sed` over all existing contract types, semantic and export validators, ID and revision modules, contract tests, report/evidence/design/visualization/common schemas, fixture manifest, normalized evidence, raw inputs, Work Library specimens, and the Gate 1 report specimen — passed; no authoritative conflict found.
+- `sed -n '1,240p' README.md` — passed; confirmed the Gate 1 public capability boundary before updating it.
 
 Test-first implementation and focused checks:
 
-- `npm run test:contracts` — failed as intended before implementation: four test files could not resolve the not-yet-created Gate 1 contract modules; 0 pass, 4 fail, 0 skipped, 0 todo.
-- `npm install ajv@^8.17.1` — passed; installed Ajv 8.20.0 and its four runtime packages, changed the lockfile, and reported zero vulnerabilities.
-- `command -v magick; command -v convert; command -v sips; command -v qlmanage` — passed; only macOS `sips` and `qlmanage` were available.
-- `sips -s format png ...rollout-dashboard-source.svg --out ...rollout-dashboard.png; file ...; wc -c ...` — conversion failed because `sips` could not decode SVG; no PNG was written.
-- `qlmanage -t -s 960 -o /private/tmp ...; ls ...; mv ...; file ...; wc -c ...` — failed because Quick Look sandbox initialization was not permitted; no fixture output was written.
-- `python3 -c "import PIL; print(PIL.__version__)"` — failed read-only capability check because Pillow was not installed; Python was not used to create or edit files.
-- `swift --version` — passed; found Swift 6.2.4.
-- `swift scripts/generate-fixture-screenshot.swift ...; file ...; wc -c ...` — failed because Swift's default module cache was not writable; no PNG was written.
-- `mkdir -p /private/tmp/progressbrief-swift-module-cache; CLANG_MODULE_CACHE_PATH=/private/tmp/progressbrief-swift-module-cache SWIFT_MODULECACHE_PATH=/private/tmp/progressbrief-swift-module-cache swift scripts/generate-fixture-screenshot.swift fixtures/snapshot-three-workstreams/input/rollout-dashboard.png; file fixtures/snapshot-three-workstreams/input/rollout-dashboard.png; wc -c fixtures/snapshot-three-workstreams/input/rollout-dashboard.png` — passed after the temporary task-specific cache was selected; produced a 34,578-byte, 960 × 540 RGBA PNG. The temporary generator and SVG source were then removed, leaving only the final synthetic raster fixture.
-- Local image inspection of `fixtures/snapshot-three-workstreams/input/rollout-dashboard.png` — passed; labels, bars, 18-minute baseline, 6-minute current value, and synthetic marker were legible with no clipping.
-- `npm run test:contracts` — first implementation run reported 6 pass and 3 fail: direct TypeScript tests could not resolve compiled `.js` imports, and Ajv strict-required checks rejected conditional branches without local property declarations.
-- `sed` over `node_modules/ajv/dist/2020.d.ts` and `node_modules/ajv/package.json`, plus `rg 'export default|export =' ...` — passed; confirmed Ajv exposes the named `Ajv2020` class and the required types.
-- `npm run test:contracts` — next run failed during TypeScript build because the Ajv default import was not constructable under NodeNext module resolution.
-- `npm run test:contracts` — passed after using the named Ajv export and compiled test targets: 11 pass, 0 fail, 0 skipped, 0 todo.
-- `npm run build; npm run lint; npm run typecheck; npm run test:foundation` — all passed; foundation reported 4 pass, 0 fail, 0 skipped, 0 todo.
-- `sed` over `README.md` and `package-lock.json`, followed by `git diff --stat; git status --short` — passed; inspected dependency placement and the complete worktree delta before final hardening.
-- `npm run test:contracts; npm run lint; npm run typecheck` — all passed after adding duplicate-reference, fixture-reference, nested-ID, reporting-period, and general absolute-path checks; contract tests remained 11 pass, 0 fail, 0 skipped, 0 todo.
-
-Gate and falsifiability oracles:
-
-- `npm run verify:gate -- 1` — passed the cumulative Gate 1 oracle: clean install, build, lint, typecheck, 4 foundation tests, both skill validations, static macOS/Linux CI validation, and 11 contract tests. All tests reported zero skipped and zero todo.
-- `for gate in 2 3 4 5 6 7 8 9 10; do gate_log="/private/tmp/progressbrief-gate-${gate}.log"; if npm run verify:gate -- "$gate" >"$gate_log" 2>&1; then echo "Gate $gate unexpectedly passed"; exit 1; else echo "Gate $gate failed as expected: $(tail -n 1 "$gate_log")"; fi; done` — passed as a negative-oracle check: every future gate failed before execution. Gate 2 failed on missing `test:report`; later gates cumulatively named that suite and every subsequent missing suite through Gate 10's `test:security` and `test:release`.
-- `git add --all; git diff --cached --check; git status --short --branch; git diff --cached --stat; git diff --cached --name-status` — passed; staged 57 intended paths, found no whitespace errors, and exposed no unrelated file.
-- `git diff --cached -- package.json src/index.ts src/contracts tests/contracts tests/foundation/foundation.test.mjs; git diff --cached -- schemas/common.schema.json schemas/report.schema.json schemas/evidence.schema.json; rg -n "passWithNoTests|test\\.skip|it\\.todo|describe\\.skip|\\.only\\(|exit 0|continue-on-error" scripts tests package.json .github -g '!node_modules' -g '!.npm-cache' -g '!dist'` — passed; manual diff review found the expected implementation. The only scan hits were the two `continue-on-error` rejection checks in `scripts/validate-ci.mjs`; no test or verifier bypass was present.
-- Final `npm run verify:gate -- 1` — passed again from the staged tree after the README and status update: clean install, build, lint, typecheck, 4 foundation tests, skill and CI validation, and 11 contract tests; zero failed, skipped, or todo tests.
-- `git status --short --branch; git diff --check; git diff --cached --check` — passed; every intended change remained staged with no unstaged or whitespace error.
+- `npm run test:report` immediately after adding the Gate 2 suite — failed as intended: 0 pass, 6 fail because `dist/report/confirmation.js`, `proposal-invariants.js`, `resolution.js`, and `golden-report-model.json` did not exist.
+- `npm run test:report` after the first implementation — failed during build with three `TS18048` errors because optional reusable-knowledge handling was not narrowed.
+- `npm run test:report` after the type narrowing — reported 14 pass and 1 fail; the implementation returned the correct ambiguity error, but the assertion was case-sensitive.
+- `npm run test:report && npm run build && npm run lint && npm run typecheck && npm run validate:skills` after the assertion correction — all passed; report tests were 15 pass, 0 fail, 0 skipped, 0 todo, and both skills validated.
+- `python3 /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — failed because the host Python lacked PyYAML; no repository change occurred.
+- `command -v uv || true; command -v pipx || true` — passed; found `uv` and no `pipx`.
+- `uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — failed because the host-owned default uv cache was not writable; no repository change occurred.
+- `UV_CACHE_DIR=/private/tmp/progressbrief-uv-cache uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` — passed using the task-specific temporary cache; reported `Skill is valid!`.
+- `npm run test:report && npm run test:contracts && npm run test:foundation && npm run lint && npm run typecheck` — all passed: 15 report, 11 contract, and 4 foundation tests; zero failed, skipped, or todo tests.
+- `npm run verify:gate -- 2` — first cumulative run passed install, build, lint, typecheck, 4 foundation tests, both skill validations, local CI validation, 11 contract tests, and 15 report tests.
+- `git status --short --branch && git diff --stat && git diff --check`; manual `git diff` over package, tripwire, public API, report implementation, tests, README, skill, and fixture documentation; and `rg -n "passWithNoTests|test\\.skip|it\\.todo|describe\\.skip|\\.only\\(|exit 0|continue-on-error|\\|\\| true" scripts tests package.json .github skills ...` — passed. The only scan hits were the two `continue-on-error` rejection checks in `scripts/validate-ci.mjs`; no bypass exists.
+- `git add --all && git diff --cached --check && git status --short --branch && git diff --cached --stat && git diff --cached --name-status` — passed; staged the 19 intended Gate 2 paths with no whitespace errors or unrelated file.
+- `node -e "...JSON.parse..."` over the two new JSON artifacts and `wc -l` over report skill, implementation, and tests — passed; both artifacts parsed and the skill remained 54 lines with a 59-line shallow reference.
+- `for gate_number in 3 4 5 6 7 8 9 10; do ... npm run verify:gate -- "$gate_number" ...; done` — passed as a negative-oracle check: every future gate failed before execution on `test:browser` and its subsequent missing cumulative suites.
+- Direct original-resolution inspection of `rollout-dashboard.png` — passed; the image supports the 18-minute to 6-minute comparison but not the draft's ten-minute-window implication. That unsupported implication was removed from both the proposal and golden model.
+- Fresh-context read-only forward test of `progressbrief-report` against the raw fixture — completed without repository edits. It followed `generate now`, omitted the ambiguous activity, grounded consequential claims, excluded all three unsafe sentinels, and respected the renderer boundary. It exposed an unspecified weekly-period anchor, which was repaired in the workflow and resolver.
+- `sed` over the resolver, period tests, and workflow reference after an atomic patch context failure — passed; confirmed the failed patch had made no partial change before the corrected patch was applied.
+- `npm run test:report && npm run lint && npm run typecheck && npm run validate:skills && UV_CACHE_DIR=/private/tmp/progressbrief-uv-cache uv run --with pyyaml python /Users/likunkkk/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/progressbrief-report` after the forward-test repair — all passed; report tests remained 15 pass with zero skipped or todo tests, and both skill validators passed.
+- `npm run test:report && npm run lint && npm run typecheck` after staged-review hardening — all passed; malformed agent output now returns an invalid-shape result without changing the 15-test count.
+- Final `npm run verify:gate -- 2` — passed the complete cumulative Gate 2 oracle again after all implementation, evidence, wording, skill, and runtime-shape changes: install, build, lint, typecheck, 4 foundation tests, skills, CI validation, 11 contract tests, and 15 report tests.
 
 ## Artifacts and evidence
 
-- Complete fixture manifest:
-  `fixtures/snapshot-three-workstreams/fixture-manifest.json`.
-- Raw synthetic inputs:
-  `fixtures/snapshot-three-workstreams/input/messy-notes.md`,
-  `input/project-brief.md`, `input/github/pr-184.json`, and
-  `input/rollout-dashboard.png` under the same fixture root.
-- Normalized evidence and Work Library specimens:
-  `fixtures/snapshot-three-workstreams/evidence.json` and `library/`.
-- Valid and invalid contract corpus:
-  `fixtures/snapshot-three-workstreams/contracts/`.
-- Versioned contracts: `schemas/`.
-- Validation and export boundary: `src/contracts/`.
-- Executable evidence: `tests/contracts/` and
-  `tests/foundation/foundation.test.mjs`.
-- No report HTML or report screenshots were generated because Gate 1 did not
-  change rendering. The only image is the intentionally committed input
-  screenshot fixture, which was inspected directly.
+- Complete agent-authored proposal specimen:
+  `fixtures/snapshot-three-workstreams/agent-report-proposal.json`.
+- Complete source-model boundary for Gate 3:
+  `fixtures/snapshot-three-workstreams/golden-report-model.json`.
+- Request and interaction behavior: `src/report/resolution.ts`,
+  `structure.ts`, and `confirmation.ts`.
+- Proposal acceptance boundary: `src/report/proposal-invariants.ts`.
+- Executable acceptance evidence: `tests/report/`.
+- Agent-facing workflow: `skills/progressbrief-report/SKILL.md` and
+  `references/report-workflow.md`.
+- No report HTML, PDF, or report screenshot was generated because Gate 2 did not
+  implement or change rendering. The existing synthetic input screenshot was
+  inspected only as evidence while reviewing a claim.
 
 ## Judgment for review
 
-- Added Ajv as the only runtime dependency because complete JSON Schema 2020-12
-  validation materially reduces contract and security risk compared with a
-  hand-written partial validator; all other Gate 1 behavior uses Node APIs.
-- Added a ninth shared `common.schema.json` behind the eight required documents
-  so ID, visibility, date, and schema-version constraints cannot drift.
-- Used the contract's required prefixes and added explicit `dsg_`, `wsp_`,
-  `prj_`, `wlg_`, `knw_`, and `fbq_` prefixes for persisted types the contract
-  names but does not assign a literal prefix. All use opaque UUID v4 values.
-- Kept `contracts/valid/report.json` deliberately small and labeled it as a
-  source-model contract specimen, not the Gate 2 complete Snapshot or
-  `golden-report-model.json`.
-- Represented semantic/export negative cases as a committed valid base report
-  plus explicit mutation recipe. This avoids four large duplicated reports
-  while materializing deterministic invalid documents in tests. Schema-level
-  invalid fixtures remain standalone invalid documents.
-- Made the export projection an explicit reconstruction instead of deleting
-  forbidden keys from a clone. This keeps creator-only fields unrepresentable
-  in the export type and makes newly added source fields opt-in to export.
-- Preserved public source labels and safe summaries as selected report content;
-  did not sanitize ordinary internal content. Creator-only locators and raw
-  evidence are separate and excluded structurally.
-- Generated the synthetic raster input locally after two OS converters failed;
-  no generator or macOS-only build requirement remains in the repository.
-- Changed test imports to compiled `dist/` modules and made the focused test
-  scripts build first. Production TypeScript retains NodeNext `.js` imports,
-  and clean-checkout test commands remain self-contained.
-- Preserved the audit's F1 tripwire: Gate 1 is now available, while every gate
-  2–10 is asserted to fail on `test:report`. The new suite runs a real test
-  runner over four non-empty files and reports 11 passing tests, addressing F2.
+- Interpreted the user's instruction to complete one whole gate as overriding
+  the runbook's older one-obligation iteration wording; all Gate 2 obligations
+  were completed, and no Gate 3 implementation was attempted.
+- Used an unqualified weekly request as the most recent completed
+  Monday-through-Sunday period; `this week` means Monday through today. An
+  unqualified biweekly request uses the two most recent completed weeks, while
+  monthly and quarterly requests use the current calendar period through today.
+  This reversible default was made explicit after fresh-context testing exposed
+  the ambiguity and matches the fixture's completed Aug 17–23 week.
+- Chose Snapshot as the `generate now` fallback only when mode remains
+  unresolved. This permits setup-free generation without inventing a Deep Dive
+  purpose.
+- Kept agent proposals separate from persisted report models. Proposals use
+  stable semantic keys and are evaluated by invariants; opaque persisted IDs are
+  assigned once in the source model. No proposal JSON Schema was added because
+  proposals are not a persistent or interchange contract in Gate 2.
+- Made required Snapshot modules conditional on included content rather than
+  universally mandatory, preserving the PRD rule that empty modules are
+  omitted. This fixture requires all four roles because it contains movement,
+  attention, and a forward priority.
+- Represented all three fixture workstreams in the proposal structure but
+  omitted the only Developer experience activity from exportable content under
+  `generate now` because its completion is unresolved. The golden Snapshot
+  publicly communicates the two verified workstreams and records the third
+  workstream omission only in creator metadata.
+- Included replay-safe knowledge because it explains the benchmark's
+  comparability. Kept four-versus-eight-worker supersession as memory-only
+  because it does not materially explain this reporting period; history remains
+  preserved in the Gate 1 Work Library specimens.
+- Kept design and visualization specifications in the golden model because the
+  report schema requires the renderer boundary, but did not implement or claim
+  HTML, browser, accessibility, print, offline, asset, or export behavior.
+- Required an evidence-led proposal for Deep Dive structure rather than applying
+  the Snapshot default. Gate 2 resolves mode but does not implement the Gate 7
+  Deep Dive flow.
+- Added no dependency. The existing Ajv contract validation and Node standard
+  library remain sufficient for Gate 2.
+- Applied the `skill-creator` guidance by keeping the skill concise, moving
+  detailed workflow into one shallow reference, validating with both repository
+  and skill-creator validators, and running a fresh-context read-only forward
+  test. It materially clarified the period anchor and `generate now` precedence.
 
 ## Commit intent
 
-Commit the complete passing Gate 1 change and this ledger together as
-`feat: define Gate 1 semantic contracts`.
+Commit the complete passing Gate 2 change and this ledger together as
+`feat: implement Gate 2 Snapshot report path`.
 
 ## Unresolved risks and next gate
 
-- The source-model schema supports both report modes, but no agent-authored
-  report workflow exists yet. Do not treat the small valid report specimen as
-  a completed Snapshot.
-- Cross-document references require `validateReportModel` in addition to JSON
-  Schema validation; JSON Schema alone cannot prove referential integrity.
-- Version `1.0.0` is the only accepted contract version. Migration behavior is
-  intentionally deferred until a later version exists.
-- Gate 0 audit advisories about the repository-local npm cache and
-  `"private": true` remain release-polish decisions due by Gate 10.
-- Authorized remote CI is still a Gate 10 requirement; no remote exists and no
-  remote operation was attempted.
+- The agent proposal validator is intentionally an in-process invariant boundary,
+  not a persisted schema. A later feature that stores proposals must add a
+  versioned contract rather than treating the current TypeScript interface and
+  runtime shape guard as a file format.
+- Period resolution is calendar-based in UTC. Host-local timezone interpretation
+  and natural-language date breadth may need expansion when real CLI parsing is
+  introduced, but the current explicit-date and cadence behavior is deterministic.
+- The golden model is source data, not rendered proof. No HTML determinism,
+  responsive behavior, CSP, offline behavior, accessibility, print, or asset
+  limits have passed yet.
+- Gate 1's path-regex advisory, repository-local npm cache, `npm test` breadth,
+  and `private: true` remain Gate 10 review items.
+- Authorized remote CI remains a Gate 10 requirement; no remote operation was
+  attempted.
 
-**Next gate:** Gate 2 — Snapshot report path. Implement the
-`progressbrief-report` workflow, period/audience/mode/structure resolution,
-confirmation and `generate now`, claim-to-source mapping, a complete Snapshot,
-the committed schema-valid `golden-report-model.json`, and invariant tests for
-all eleven fixture cases. The next suite must be the substantive `test:report`;
-do not begin Gate 3 rendering work.
+**Next gate:** Gate 3 — Renderer, visuals, and export. Build the deterministic
+self-contained HTML renderer from `golden-report-model.json`, presentation and
+reading behavior, visualization replacement, evidence disclosure, screenshot,
+print, offline, CSP, accessibility, and asset-limit checks. The next substantive
+suite must be `test:browser`; do not begin creator review work.

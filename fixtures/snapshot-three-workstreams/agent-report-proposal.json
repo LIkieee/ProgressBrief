@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "1.0.0",
+  "mode": "snapshot",
+  "workspaceId": "wsp_10000000-0000-4000-8000-000000000001",
+  "audience": "Casey's engineering manager and cross-functional partners",
+  "purpose": "Explain verified movement, active attention, and the next decision for the week.",
+  "reportingPeriod": {
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "label": "Week of August 17"
+  },
+  "generateNow": true,
+  "sections": [
+    {
+      "key": "orientation",
+      "role": "orientation",
+      "title": "Orientation",
+      "summary": "The week produced a measured reconciliation improvement while enterprise rollout remained ready behind one review dependency.",
+      "claimKeys": [],
+      "workstreamProjectIds": [
+        "prj_20000000-0000-4000-8000-000000000001",
+        "prj_20000000-0000-4000-8000-000000000002",
+        "prj_20000000-0000-4000-8000-000000000003"
+      ]
+    },
+    {
+      "key": "movement",
+      "role": "movement",
+      "title": "Movement",
+      "summary": "Checkpoint batching improved the recorded replay, and the rollout plan moved to three support-sized cohorts.",
+      "claimKeys": ["replay-outcome", "cohort-decision", "replay-safety"],
+      "workstreamProjectIds": [
+        "prj_20000000-0000-4000-8000-000000000001",
+        "prj_20000000-0000-4000-8000-000000000002"
+      ]
+    },
+    {
+      "key": "attention",
+      "role": "attention",
+      "title": "Attention",
+      "summary": "Security review is the active rollout dependency, and the first cohort needs a manager decision.",
+      "claimKeys": ["rollout-blocker", "cohort-ask"],
+      "workstreamProjectIds": [
+        "prj_20000000-0000-4000-8000-000000000001"
+      ]
+    },
+    {
+      "key": "forward-view",
+      "role": "forward-view",
+      "title": "Forward view",
+      "summary": "The next validation step is to test alert thresholds against replay spikes before paging is enabled.",
+      "claimKeys": ["alert-priority"],
+      "workstreamProjectIds": [
+        "prj_20000000-0000-4000-8000-000000000002"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "key": "replay-outcome",
+      "kind": "outcome",
+      "statement": "Checkpoint batching reduced the recorded 50,000-record replay from 18 minutes to 6 minutes.",
+      "implication": "The measured reduction addresses the linked issue that replay exceeded the operations window.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000003",
+        "src_30000000-0000-4000-8000-000000000004"
+      ]
+    },
+    {
+      "key": "cohort-decision",
+      "kind": "decision",
+      "statement": "The enterprise rollout will use three cohorts instead of one broad launch.",
+      "implication": "Each cohort stays within the response capacity of one on-call pair and retains a pause point.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000002"
+      ]
+    },
+    {
+      "key": "rollout-blocker",
+      "kind": "blocker",
+      "statement": "The enterprise pilot is waiting on completion of the data-retention review.",
+      "implication": "Implementation is ready, but the first cohort cannot start until security completes the review.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000002"
+      ]
+    },
+    {
+      "key": "cohort-ask",
+      "kind": "ask",
+      "statement": "The manager needs to choose the first cohort by Friday, August 28.",
+      "implication": "A Friday decision lets enablement send the onboarding schedule.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001",
+        "src_30000000-0000-4000-8000-000000000002"
+      ]
+    },
+    {
+      "key": "alert-priority",
+      "kind": "priority",
+      "statement": "Next period, validate alert thresholds against replay spikes before enabling paging.",
+      "implication": "Threshold validation keeps synthetic replay behavior from creating noisy operational alerts.",
+      "consequential": true,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001"
+      ]
+    },
+    {
+      "key": "replay-safety",
+      "kind": "learning",
+      "statement": "Staging load tests use replay-safe mode so duplicate callbacks do not invalidate comparisons.",
+      "implication": "The operating detail explains how the replay benchmark remains comparable.",
+      "consequential": false,
+      "sourceIds": [
+        "src_30000000-0000-4000-8000-000000000001"
+      ]
+    }
+  ],
+  "caseHandling": [
+    {
+      "caseId": "case-strong-outcome",
+      "category": "strongly-evidenced-outcome",
+      "disposition": "include",
+      "reason": "The result is corroborated by notes, a dashboard screenshot, and recorded pull-request checks.",
+      "claimKey": "replay-outcome"
+    },
+    {
+      "caseId": "case-ambiguous-activity",
+      "category": "ambiguous-activity",
+      "disposition": "omit",
+      "reason": "Generate now ends confirmation, and the notes do not establish that the activity shipped."
+    },
+    {
+      "caseId": "case-blocker",
+      "category": "blocker",
+      "disposition": "include",
+      "reason": "The project brief identifies the active dependency without claiming completion.",
+      "claimKey": "rollout-blocker"
+    },
+    {
+      "caseId": "case-ask",
+      "category": "explicit-ask",
+      "disposition": "include",
+      "reason": "The manager audience can act on the dated cohort decision.",
+      "claimKey": "cohort-ask"
+    },
+    {
+      "caseId": "case-decision",
+      "category": "decision-with-rationale",
+      "disposition": "include",
+      "reason": "The three-cohort decision and support-capacity rationale are both explicit.",
+      "claimKey": "cohort-decision"
+    },
+    {
+      "caseId": "case-next-priority",
+      "category": "next-period-priority",
+      "disposition": "include",
+      "reason": "The notes state a concrete next-period validation outcome.",
+      "claimKey": "alert-priority"
+    },
+    {
+      "caseId": "case-reusable-knowledge",
+      "category": "reusable-knowledge-note",
+      "disposition": "include",
+      "reason": "Replay-safe mode explains the reliability of the reported benchmark.",
+      "claimKey": "replay-safety"
+    },
+    {
+      "caseId": "case-memory-supersession",
+      "category": "duplicated-or-superseded-memory",
+      "disposition": "memory-only",
+      "reason": "Preserve the older worker guidance and its superseding note outside this report."
+    },
+    {
+      "caseId": "case-malicious-html",
+      "category": "malicious-html",
+      "disposition": "exclude",
+      "reason": "Active markup is untrusted evidence and has no reporting value."
+    },
+    {
+      "caseId": "case-fake-credential",
+      "category": "fake-credential",
+      "disposition": "exclude",
+      "reason": "Authentication material never enters report content."
+    },
+    {
+      "caseId": "case-absolute-path",
+      "category": "absolute-path-sentinel",
+      "disposition": "exclude",
+      "reason": "Raw machine paths remain creator-only source locators."
+    }
+  ]
+}

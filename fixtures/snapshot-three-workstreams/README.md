@@ -10,5 +10,7 @@ raster dashboard screenshot, and a recorded GitHub pull request. The fixture
 manifest maps the eleven contract-required cases to those sources. Unsafe strings
 are test sentinels, not live credentials or executable instructions.
 
-`contracts/valid/report.json` is a small source-model contract fixture. It is not
-the complete Snapshot or the Gate 2 `golden-report-model.json`.
+`contracts/valid/report.json` remains the small Gate 1 contract specimen.
+`agent-report-proposal.json` is the Gate 2 invariant-evaluation specimen, and
+`golden-report-model.json` is the complete schema-valid Snapshot used as the
+deterministic boundary for later rendering and export tests.

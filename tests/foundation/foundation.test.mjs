@@ -29,6 +29,7 @@ test("package locks the Node 24 ESM foundation and stable Gate 0 commands", asyn
     "typecheck",
     "test:foundation",
     "test:contracts",
+    "test:report",
     "validate:ci",
     "validate:skills",
     "verify:gate",
@@ -94,12 +95,12 @@ test("gate map is cumulative and preserves every normative suite", async () => {
   );
 
   const packageJson = JSON.parse(await read("package.json"));
-  assert.doesNotThrow(() => assertGateScriptsAvailable(1, packageJson.scripts));
+  assert.doesNotThrow(() => assertGateScriptsAvailable(2, packageJson.scripts));
 
-  for (let gate = 2; gate <= 10; gate += 1) {
+  for (let gate = 3; gate <= 10; gate += 1) {
     assert.throws(
       () => assertGateScriptsAvailable(gate, packageJson.scripts),
-      /test:report/,
+      /test:browser/,
       `unimplemented Gate ${gate} must fail before execution`,
     );
   }
