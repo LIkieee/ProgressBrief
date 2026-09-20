@@ -4,3 +4,6 @@ node_modules/
 tmp/
 *.log
 .DS_Store
+
+# Work Libraries contain private professional data and should live outside the clone.
+/ProgressBrief Library/

@@ -4,6 +4,10 @@ ProgressBrief turns scattered evidence of professional work into concise,
 evidence-aware, visually structured reports. It is designed as a local-first,
 open-source package for people who work with coding agents.
 
+> **Pre-release source preview:** the implemented product passes Gate 8, but
+> clean-host installation and release hardening are not complete. The package
+> is intentionally private and is not published to npm yet.
+
 The product has two reporting modes:
 
 - **Snapshot** synthesizes a person's work across workstreams for a reporting
@@ -17,27 +21,12 @@ Curate workflows. A Workspace is the privacy boundary around that content.
 
 ## Implementation status
 
-The repository currently implements Gates 0–8: the foundation, semantic
-contracts, Snapshot report path, deterministic clean HTML renderer, and the
-creator review loop, plus Work Library persistence. The review wrapper supports
-stable component and text
-annotations, inline corrections as feedback operations, a durable queue,
-explicit Codex and Claude Code handoffs, conflict detection, and live reload.
-The memory path supports first-use setup, Workspace-scoped Capture and Remember,
-search-before-write outcomes, linked Markdown records, atomic locked writes,
-and per-Workspace undo. Recall adds portable lexical retrieval over paths,
-metadata, headings, and bodies; Workspace/project/time/topic/visibility
-filters; query expansion; agent reranking; grounded note links; and current-over-
-superseded handling. Deep Dive reuses the same report schema, evidence model,
-renderer, export projection, and review loop with purpose-bounded structure,
-deeper corroboration, an additional visual composition, and section-local
-evidence in reading view. Curate uses an explicit proposal boundary: read-only
-discovery surfaces duplicate, contradiction, stale-note, missing-link, and
-broad-note candidates;
-approved merge, move, rewrite, relation, and supersession operations apply as
-one reversible mutation while rejected proposals change no library bytes.
-Clean-host installation and release proof remain later gates and are not
-claimed as implemented yet.
+Gates 0–8 are implemented: semantic contracts, Snapshot and Deep Dive reports,
+deterministic accessible HTML, creator review, Work Library persistence,
+Capture, Remember, Recall, and approval-gated Curate. The cumulative Gate 8
+oracle covers 86 substantive tests. See the public
+[implementation status](docs/implementation/status.md) for capabilities,
+boundaries, and remaining release work.
 
 ## Requirements
 
@@ -46,6 +35,34 @@ claimed as implemented yet.
 - macOS, Linux, or Windows through WSL2
 
 Native Windows and PowerShell are outside the V1 support boundary.
+
+## Try the skills in Codex
+
+This repository exposes its two canonical skills through `.agents/skills`.
+For the current developer setup, build and link the companion CLI first:
+
+```sh
+npm ci
+npm run build
+npm link
+```
+
+This is a local development link, not the final Gate 9 installation flow.
+Launch Codex from the repository root, type `/skills`, or invoke one explicitly:
+
+```text
+$progressbrief-report Create a weekly Snapshot for my manager from this
+repository's Git history and my notes. Generate now.
+```
+
+```text
+$progressbrief-memory Remember: staging load tests require replay-safe mode.
+```
+
+The report skill creates evidence-aware Snapshots and Deep Dives. The memory
+skill handles Capture, Remember, Recall, and Curate. The TypeScript CLI is the
+deterministic companion runtime used by those workflows; report synthesis is
+currently agent-driven rather than a standalone `report generate` command.
 
 ## Development
 
@@ -89,16 +106,19 @@ Initialize a visible Work Library, then Capture or Remember a fragment:
 
 ```sh
 progressbrief library init \
-  --directory "$PWD/ProgressBrief Library" \
+  --directory "$HOME/Documents/ProgressBrief Library" \
   --workspace "Example Company" \
   --kind employer \
   --project "Migration"
 
 progressbrief memory capture \
-  --library "$PWD/ProgressBrief Library" \
+  --library "$HOME/Documents/ProgressBrief Library" \
   --workspace example-company \
   --text "Capture: we finished the migration, and staging migrations require VPN access."
 ```
+
+Keep Work Libraries outside the repository clone: they contain private or
+internal professional data by design.
 
 Use `progressbrief memory undo --library <directory> --workspace <id-or-slug>`
 to reverse only the last ProgressBrief mutation in that Workspace.
@@ -107,7 +127,7 @@ Recall a professional detail without generating a report:
 
 ```sh
 progressbrief memory recall \
-  --library "$PWD/ProgressBrief Library" \
+  --library "$HOME/Documents/ProgressBrief Library" \
   --workspace example-company \
   --query "What does staging require before migration?"
 ```
@@ -121,7 +141,7 @@ Discover Curate candidates without mutating the Work Library:
 
 ```sh
 progressbrief memory curate \
-  --library "$PWD/ProgressBrief Library" \
+  --library "$HOME/Documents/ProgressBrief Library" \
   --workspace example-company
 ```
 
@@ -143,7 +163,8 @@ oracle and is expected to fail before that work exists.
 - `src/` contains the shared TypeScript CLI and implementation.
 - `schemas/` contains the versioned interchange and persistence contracts.
 - `fixtures/` and `tests/` contain synthetic acceptance evidence.
-- `docs/implementation/status.md` is the resumable gate ledger.
+- `docs/implementation/status.md` is the public capability and roadmap ledger.
+- `.agents/skills/` exposes repository-local links to the canonical skills.
 
 Installed host copies will be derived from `skills/`; they are not edited
 directly. The package does not require hosted infrastructure and does not add

@@ -12,9 +12,13 @@ release exists. Published support ranges will be documented with releases.
 ## Reporting a vulnerability
 
 Do not place credentials, private work content, or exploit payloads containing
-real data in a public issue. When the project has a hosted repository with
-private vulnerability reporting, use that channel. Before then, contact the
-maintainer through the private channel from which you received this source.
+real data in a public issue. Use GitHub's **Privately report a vulnerability**
+flow from the repository's Security tab:
+
+<https://github.com/LIkieee/skill/security/advisories/new>
+
+If private reporting is temporarily unavailable, open a public issue containing
+no sensitive details and ask the maintainer to establish a private channel.
 
 Include the affected revision, impact, a minimal synthetic reproduction, and
 whether the issue crosses a Workspace boundary or exposes a local service.

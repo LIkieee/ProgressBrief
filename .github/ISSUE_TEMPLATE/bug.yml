@@ -1,0 +1,44 @@
+name: Bug report
+description: Report reproducible incorrect behavior using synthetic data.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, private work content, or real local paths.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the observed and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Synthetic reproduction
+      description: Provide the smallest safe reproduction and relevant command output.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Revision
+      description: Commit SHA or version.
+    validations:
+      required: true
+  - type: dropdown
+    id: boundary
+    attributes:
+      label: Affected area
+      options:
+        - Report contracts or generation
+        - Rendering or export
+        - Creator review
+        - Work Library persistence
+        - Recall
+        - Curate
+        - Installation or packaging
+    validations:
+      required: true

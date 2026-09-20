@@ -4,6 +4,22 @@
   "description": "Turn work evidence into concise, evidence-aware HTML reports.",
   "license": "MIT",
   "private": true,
+  "author": "LIkieee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LIkieee/skill.git"
+  },
+  "homepage": "https://github.com/LIkieee/skill#readme",
+  "bugs": {
+    "url": "https://github.com/LIkieee/skill/issues"
+  },
+  "keywords": [
+    "agent-skills",
+    "codex",
+    "knowledge-management",
+    "local-first",
+    "professional-reporting"
+  ],
   "type": "module",
   "engines": {
     "node": ">=24"
